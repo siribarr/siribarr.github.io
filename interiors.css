@@ -232,6 +232,7 @@ body.object-page::before{content:none}
   pointer-events: none;
 }
 .film-note svg { flex: none; width: 43px; height: 50px; filter: drop-shadow(0 1px 0 #fff7e7); }
+.film-note .short-arrow { display: none; }
 .film-note span {
   white-space: nowrap;
   font: italic 22px/1 Linden, Georgia, serif;
@@ -316,7 +317,18 @@ body.object-page::before{content:none}
   .portfolio .object-page .courses > div { grid-template-columns: 1.08fr 1fr; gap: 18px; }
   .portfolio .object-page .courses dt { font-size: clamp(21px, 5.4vw, 30px); }
   .portfolio .object-page .courses dd { font-size: 15px; }
-  .object-page #awards .award-film { margin: 26px auto 32px; max-width: 480px; }
+  .object-page #awards .award-film {
+    margin: 18px auto 30px;
+    max-width: 480px;
+    padding: 0;
+  }
+  .object-page #awards .filmstrip { margin-top: 22px; transform: none; }
+  .object-page #awards .award-film-caption { margin: 12px 5px 0; }
+  .film-note { left: 54%; bottom: calc(79% - 6px); }
+  .film-note svg { width: 32px; height: 38px; }
+  .film-note .loop-arrow { display: none; }
+  .film-note .short-arrow { display: inline; }
+  .film-note span { font-size: 17px; transform: translateY(-.66em); }
   .object-page #awards .award-objects { display: flex; gap: 38px; }
   .object-page #awards .award-objects > * { width: min(100%, 290px); }
   .object-page #references .reference-transcript { display: flex; flex-direction: column; align-items: stretch; gap: 36px; }
