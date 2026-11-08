@@ -15,6 +15,7 @@
 .top{padding:38px 0 27px}.wordmark{font-family:Basteleur,Georgia,serif;font-size:30px;letter-spacing:-.03em}@media(max-width:650px){.top{padding-top:25px}.wordmark{font-size:26px}}
 .sample-switch{display:flex;gap:25px;margin-bottom:15px}.sample-switch button{font:20px Linden,Georgia,serif;color:var(--muted);background:none;border:0;padding:5px 0;cursor:pointer}.sample-switch button[aria-pressed="true"]{color:var(--ink);text-decoration:underline;text-underline-offset:6px;text-decoration-color:var(--orange)}.sample-switch button:focus-visible{outline:3px solid var(--orange);outline-offset:5px}
 </style>
+<link rel="stylesheet" href="visit/native/guide.css">
 <link rel="stylesheet" href="halyx-edition.css">
 <link rel="stylesheet" href="site-nav.css"/></head>
 <body>
@@ -31,7 +32,20 @@
 <a href="https://app.thestorygraph.com/profile/sophiesf">What I’m reading</a>
 </nav></details>
 <main>
-<header class="intro"><div class="intro-grid"><h1>Halyx</h1><div><p class="lede">A handmade computer in a briefcase, with a few things rattling around inside.</p><p class="intro-detail">The odds and ends have promoted themselves to software. The fountain has opinions now, and the coins remember your day.</p></div><figure class="opening" id="short-visit"><a class="visit-launch" href="visit/index.html"><img src="assets/studiolo-folio.webp" alt="The embroidered Folio at the center of the Studiolo carousel" width="800" height="428"><span>Take a short visit <span aria-hidden="true">→</span></span></a></figure></div></header>
+<header class="intro"><div class="intro-grid"><h1>Halyx</h1><div><p class="lede">A handmade computer in a briefcase, with a few things rattling around inside.</p><p class="intro-detail">The odds and ends have promoted themselves to software. The fountain has opinions now, and the coins remember your day.</p></div><figure class="opening" id="short-visit">
+<details class="beetle-welcome" open>
+  <summary aria-label="Beetle’s greeting">
+    <span class="v-guide-beetle" aria-hidden="true"><img src="visit/native/assets/studiolo/life/durer-stag-beetle.jpg" alt=""></span>
+  </summary>
+  <div class="v-guide v-beetle-message">
+    <p>Oh, more company! Come on in. I squeeze in by the hinge and come out on the screen. Sophie put in a button for people.</p>
+    <button class="v-close" type="button" aria-label="Hide Beetle’s greeting" hidden>×</button>
+  </div>
+</details>
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs><filter id="visit-beetle-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -1 -1 -1 0 2"/></filter></defs>
+</svg>
+<a class="visit-launch" href="visit/index.html"><img src="assets/studiolo-folio.webp" alt="The embroidered Folio at the center of the Studiolo carousel" width="800" height="428"><span>Take a short visit <span aria-hidden="true">→</span></span></a></figure></div></header>
 <nav class="contents" aria-label="Halyx functions"><a href="#vernierscope">Vernierscope</a><a href="#mint">The Mint</a><a href="#rum-standard">The Rum Standard</a><a href="#sundae">Sundae Forecast</a><a href="#folio">Folio</a><a href="#sky">Heliograph & Lunidex</a><a href="#more">More inside</a></nav>
 <div class="instrument-pair">
 <section class="feature" id="vernierscope"><div class="copy"><h2>The Vernierscope</h2><p>The Vernierscope has the appeal of a horoscope, with eight temperaments of its own, each with particular pleasures and contradictions. A few choices of words and symbols lead to a short personal notice: the satisfaction of getting one small detail right, the discovery that rearranges an afternoon, or the wish to be known without giving everything away.</p></div><figure><a href="assets/notice.png" aria-label="View the Vernierscope image at full size"><img src="assets/notice.png" alt="A result from the Vernierscope’s invented horoscope" width="800" height="480" loading="lazy"></a></figure></section>
@@ -49,6 +63,14 @@
 </main></div>
 <footer><div class="shell"><span>Sophie Iribarren</span><span>San Francisco</span></div></footer>
 <script>
+const greeting = document.querySelector('.beetle-welcome');
+const hideGreeting = greeting.querySelector('.v-close');
+hideGreeting.hidden = false;
+hideGreeting.addEventListener('click', () => {
+  greeting.open = false;
+  greeting.querySelector('summary').focus({preventScroll: true});
+});
+
 const rumScreens = {
   menu: {src:'assets/rum-menu.png',alt:'The Rum Standard printed menu, with Gin, Citrusy, Golden age and Steady current circled'},
   recipe: {src:'assets/rum-recipe.png',alt:'The Rum Standard recommends a Saturn, with its illustrated glass, recipe, and a note about its planetary garnish'}

@@ -49,3 +49,26 @@ body .sample-switch button[aria-pressed=true]{font-style:italic}
 .opening .visit-launch { display:block; width:100%; }
 .visit-launch > span { display:table; margin:10px auto 0; padding:4px 13px; background:#f5e7c9; border:1px solid #958269; box-shadow:1px 2px #8c75543b; color:#563726; font:20px/1.3 Linden,Georgia,serif; }
 .visit-launch:hover > span { color:#843d27; background:#f8dfb4; }
+
+/* The visit supplies the original balloon, ink filter styling and arrival motion. */
+.beetle-welcome {
+  position: relative;
+  margin: 0 0 12px;
+  padding: 0 3px 4px 86px;
+  min-height: 70px;
+  max-width: 455px;
+}
+.beetle-welcome summary {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 68px;
+  height: 68px;
+  cursor: pointer;
+  list-style: none;
+}
+.beetle-welcome summary::-webkit-details-marker { display: none; }
+.beetle-welcome summary:focus-visible { outline: 2px dotted #70513c; outline-offset: 3px; }
+.beetle-welcome .v-guide-beetle { position: absolute; left: 0; top: 0; z-index: auto; }
+.opening .beetle-welcome img { width: 68px; box-shadow: none; }
+.beetle-welcome .v-guide { position: relative; z-index: auto; max-height: none; }
