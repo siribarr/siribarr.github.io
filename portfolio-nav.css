@@ -1,0 +1,55 @@
+.portfolio-header {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  grid-template-areas: "identity personal" "identity work";
+  justify-content: stretch;
+  align-items: center;
+  gap: 5px clamp(18px, 3vw, 46px);
+}
+.portfolio-header .site-identity { grid-area: identity; }
+.portfolio-header nav {
+  grid-area: work;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 4px clamp(12px, 1vw, 20px);
+  font: 520 clamp(13px, .92vw, 16px)/1.4 Bricolage, sans-serif;
+}
+.portfolio-header nav a {
+  display: block;
+  padding-block: 4px;
+  white-space: nowrap;
+}
+.portfolio-header .personal-nav {
+  grid-area: personal;
+  align-self: start;
+  justify-self: end;
+  color: var(--accent);
+}
+.portfolio-header nav a[aria-current] {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: .25em;
+}
+@media (max-width: 1179px) {
+  .portfolio-header,
+  .object-page .portfolio-header {
+    grid-template-areas: "identity personal" "work work";
+    position: relative;
+    row-gap: 12px;
+  }
+  .portfolio-header nav {
+    justify-content: flex-start;
+    gap: 1px 18px;
+    font-size: 14px;
+  }
+}
+@media (max-width: 520px) {
+  .portfolio-header { column-gap: 8px; }
+  .portfolio-header nav { gap: 2px 14px; }
+  .portfolio-header .personal-nav { justify-content: flex-end; }
+}
+@media (max-width: 370px) {
+  .portfolio-header .personal-nav { flex-direction: column; align-items: flex-end; gap: 0; }
+}

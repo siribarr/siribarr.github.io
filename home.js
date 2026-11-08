@@ -9,14 +9,15 @@ function flipPostcard() {
 }
 postcard.addEventListener('click', flipPostcard);
 document.querySelector('#turn-card').addEventListener('click', flipPostcard);
-const contentsLinks = [...document.querySelectorAll('.site-sections nav a, .masthead a[href^="#"]')];
+const contentsLinks = [...document.querySelectorAll('.object-nav nav a')];
 const sections = [...document.querySelectorAll('#main > section')];
 const projectLinks = [...document.querySelectorAll('.project-tabs a')];
 const projectPanels = [...document.querySelectorAll('.project-panel')];
 function showLocation() {
+  for (const dialog of document.querySelectorAll('dialog[open]')) dialog.close();
   const hash = window.location.hash.slice(1);
   if (hash === 'project-halyx' || hash === 'things') {
-    const destination = hash === 'project-halyx' ? 'halyx.html' : 'material-study.html';
+    const destination = hash === 'project-halyx' ? 'halyx.html' : 'index.html';
     location.replace(destination + location.search);
     return;
   }
@@ -39,7 +40,7 @@ function showLocation() {
     if (link.hash === '#' + selectedProject) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   }
-  document.title = sectionId === 'things' ? 'Sophie Iribarren' : document.querySelector('#' + sectionId + ' h2').textContent + ' — Sophie Iribarren';
+  document.title = sectionId === 'things' ? document.querySelector('#' + selectedProject + ' h3').textContent + ' — Sophie Iribarren' : document.querySelector('#' + sectionId + ' h2').textContent + ' — Sophie Iribarren';
 }
 function navigate(hash) {
   if (window.location.hash !== hash) history.pushState(null, '', hash);
@@ -92,7 +93,7 @@ document.querySelector('#tattoo-enlarge').addEventListener('click', () => {
   tattooDetail.replaceChildren(tattooPieces[activeTattoo].querySelector('svg').cloneNode(true));
   tattooDialog.showModal();
 });
-selectTattoo(0, false);
+selectTattoo(tattooPieces.length - 1, false);
 document.querySelector('#close-tattoo').addEventListener('click', () => tattooDialog.close());
 tattooDialog.addEventListener('click', event => {
   if (event.target !== tattooDialog) return;
@@ -177,6 +178,15 @@ const spreadButtons = notebookSources.map((source, i) => {
 });
 function updateBookButtons() {
   spreadButtons.forEach((button, i) => button.setAttribute('aria-pressed', String(i === notebookIndex)));
+  const selected = spreadButtons[notebookIndex];
+  const strip = selected.parentElement;
+  if (strip.clientWidth && strip.scrollWidth > strip.clientWidth) {
+    const item = selected.getBoundingClientRect();
+    const viewport = strip.getBoundingClientRect();
+    if (item.left < viewport.left || item.right > viewport.right) {
+      strip.scrollLeft += item.left - viewport.left - (strip.clientWidth - item.width) / 2;
+    }
+  }
   const first = notebookIndex === 0;
   const last = notebookIndex === notebookSources.length - 1;
   document.querySelector('#notebook-prev').disabled = first;
@@ -259,12 +269,22 @@ for (const target of [pageButton, artifactDetail]) {
     if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.3) {suppressBookClickUntil=performance.now()+350;stepNotebook(dx < 0 ? 1 : -1);}
   });
 }
-for (const button of document.querySelectorAll('[data-artifact]')) button.addEventListener('click', () => {
-  notebookDetailOpen = false;stopBookTurn(artifactDetail);artifactDetail.classList.remove('is-notebook');
+function openArtifact(title, image) {
+  notebookDetailOpen = false;
+  stopBookTurn(artifactDetail);
+  artifactDetail.classList.remove('is-notebook');
   document.querySelector('.notebook-dialog-controls').hidden = true;
-  document.querySelector('#artifact-title').textContent = button.dataset.artifact === 'trophy' ? '16th Annual Brews, Shoes n’ Qs Horseshoe Tournament, 2023' : button.dataset.artifact === 'reading' ? '2025 Summer Reading Challenge' : 'Pub trivia';
-  artifactDetail.replaceChildren(clonePhoto(button.querySelector('svg, img')));
+  document.querySelector('#artifact-title').textContent = title;
+  artifactDetail.replaceChildren(image);
   artifactDialog.showModal();
+}
+const artifactTitles = {
+  trophy: '16th Annual Brews, Shoes n’ Qs Horseshoe Tournament, 2023',
+  reading: '2025 Summer Reading Challenge',
+  trivia: 'Pub trivia'
+};
+for (const button of document.querySelectorAll('[data-artifact]')) button.addEventListener('click', () => {
+  openArtifact(artifactTitles[button.dataset.artifact], clonePhoto(button.querySelector('svg, img')));
 });
 document.querySelector('#close-artifact').addEventListener('click', () => artifactDialog.close());
 artifactDialog.addEventListener('close', () => {notebookDetailOpen = false;stopBookTurn(artifactDetail);});
@@ -275,6 +295,12 @@ artifactDialog.addEventListener('click', event => {
 });
 reducedBookMotion.addEventListener('change', () => {if(reducedBookMotion.matches) for(const stop of [...activeBookTurns.values()]) stop();});
 renderNotebook();
+
+const initialSpread = new URLSearchParams(location.search).get('spread');
+if (location.hash === '#publications' && initialSpread) {
+  const index = notebookSources.findIndex(source => source.dataset.caption === initialSpread);
+  if (index >= 0) requestNotebook(index);
+}
 
 // This is a different notebook: the leather cover that actually holds the Sticky.
 let companionOpen = false;

@@ -17,20 +17,19 @@
 </style>
 <link rel="stylesheet" href="visit/native/guide.css">
 <link rel="stylesheet" href="halyx-edition.css">
-<link rel="stylesheet" href="site-nav.css"/></head>
-<body>
+<link rel="stylesheet" href="interiors.css"/><link href="portfolio-nav.css" rel="stylesheet"/></head>
+<body class="object-page deck-page">
 <div class="shell site-frame">
-<header class="top"><a class="wordmark" href="material-study.html">Sophie Iribarren</a><nav class="nav" aria-label="Main"><a href="index.html#about">About me</a><a href="index.html#contact">Contact</a></nav></header>
-<details class="site-sections" open><summary>Sections</summary><nav aria-label="Portfolio sections">
-<a href="material-study.html">Projects</a>
-<a href="index.html#publications">Publications</a>
-<a href="index.html#product-development">Product development</a>
-<a href="index.html#permanent-collection">Permanent collection</a>
-<a href="index.html#awards">Awards</a>
-<a href="index.html#continuing-education">Continuing education</a>
-<a href="index.html#references">References</a>
-<a href="https://app.thestorygraph.com/profile/sophiesf">What I’m reading</a>
-</nav></details>
+<header class="object-nav portfolio-header"><div class="site-identity"><a href="index.html" class="signature">Sophie Iribarren</a><span class="site-title">Recreational Technologist</span><span class="site-location">San Francisco</span></div><nav aria-label="About and contact" class="personal-nav"><a href="pages.html#about">About me</a><a href="pages.html#contact">Contact</a></nav>
+<nav aria-label="Portfolio"><a aria-current="location" href="index.html">Projects</a>
+<a href="pages.html#publications">Publications</a>
+<a href="pages.html#awards">Awards</a>
+<a href="pages.html#product-development">Product development</a>
+<a href="pages.html#permanent-collection">Permanent collection</a>
+<a href="pages.html#continuing-education">Continuing education</a>
+<a href="pages.html#references">References</a>
+<a href="https://app.thestorygraph.com/profile/sophiesf">What I’m reading</a></nav>
+</header>
 <main>
 <header class="intro"><div class="intro-grid"><h1>Halyx</h1><div><p class="lede">A handmade computer in a briefcase, with a few things rattling around inside.</p><p class="intro-detail">The odds and ends have promoted themselves to software. The fountain has opinions now, and the coins remember your day.</p></div><figure class="opening" id="short-visit">
 <details class="beetle-welcome" open>
@@ -46,23 +45,26 @@
 <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
   <defs><filter id="visit-beetle-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -1 -1 -1 0 2"/></filter></defs>
 </svg>
-<a class="visit-launch" href="visit/index.html"><img src="assets/studiolo-folio.webp" alt="The embroidered Folio at the center of the Studiolo carousel" width="800" height="428"><span>Take a short visit <span aria-hidden="true">→</span></span></a></figure></div></header>
-<nav class="contents" aria-label="Halyx functions"><a href="#vernierscope">Vernierscope</a><a href="#mint">The Mint</a><a href="#rum-standard">The Rum Standard</a><a href="#sundae">Sundae Forecast</a><a href="#folio">Folio</a><a href="#sky">Heliograph & Lunidex</a><a href="#more">More inside</a></nav>
-<div class="instrument-pair">
-<section class="feature" id="vernierscope"><div class="copy"><h2>The Vernierscope</h2><p>The Vernierscope has the appeal of a horoscope, with eight temperaments of its own, each with particular pleasures and contradictions. A few choices of words and symbols lead to a short personal notice: the satisfaction of getting one small detail right, the discovery that rearranges an afternoon, or the wish to be known without giving everything away.</p></div><figure><a href="assets/notice.png" aria-label="View the Vernierscope image at full size"><img src="assets/notice.png" alt="A result from the Vernierscope’s invented horoscope" width="800" height="480" loading="lazy"></a></figure></section>
-<section class="feature reverse" id="mint"><div class="copy"><h2>The Mint</h2><p>Answer questions about your day, and the Mint uses your responses to determine a coin’s design, drawing on historical medal imagery. Each coin is saved with its date and answers, so you can reopen it later and see the day that produced it.</p></div><figure><a href="assets/mint.png" aria-label="View the Mint image at full size"><img src="assets/mint.png" alt="A completed coin revealed in the Mint" width="800" height="480" loading="lazy"></a></figure></section>
-</div>
-<section class="feature" id="rum-standard"><div class="copy"><h2>The Rum Standard</h2><p>Circle your preferences on an illustrated drinks menu. It filters the recipe collection to match your choices, then uses your recommendation history to vary what it serves. Each drink comes with its recipe and a note about its origins.</p></div><figure class="rum-sample"><div class="sample-switch" role="group" aria-label="Rum Standard sample screens"><button type="button" data-rum-screen="menu" aria-pressed="false">The menu</button><button type="button" data-rum-screen="recipe" aria-pressed="true">The drink</button></div><a id="rum-sample-link" href="assets/rum-recipe.png" aria-label="View the Rum Standard recipe screen at full size"><img id="rum-sample-image" src="assets/rum-recipe.png" alt="The Rum Standard recommends a Saturn, with its illustrated glass, recipe, and a note about its planetary garnish" width="800" height="480" loading="lazy"></a></figure></section>
-<div class="instrument-pair">
-<section class="feature" id="sundae"><div class="copy"><h2>Sundae Forecast</h2><p>Choose two seasonal ingredients. Live weather shapes the sundae. For each order, a small language model running on the Pi decides what to do with the second ingredient.</p></div><figure><a href="assets/sundae.png" aria-label="View Sundae Forecast at full size"><img src="assets/sundae.png" alt="Sundae Forecast’s seasonal food menu, with illustrated bowls of ice cream" width="800" height="480" loading="lazy"></a></figure></section>
+<a class="visit-launch" href="visit/index.html"><img src="assets/studiolo-folio-full.webp" alt="The embroidered Folio at the center of the Studiolo carousel" width="800" height="480"><span>Take a short visit <span aria-hidden="true">→</span></span></a></figure></div></header>
+<div class="instrument-browser" id="instruments"><nav class="instrument-selector" aria-label="Explore the Halyx instruments">
+<a href="#folio"><span><img src="visit/native/public_domain_art/prepared/folio-embroidered-book-cutout.png" alt=""></span>Folio</a>
+<a href="#mint"><span><img src="assets/coin.png" alt=""></span>The Mint</a>
+<a href="#vernierscope"><span><img src="visit/native/public_domain_art/prepared/vernierscope-fountain-cutout.png" alt=""></span>Vernierscope</a>
+<a href="#rum-standard"><span><img src="visit/native/public_domain_art/prepared/rum-standard-tiki-bobs-menu.jpg" alt=""></span>The Rum Standard</a>
+<a href="#sundae"><span><img src="visit/native/public_domain_art/prepared/creamery-sundae-menu-cover.jpg" alt=""></span>Sundae Forecast</a>
+<a href="#sky"><span><img src="visit/native/public_domain_art/prepared/lunidex-luna.jpg" alt=""></span>Heliograph &amp; Lunidex</a>
+</nav><div class="instrument-samples">
 <section class="feature reverse" id="folio"><div class="copy"><h2>Folio</h2><p>Folio holds notes and saved excerpts on a pinboard of movable slips. When you file something from Signal, a language model running on the Pi can condense the excerpt into a short note. Its source stays attached, and your arrangement is saved for the next visit.</p></div><figure><a href="assets/folio.png" aria-label="View Folio at full size"><img src="assets/folio.png" alt="Folio’s pinboard holding illustrated notes about paper stencils, pomegranates, and the Tonga Room" width="800" height="480" loading="lazy"></a></figure></section>
-</div>
+<section class="feature reverse" id="mint"><div class="copy"><h2>The Mint</h2><p>Answer questions about your day, and the Mint uses your responses to determine a coin’s design, drawing on historical medal imagery. Each coin is saved with its date and answers, so you can reopen it later and see the day that produced it.</p></div><figure><a href="assets/mint.png" aria-label="View the Mint image at full size"><img src="assets/mint.png" alt="A completed coin revealed in the Mint" width="800" height="480" loading="lazy"></a></figure></section>
+<section class="feature" id="vernierscope"><div class="copy"><h2>The Vernierscope</h2><p>The Vernierscope has the appeal of a horoscope, with eight temperaments of its own, each with particular pleasures and contradictions. A few choices of words and symbols lead to a short personal notice: the satisfaction of getting one small detail right, the discovery that rearranges an afternoon, or the wish to be known without giving everything away.</p></div><figure><a href="assets/notice.png" aria-label="View the Vernierscope image at full size"><img src="assets/notice.png" alt="A result from the Vernierscope’s invented horoscope" width="800" height="480" loading="lazy"></a></figure></section>
+<section class="feature" id="rum-standard"><div class="copy"><h2>The Rum Standard</h2><p>Circle your preferences on an illustrated drinks menu. It filters the recipe collection to match your choices, then uses your recommendation history to vary what it serves. Each drink comes with its recipe and a note about its origins.</p></div><figure class="rum-sample"><div class="sample-switch" role="group" aria-label="Rum Standard sample screens"><button type="button" data-rum-screen="menu" aria-pressed="false">The menu</button><button type="button" data-rum-screen="recipe" aria-pressed="true">The drink</button></div><a id="rum-sample-link" href="assets/rum-recipe.png" aria-label="View the Rum Standard recipe screen at full size"><img id="rum-sample-image" src="assets/rum-recipe.png" alt="The Rum Standard recommends a Saturn, with its illustrated glass, recipe, and a note about its planetary garnish" width="800" height="480" loading="lazy"></a></figure></section>
+<section class="feature" id="sundae"><div class="copy"><h2>Sundae Forecast</h2><p>Choose two seasonal ingredients. Live weather shapes the sundae. For each order, a small language model running on the Pi decides what to do with the second ingredient.</p></div><figure><a href="assets/sundae.png" aria-label="View Sundae Forecast at full size"><img src="assets/sundae.png" alt="Sundae Forecast’s seasonal food menu, with illustrated bowls of ice cream" width="800" height="480" loading="lazy"></a></figure></section>
 <section class="feature" id="sky"><div class="copy"><h2>Heliograph & Lunidex</h2><p>A historical astronomical diagram adapted into an interactive sun-and-moon wheel. It calculates sunrise and sunset for San Francisco and the moon’s phase for the date you choose.</p></div><figure><a href="assets/lunidex.png" aria-label="View Lunidex at full size"><img src="assets/lunidex.png" alt="Lunidex showing the moon, its phase, and a time readout on blue woven fabric" width="800" height="480" loading="lazy"></a></figure></section>
+</div><a class="more-link" href="#more">More inside ↓</a></div>
 <section class="more" id="more"><h2>More inside</h2><div class="more-list"><div><h3>The Matinal</h3><p>A morning paper assembled from weather and air-quality feeds, incoming headlines, and a seasonal produce calendar. Turn it over for NASA’s astronomy image and its accompanying explanation.</p></div><div><h3>The Archive</h3><p>A searchable copy of Wikipedia stored on the Pi, with an interface built from historical encyclopaedia illustrations. Articles and their links work offline.</p></div><div><h3>Signal</h3><p>Articles from selected RSS feeds arrive as telegrams. Open one to read the article and its images, then file an excerpt in Folio with its source attached.</p></div></div></section>
 <p class="build-note">I built the interface as a set of web applications running on a Raspberry Pi with Linux. Local services handle the collections, incoming feeds, and language model; public-domain artwork supplies the menus, diagrams, and objects you use to navigate.</p>
-<div class="return"><a href="material-study.html">← Home</a></div>
+<div class="return"><a href="index.html">← Home</a></div>
 </main></div>
-<footer><div class="shell"><span>Sophie Iribarren</span><span>San Francisco</span></div></footer>
 <script>
 const greeting = document.querySelector('.beetle-welcome');
 const hideGreeting = greeting.querySelector('.v-close');
@@ -90,4 +92,5 @@ for (const button of document.querySelectorAll('[data-rum-screen]')) {
   });
 }
 </script>
-<script src="edition.js"></script></body></html>
+<script src="instrument-browser.js"></script>
+</body></html>
