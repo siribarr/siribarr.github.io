@@ -1,0 +1,17 @@
+/* Ambient additions only. The selected desktop layout remains the base. */
+html .card-face{z-index:2}.desktop-label{z-index:4}
+.ambient-beetle{position:absolute;right:-32px;top:56px;width:83px;height:103px;z-index:1;pointer-events:none;opacity:0;transform:translate(-54px,16px) rotate(-22deg);overflow:hidden}
+.ambient-beetle img{width:100%;height:auto;display:block;clip-path:polygon(0 0,100% 0,100% 77%,0 77%)}
+.brooch-excursion{position:absolute;width:96px;height:96px;z-index:32;pointer-events:none;opacity:0;object-fit:contain;filter:drop-shadow(2px 4px 2px #30231555);transform-origin:35% 40%}
+.shell .footer.footer-introduction,.shell .footer.arrival-reveal{transform:translateY(0);pointer-events:auto}
+.arrival-envelope{position:absolute;right:25px;bottom:39px;width:47px;height:34px;z-index:42;pointer-events:none;opacity:0;filter:drop-shadow(0 2px 2px #30231555)}
+.saved-fragment-slip{position:absolute;left:30px;top:-8px;width:105px;height:auto;display:block;box-shadow:1px 2px 3px #382a2155;z-index:1;transform:rotate(-7deg);pointer-events:none}
+@media(prefers-reduced-motion:reduce){.ambient-beetle,.brooch-excursion,.arrival-envelope{display:none!important}}
+
+.ambient-beetle{filter:none;mix-blend-mode:normal;mask-image:none}.ambient-beetle img{filter:url(#historical-ink)}
+
+
+/* A visitor temporarily comes in front of its neighboring objects. */
+.card.visitor-host{z-index:21!important}
+.desktop-label{transition:rotate 650ms ease-out}
+@media(prefers-reduced-motion:reduce){.desktop-label{transition:none}}

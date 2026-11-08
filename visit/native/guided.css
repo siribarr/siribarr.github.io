@@ -1,0 +1,3 @@
+/* The original basket rocks. Let the illustration carry the cue by itself. */
+[data-open=season].v-target {filter:none;outline:none}
+[data-open=season]:focus-visible {outline:2px dotted #634f37;outline-offset:2px}

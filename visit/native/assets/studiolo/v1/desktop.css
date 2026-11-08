@@ -1,0 +1,53 @@
+/* Selected fine bookcloth desktop. Archive image provenance: SOURCES.md. */
+html:root{--control-ink:#423c30;--control-cream:#e2d8b4;--control-light:#f5efda;--control-edge:#926747;--control-shadow:#b2a07a;--control-orange:#f07030;--control-orange-light:#ffc18a;--control-orange-shadow:#a64d22;--control-focus:#926747}
+html .shell{background:#ead6b3;isolation:isolate;box-shadow:none}
+html .shell:before{display:block;content:'';position:absolute;inset:0;background:url('ghent-book-cornerpieces.jpg') -369px -246px/1349px 1653px no-repeat;filter:grayscale(1) sepia(.22) brightness(2.1) contrast(1.1);mix-blend-mode:multiply;opacity:.64;pointer-events:none;z-index:-1;border:0;box-shadow:none}
+html .shell:after,html .stage:before,html .footer:before,html .footer:after,html .dropup:before{display:none}
+html .stage{top:0;height:428px;background:transparent;box-shadow:none;z-index:1}
+html .footer{position:absolute;left:0;bottom:0;width:800px;height:52px;padding:5px 10px;gap:6px;background:#793b2e;border:1px solid #4d2921;box-shadow:inset 1px 1px #b57050,inset -1px -1px #48241e;isolation:isolate}
+html .parlour-btn,html .cyberspace-link{font:11px/1.2 Sligoil,monospace;min-height:31px;padding:6px 10px;letter-spacing:0;border-radius:0;margin:0;white-space:nowrap;text-shadow:none;transition:none}
+html :is(.parlour-btn,.cyberspace-link),html :is(.parlour-btn,.cyberspace-link):hover{background:var(--control-cream);color:var(--control-ink);border:1px solid var(--control-edge);box-shadow:inset 1px 1px var(--control-light),inset -1px -1px var(--control-shadow)}
+html :is(.parlour-btn,.cyberspace-link):active{box-shadow:inset 1px 1px var(--control-edge),inset -1px -1px var(--control-light);transform:translateY(1px)}
+html .parlour-suit{animation:none!important;text-shadow:none;color:#ae322a;font:14px/1 Georgia,serif}
+html .keyhole-wrap{margin-left:0;margin-right:5px}
+html .keyhole-btn.hx-control{min-width:74px;height:31px;padding:5px 10px;gap:10px;justify-content:center;background:var(--control-orange)!important;border:1px solid var(--control-edge)!important;box-shadow:inset 1px 1px var(--control-orange-light),inset -1px -1px var(--control-orange-shadow)!important;color:#302720;font:11px Sligoil,monospace;border-radius:0}
+html .keyhole-btn.hx-control:active,html .keyhole-btn.hx-control[aria-expanded=true]{box-shadow:inset 1px 1px var(--control-orange-shadow),inset -1px -1px var(--control-orange-light)!important}
+.menu-caret{font:11px Georgia,serif}
+html .dropup{bottom:calc(100% + 7px);left:0;right:auto;min-width:220px;padding:3px;background:var(--control-cream);border:1px solid var(--control-edge);border-radius:0;box-shadow:inset 1px 1px var(--control-light),inset -1px -1px var(--control-shadow)}
+html .dropup-item{min-height:40px;font:12px Sligoil,monospace;letter-spacing:0;color:#302720!important;border:0!important;background:transparent!important;padding:10px 13px;box-shadow:none!important}
+html .dropup-item:hover{background:#f07030!important}
+html .dropup-item.danger{border-top:1px solid #9d7e59!important}
+html .signal-delivery{margin-left:auto;flex:0 0 auto;width:auto;max-width:260px;min-width:108px;height:31px;display:flex;gap:9px;padding:3px 10px;background:var(--control-cream);border:1px solid var(--control-edge);border-radius:0;box-shadow:inset 1px 1px var(--control-light),inset -1px -1px var(--control-shadow);text-align:left;cursor:pointer}
+html .signal-delivery .signal-ticker-text{font:11px/20px Sligoil,monospace;letter-spacing:0;color:#302720;display:block;transition:none;transform:none}
+.delivery-envelope{display:block;flex:none;width:29px;height:21px}
+.signal-delivery:not(.has-delivery) .delivery-envelope{opacity:.65}
+html .signal-delivery:active{box-shadow:inset 1px 1px var(--control-shadow),inset -1px -1px var(--control-light)}
+html body :is(button,a):focus-visible{outline:2px dotted #f07030;outline-offset:2px}
+html .signal-delivery:focus-visible{outline:2px dotted #783b19;outline-offset:-4px}
+.book-corners{position:absolute;inset:0;z-index:3;pointer-events:none}
+.book-corner{position:absolute;width:43px;height:48px;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(66,45,21,.25))}
+.corner-tr{top:2px;right:2px;transform:rotate(180deg)}
+.corner-tl{top:2px;left:2px;transform:scaleY(-1)}
+.corner-br{bottom:2px;right:2px;transform:scaleX(-1)}
+.corner-bl{bottom:2px;left:2px}
+/* A forgiving reveal overlays the same fixed desktop layout. */
+.footer-edge{position:absolute;left:0;right:0;bottom:0;height:40px;z-index:39;touch-action:manipulation}
+.auto-footer .footer{transform:translateY(100%);pointer-events:none;transition:transform 180ms cubic-bezier(.2,.7,.2,1)}
+.auto-footer .footer.is-revealed{transform:translateY(0);pointer-events:auto}
+/* Image and name form one desktop item. Selection changes emphasis, not identity. */
+html .card{overflow:visible}
+html .card .card-face{overflow:hidden;border-radius:inherit}
+html .card-name-overlay{display:none}
+html .card.slot-inactive{opacity:1!important;filter:none}
+html .card.slot-inactive .card-face{opacity:.72;filter:saturate(.78) brightness(.94)}
+.desktop-label{position:absolute;top:calc(100% + 7px);left:50%;transform:translateX(-50%) rotate(var(--label-tilt,0deg));transform-origin:center;width:max-content;max-width:196px;padding:4px 7px;margin:0;border:1px solid #c9b58e;background:#f1e5c9;box-shadow:0 1px 1px rgba(49,31,20,.22),inset 0 1px rgba(255,255,255,.3);color:#383028;font:16px/1.2 Sligoil,monospace;text-align:center;white-space:normal;overflow-wrap:normal;pointer-events:auto;cursor:pointer;text-shadow:none}
+.slot-center .desktop-label{max-width:280px;color:#fff0d1;background:#793b2e;border-color:#633126}
+.slot-peek .desktop-label,.card:not(.slot-center):not(.slot-inactive) .desktop-label{visibility:hidden}
+
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* The Pi moves pre-laid-out cards; no per-frame resize/filter/shadow work. */
+html .card{transition:transform 280ms cubic-bezier(.2,.7,.2,1),opacity 180ms ease;transform-origin:center;will-change:transform}
+html .card.slot-peek,html .card.slot-inactive,html .card.slot-inactive .card-face{filter:none}
+html .card *{animation:none!important}
+@media(prefers-reduced-motion:reduce){html .card{transition:none}}

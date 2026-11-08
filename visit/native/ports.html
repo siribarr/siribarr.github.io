@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'"><script src="edition.js"></script><script src="offline.js"></script><script src="isolation.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=800, initial-scale=1.0">
+<title>Ports of Call — Halyx</title>
+<link rel="stylesheet" href="leaflet/leaflet.css" />
+<style>
+  @font-face{font-family:'Linden Hill';src:url('fonts/LindenHill.woff') format('woff');font-style:normal;font-weight:400;font-display:swap;}
+  @font-face{font-family:'Linden Hill';src:url('fonts/LindenHill-Italic.woff') format('woff');font-style:italic;font-weight:400;font-display:swap;}
+  :root{--wood:#5B4538;--deep:#482824;--paper:#C4B89A;--paper-dark:#B6A582;--ink:#2E211B;--rule:#8B654B;--signal:#F07030;--instrument:#56777D;--chart-blue:#7A9EA8;--pale:#EEE2C8;--margin-head:112px;--apparatus:'Sligoil',monospace;--reading:'Linden Hill',serif;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{width:800px;height:480px;overflow:hidden;background:var(--wood);font-family:var(--apparatus);font-synthesis:none;color:var(--ink);position:relative;}
+  #map{position:absolute;left:0;top:0;width:570px;height:480px;z-index:0;background:var(--paper-dark);border-right:3px double var(--chart-blue);}
+  .leaflet-tile-pane{filter:sepia(.42) saturate(.62) brightness(.94) contrast(1.04);}
+  .leaflet-control-attribution{background:rgba(196,184,154,.88)!important;color:rgba(46,33,27,.72)!important;font-size:8px!important;}
+  .leaflet-control-zoom{border:1px solid var(--rule)!important;border-radius:0!important;box-shadow:none!important;overflow:hidden;}
+  .leaflet-control-zoom a{background:var(--control-cream)!important;color:var(--control-ink)!important;border-bottom:1px solid var(--rule)!important;width:36px!important;height:36px!important;line-height:36px!important;font-family:var(--apparatus)!important;font-size:19px!important;}
+  .leaflet-control-zoom a:hover{background:var(--paper-dark)!important;color:var(--signal)!important;}
+  .halyx-pin{background:transparent;border:0;}
+  .map-pin-hit{width:34px;height:40px;display:flex;justify-content:center;align-items:flex-start;padding-top:4px;}
+  .region-pin{background:transparent;border:0;}
+  .region-mark{width:174px;height:54px;display:flex;align-items:center;}
+  .region-stack{position:relative;width:44px;height:46px;flex:0 0 44px;}
+  .region-stack svg{position:absolute;left:5px;top:5px;width:22px;height:30px;}
+  .region-stack svg+svg{left:14px;top:10px;}
+  .region-label{font-family:var(--reading);font-size:18px;line-height:1;color:var(--deep);white-space:nowrap;text-shadow:0 1px var(--pale),1px 0 var(--pale),0 -1px var(--pale),-1px 0 var(--pale);}
+  #chart-margin{position:absolute;top:0;right:0;width:230px;height:480px;background:var(--paper);z-index:1000;overflow:hidden;}
+  #topbar{height:var(--margin-head);background:var(--deep);border-bottom:2px solid #C1945C;padding:15px 14px 0 20px;position:relative;z-index:3;}
+  #topbar-title{font-family:var(--reading);font-size:27px;color:var(--pale);line-height:1;}
+  #topbar-title span{color:var(--chart-blue);font-style:italic;}
+  #pin-count{display:none;}
+  #topbar-right{position:absolute;left:20px;right:14px;bottom:0;height:44px;border-top:1px solid rgba(122,158,168,.58);display:grid;grid-template-columns:1fr 48px;align-items:stretch;}
+  .btn{background:transparent;border:0;color:var(--ink);font-family:var(--apparatus);font-weight:500;font-size:12px;min-height:40px;padding:0 8px;cursor:pointer;text-align:left;}
+  #topbar-right .btn{color:var(--pale);}
+  .btn:hover,.btn:focus-visible{color:var(--signal);outline:none;}
+  .btn.accent{color:var(--signal);}
+  .btn.active{color:var(--signal);text-decoration:underline;text-underline-offset:4px;}
+  #topbar-right .btn+ .btn{border-left:1px solid rgba(193,148,92,.42);}
+  #topbar-right .return{font-size:21px;text-align:center;padding:0;}
+  #margin-idle{display:none;}
+  #card,#list-panel,#add-form{position:absolute;inset:var(--margin-head) 0 0;background:var(--paper);z-index:4;display:none;overflow:hidden;}
+  #card.open,#list-panel.open,#add-form.visible{display:flex;}
+  #card{flex-direction:column;}
+  #card-header{border-bottom:1px solid var(--rule);padding:19px 34px 15px 20px;flex-shrink:0;}
+  #card-name{font-family:var(--reading);font-size:22px;color:var(--deep);line-height:1.15;padding-right:8px;}
+  #card-coords{display:none;}
+  #card-body{padding:16px 17px 18px 20px;flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--rule) transparent;}
+  #card-status-row{display:flex;gap:6px;margin-bottom:18px;font-family:var(--apparatus);font-weight:500;font-size:12px;text-transform:capitalize;color:var(--signal);}
+  .tag{display:inline;padding:0;border:0;}
+  .tag+.tag::before{content:'\00b7';color:var(--rule);margin-right:5px;}
+  .tag.planned{color:var(--instrument);}
+  .tag.category{color:var(--ink);}
+  #card-image{display:none;margin:0 0 20px;}
+  #card-image.visible{display:block;}
+  #card-image img{display:block;width:100%;height:auto;border:1px solid rgba(139,101,75,.5);background:var(--pale);}
+  #card-image figcaption{margin-top:8px;font-family:var(--reading);font-size:12px;line-height:1.35;color:rgba(46,33,27,.72);}
+  #card-notes-label{display:none;}
+  #card-notes{font-family:var(--reading);font-size:15px;color:var(--ink);line-height:1.45;margin-bottom:18px;min-height:48px;}
+  #card-notes.empty{color:rgba(46,33,27,.42);}
+  hr.card-divider{border:0;border-top:1px solid rgba(139,101,75,.5);margin:7px 0 10px;}
+  #card-kiwix-btn{display:none;padding:9px 0;color:var(--deep);font-family:var(--reading);font-size:15px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-bottom:14px;}
+  #card-kiwix-btn:hover{color:var(--signal);}
+  #card-actions{display:flex;border-top:1px solid rgba(139,101,75,.5);}
+  #card-actions .btn{flex:1;min-height:44px;padding:7px 0;text-align:left;}
+  #card-actions .btn+.btn{border-left:1px solid rgba(139,101,75,.5);padding-left:10px;}
+  #card-close,#list-close{position:absolute;top:8px;right:7px;width:40px;height:40px;background:transparent;border:0;color:var(--rule);font-family:var(--apparatus);font-size:19px;cursor:pointer;z-index:10;}
+  #card-close:hover,#list-close:hover{color:var(--signal);}
+  #list-panel{flex-direction:column;}
+  #list-header{display:none;}
+  #list-filters{display:none;}
+  #list-body{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--rule) transparent;}
+  .list-item{display:flex;align-items:center;min-height:54px;padding:10px 16px 10px 20px;border-bottom:1px solid rgba(139,101,75,.32);cursor:pointer;}
+  .list-item:hover{color:var(--signal);}
+  .list-item-name{font-family:var(--reading);font-size:15px;color:var(--deep);line-height:1.2;}
+  .list-item.region-item{min-height:72px;}
+  .list-item.region-item .list-item-name{font-size:21px;}
+  .region-return{width:100%;min-height:48px;padding:0 20px;background:transparent;border:0;border-bottom:1px solid var(--rule);color:var(--signal);font-family:var(--apparatus);font-weight:500;font-size:12px;text-align:left;cursor:pointer;}
+  #add-form{flex-direction:column;}
+  #add-form-header{border-bottom:1px solid var(--rule);padding:14px 14px 12px 20px;font-family:var(--reading);font-size:20px;color:var(--deep);}
+  #add-form-body{padding:13px 15px 9px 20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
+  .field-label{font-size:10px;color:var(--instrument);text-transform:uppercase;margin-bottom:3px;}
+  .field-group{display:flex;flex-direction:column;}
+  input[type="text"],textarea,select{background:transparent;border:0;border-bottom:1px solid var(--rule);border-radius:0;color:var(--ink);font-family:var(--apparatus);font-size:12px;padding:5px 1px;outline:none;width:100%;}
+  input[type="text"]:focus,textarea:focus,select:focus{border-color:var(--signal);}
+  textarea{resize:none;height:48px;font-family:var(--reading);font-size:12px;line-height:1.35;}
+  select option{background:var(--paper);}
+  .article-field{display:none;}
+  #add-form-actions{display:flex;margin:0 15px 10px 20px;border-top:1px solid var(--rule);flex-shrink:0;}
+  #add-form-actions .btn{flex:1;min-height:44px;padding:7px 0;text-align:left;}
+  #add-form-actions .btn+.btn{border-left:1px solid rgba(139,101,75,.5);padding-left:10px;}
+  #placing-hint{position:absolute;bottom:14px;left:20px;background:var(--paper);border:1px solid var(--rule);color:var(--ink);font-size:10px;padding:8px 12px;letter-spacing:.06em;z-index:1500;pointer-events:none;display:none;white-space:nowrap;}
+  #placing-hint.visible{display:block;}
+  #placing-overlay{display:none;position:absolute;left:0;top:0;width:570px;height:480px;z-index:800;cursor:crosshair;}
+  #placing-overlay.active{display:block;}
+  #coord-status{font-family:var(--apparatus);font-size:12px;color:rgba(46,33,27,.65);line-height:1.3;}
+  #coord-status:empty{display:none;}
+  .coord-actions{display:flex;gap:8px;}
+  .coord-actions .btn{flex:1;min-height:38px;text-align:left;padding:5px 0;font-size:11px;border-bottom:1px solid rgba(139,101,75,.45);}
+  #port-toast{position:absolute;left:18px;bottom:16px;background:var(--paper);border:1px solid var(--rule);color:var(--deep);font-family:var(--apparatus);font-size:12px;padding:8px 12px;z-index:2100;display:none;}
+  #port-toast.visible{display:block;}
+  #port-save-note{position:absolute;left:18px;bottom:16px;max-width:525px;z-index:2100;background:var(--paper);border:1px solid var(--rule);padding:10px 12px;color:var(--deep);font:12px var(--apparatus);}
+  #port-save-note[hidden]{display:none;}
+  #port-save-note button{margin-left:12px;}
+  #port-save-dialog{position:fixed;inset:0;margin:auto;width:410px;max-width:calc(100vw - 32px);padding:24px;background:var(--paper);color:var(--ink);border:1px solid var(--rule);font:18px/1.4 var(--reading);}
+  #port-save-dialog::backdrop{background:rgba(46,33,27,.5);}
+  #port-save-dialog .save-actions{display:flex;justify-content:space-between;gap:16px;margin-top:18px;}
+  #port-save-dialog .btn{min-height:44px;}
+  ::placeholder{color:rgba(46,33,27,.42);opacity:1;}
+/* Small software cues on the existing Ports page. Original geometry, map,
+   palette, typography, title and region-to-place flow remain the baseline. */
+#topbar-right{left:18px;right:13px;bottom:9px;height:34px;border-top:0;grid-template-columns:1fr 35px;gap:7px}
+#topbar-right .btn{min-height:34px;padding:0 7px;border:1px solid #281d17;background:#d9ccaf;color:#482824;box-shadow:inset 1px 1px #f4e8cd,inset -1px -1px #a18c6f;font-size:11px}
+#topbar-right .btn.accent{background:#f07030;color:#30231b;box-shadow:inset 1px 1px #ffb17c,inset -1px -1px #ad4b22}
+#topbar-right .btn.return{font-size:21px;padding:0}
+#topbar-right .btn:hover{filter:brightness(1.045)}
+#topbar-right .btn:active{box-shadow:inset 1px 1px #624332,inset -1px -1px #e7c6a3;padding-top:1px}
+.leaflet-control-zoom{box-shadow:1px 1px #7f715e!important}
+.leaflet-control-zoom a{box-shadow:inset 1px 1px #ece1c6,inset -1px -1px #9d8a6d}
+.leaflet-control-zoom a:active{box-shadow:inset 1px 1px #8b765b,inset -1px -1px #eadfc4}
+.list-item{position:relative;padding-right:27px}
+.list-item:after{content:'›';position:absolute;right:16px;font:20px 'Linden Hill';color:#806b53}
+.list-item:hover,.list-item:focus-visible{background:#cdc5aa;box-shadow:inset 3px 0 #f07030;color:var(--ink)}
+.list-item:hover .list-item-name,.list-item:focus-visible .list-item-name{color:var(--deep)}
+button:focus-visible,.leaflet-control-zoom a:focus-visible{outline:1px dotted #613d29;outline-offset:-5px}
+#list-body,#card-body{scrollbar-width:auto;scrollbar-color:#aa9778 #c4b89a}
+#list-body::-webkit-scrollbar,#card-body::-webkit-scrollbar{width:13px}
+#list-body::-webkit-scrollbar-track,#card-body::-webkit-scrollbar-track{background:#c9bea2;border-left:1px solid #a28e70}
+#list-body::-webkit-scrollbar-thumb,#card-body::-webkit-scrollbar-thumb{background:#b8a584;border:1px solid #8b765d;box-shadow:inset 1px 1px #e4d7b9,inset -1px -1px #998267}
+#card-close{right:9px;top:10px;width:27px;height:27px;background:#d0c2a3;border:1px solid #917b5f;box-shadow:inset 1px 1px #eee2c8,inset -1px -1px #ad9979;font-size:17px}
+#card-close:active{box-shadow:inset 1px 1px #ad9979}
+
+/* Approved September 7 ornament: original scan ink, not a redrawn frame. */
+#topbar-title{position:absolute;left:0;right:0;top:15px;text-align:center}
+.ornament-title{position:absolute;left:23px;top:43px;width:184px;height:20px;overflow:hidden;pointer-events:none}
+.ornament-title svg{display:block;overflow:hidden}
+/* Center the illustration in the usable paper below the region rows. */
+#list-body:has(> .ports-vignette){display:flex;flex-direction:column;padding-bottom:0;}
+#list-body:has(> .ports-vignette) > .region-item{flex:0 0 72px;}
+.ports-vignette{display:block;flex:0 0 131px;align-self:center;width:116px;height:131px;margin:auto 0;border-radius:50%;overflow:hidden;opacity:.86;mix-blend-mode:multiply;pointer-events:none}
+.ports-vignette img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* The shared Studiolo return sits over the map at the lower left. */
+#topbar-right{grid-template-columns:max-content;gap:0}
+#topbar-right .btn{font-size:11px;padding:0 7px;text-align:center;white-space:nowrap;font-weight:400}
+#ports-studiolo{position:absolute;left:12px;bottom:10px;z-index:2000}
+#placing-hint,#port-toast,#port-save-note{bottom:52px}
+</style>
+<style>
+/* A selected place gets the reading space; the map remains a narrow locator. */
+body.place-open #map{width:180px}
+body.place-open #chart-margin{width:620px}
+body.place-open #topbar{display:none}
+body.place-open #card{inset:0}
+body.place-open #card-header{padding:18px 62px 14px 24px}
+body.place-open #card-name{font-size:29px}
+body.place-open #card-close{width:40px;height:40px;top:10px;right:12px}
+body.place-open #card-body{padding:16px 24px 24px;min-height:0}
+#card-content{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start}
+#card-image{margin:0}
+#card-image img{width:auto;max-width:100%;max-height:300px;height:auto;margin:0 auto}
+#card-image figcaption{font-size:13px}
+#card-image:not(.visible)+.card-copy{grid-column:1/-1}
+.card-copy{min-width:0}
+body.place-open #card-status-row{margin-bottom:16px;gap:18px}
+body.place-open .tag+.tag::before{content:none}
+body.place-open #card-notes{font-size:18px;line-height:1.42}
+body.place-open #card-actions{flex-wrap:wrap}
+</style>
+<!-- HALYX CONTROLS START -->
+<style>
+/* Shared Halyx controls. Run python3 scripts/sync_halyx_controls.py after editing.
+   Embedded into the three standalone pages; no runtime server change required.
+   Existing selectors below are adapters. New apparatuses can use hx-control,
+   hx-primary, and hx-studiolo without inheriting a window or page layout. */
+@font-face{font-family:Sligoil;src:url('fonts/Sligoil-Micro.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+:root{
+  --control-ink:#302720;--control-cream:#ddc9a7;--control-light:#fff0d1;
+  --control-edge:#70513c;--control-shadow:#9d7e59;--control-orange:#f07030;
+  --control-orange-light:#ffc18a;--control-orange-shadow:#a64d22;
+  --control-focus:#70513c;--control-font:Sligoil,monospace;
+}
+/* Ordinary push controls, including link elements used for a system action. */
+:is(.hx-control,footer [data-studiolo],footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a){
+  font-family:var(--control-font);font-weight:400;font-synthesis:none;
+  color:var(--control-ink);background:var(--control-cream);
+  border:1px solid var(--control-edge);border-radius:0;
+  box-shadow:inset 1px 1px var(--control-light),inset -1px -1px var(--control-shadow);
+  text-decoration:none;cursor:pointer;touch-action:manipulation;
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent){
+  background:var(--control-orange);
+  box-shadow:inset 1px 1px var(--control-orange-light),inset -1px -1px var(--control-orange-shadow);
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):hover:not(:disabled){
+  filter:brightness(1.045);color:var(--control-ink);text-decoration:none;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):active:not(:disabled){
+  box-shadow:inset 1px 1px var(--control-edge),inset -1px -1px var(--control-light);
+  transform:translateY(1px);
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent):active:not(:disabled){background:var(--control-orange)}
+/* All three exits have the same lettering and compact proportions. */
+:is(.hx-studiolo,footer [data-studiolo],.home-exit,#topbar-right .btn.return){
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:31px;padding:4px 7px;font:11px/1.2 var(--control-font);white-space:nowrap;
+}
+/* Shared interaction signals, independent of the amount of window chrome. */
+.hx-back-arrow{font:16px/1 Arial,sans-serif;flex:none;margin-right:4px}
+html body :is(button,a,input,textarea,select,[tabindex]):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+html body button:disabled{opacity:.45;cursor:default;filter:none;transform:none}
+html body .appnav button:hover:not(:disabled):not(.active){background:var(--control-cream);color:var(--control-ink)}
+html body .appnav button:disabled{color:var(--control-ink)}
+html body ::selection{background:#f5bf88;color:var(--control-ink)}
+/* Paper stays local. The scrollbar hardware is shared. */
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap){scrollbar-width:auto;scrollbar-color:auto}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar{width:13px;height:13px}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-track{background:#e9dfcc;border-left:1px solid #b7a58b}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-thumb{background:#b8a584;border:1px solid #8b765d;box-shadow:inset 1px 1px #e4d7b9,inset -1px -1px #998267}
+@media(prefers-reduced-motion:reduce){html body :is(button,a,input,textarea,select){transition:none}}
+</style>
+<!-- HALYX CONTROLS END -->
+<style>
+/* Scanned archival paper; photograph ornaments removed at Sophie’s request. */
+#chart-margin{background:#c4b89a url('public_domain_art/ports-paper/album-stock.jpg') center/100% 100%}
+#card,#list-panel,#add-form{background:transparent}
+#card-header{border-bottom-color:rgba(112,81,60,.35)}
+#card-image.visible{text-align:center}
+.photo-mount{display:inline-block;position:relative;max-width:100%;vertical-align:top;margin:9px 0 0;padding:7px}
+#card-image .photo-mount img{display:block;max-width:100%;max-height:286px;width:auto;height:auto;border:0;box-shadow:0 1px 2px #5b453844}
+#card-image figcaption{text-align:left;margin-top:16px}
+</style>
+<style>
+#map{background:#a8b8ac;border-right-color:#8b7960;}
+#map::after{content:"";position:absolute;inset:0;z-index:450;pointer-events:none;background:url('public_domain_art/ports-paper/album-stock.jpg') center/100% 100%;mix-blend-mode:multiply;opacity:.24;}
+.leaflet-tile-pane{filter:sepia(.5) saturate(.64) brightness(.97) contrast(1.10);}
+</style>
+<script>
+</script>
+<style>
+/* List action belongs below the places, separate from the masthead. */
+:root{--margin-head:72px;}
+#list-body{min-height:0;}
+#list-panel > #topbar-right{position:static;flex:0 0 44px;height:44px;display:flex;justify-content:center;align-items:flex-start;padding:0 0 10px;border:0;}
+#list-panel > #topbar-right .btn{min-height:34px;}
+</style>
+<link rel="stylesheet" href="guide.css"><link rel="stylesheet" href="guided.css"><script src="guided.js" defer></script></head>
+<body>
+<div id="map"></div>
+<button id="ports-studiolo" class="hx-control hx-studiolo" title="The Studiolo" aria-label="Return to the Studiolo" onclick="window.location='bench.html'"><span class="hx-back-arrow">←</span> the studiolo</button>
+<div id="placing-overlay"></div>
+<aside id="chart-margin">
+  <div id="topbar">
+    <div id="topbar-title">Ports of <span>Call</span></div>
+    <div class="ornament-title" aria-hidden="true"><svg viewBox="65 329 670 54" width="184" height="20" xmlns="http://www.w3.org/2000/svg"><defs><filter id="scrollwork-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .89 0 0 0 0 .80 0 0 0 0 .65 -1.4 -1.4 -1.4 0 3.05"/></filter></defs><image href="public_domain_art/ports-ornament/collignon-cartouche.jpg" x="0" y="0" width="800" height="434" filter="url(#scrollwork-ink)"/></svg></div>
+    <span id="pin-count">0 places</span>
+  </div>
+  <div id="margin-idle"></div>
+  <div id="card">
+    <button id="card-close" aria-label="Back to places" onclick="closeCard()">×</button>
+    <div id="card-header">
+      <div id="card-name">—</div>
+      <div id="card-coords">—</div>
+    </div>
+    <div id="card-body">
+      <div id="card-status-row"></div>
+      <div id="card-content">
+      <figure id="card-image">
+        <span class="photo-mount"><img id="card-image-file" alt=""></span>
+        
+      </figure>
+      <div class="card-copy">
+      <div id="card-notes-label">Notes</div>
+      <div id="card-notes" class="empty">Nothing written here.</div>
+      <hr class="card-divider">
+      <a id="card-kiwix-btn" href="#">Read about this place</a>
+      <details class="v-photo-credit"><summary>Photograph credit</summary><p id="card-image-caption"></p></details>
+      <div id="card-actions">
+        <button class="btn" onclick="editCurrentPin()">change</button>
+        <button class="btn" onclick="deleteCurrentPin()">remove pin</button>
+      </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div id="list-panel" class="open">
+    <div id="list-header">
+      <span id="list-title">Places</span>
+      <div id="list-filters"></div>
+      <button id="list-close" onclick="toggleList()">×</button>
+    </div>
+    <div id="list-body"></div>
+    <div id="topbar-right">
+      <button class="btn accent" onclick="startAddPin()">mark a place</button>
+    </div>
+  </div>
+  <div id="add-form">
+    <div id="add-form-header">Mark a place</div>
+    <div id="add-form-body">
+      <div class="field-group">
+        <div class="field-label">Place</div>
+        <input type="text" id="form-name" placeholder="Contramar">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Position</div>
+        <div id="coord-status">Use the name or place the pin by hand.</div>
+        <div class="coord-actions">
+          <button class="btn" onclick="geocodeFormPlace()">find by name</button>
+          <button class="btn" onclick="chooseMapPoint()">place by hand</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div class="field-group" style="flex:1">
+          <div class="field-label">Status</div>
+          <select id="form-status">
+            <option value="visited">Visited</option>
+            <option value="planned">Planned</option>
+          </select>
+        </div>
+        <div class="field-group" style="flex:1">
+          <div class="field-label">Kind</div>
+          <select id="form-category">
+            <option value="monument">Monument</option>
+            <option value="neighborhood">Neighborhood</option>
+            <option value="museum">Museum</option>
+            <option value="food">Food</option>
+            <option value="nature">Nature</option>
+            <option value="ruin">Ruin</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Notes</div>
+        <textarea id="form-notes"></textarea>
+      </div>
+      <div class="field-group article-field">
+        <div class="field-label">Article</div>
+        <input type="text" id="form-kiwix" placeholder="Leave blank to find it">
+      </div>
+    </div>
+    <div id="add-form-actions">
+      <button class="btn accent" onclick="savePin()">set pin</button>
+      <button class="btn" onclick="cancelAddPin()">cancel</button>
+    </div>
+  </div>
+</aside>
+<div id="placing-hint">Place the pin on the map</div>
+<div id="port-toast"></div>
+<div id="port-save-note" hidden><span>Changes are waiting to be filed.</span><button class="btn" onclick="showPortsSave()">review →</button></div>
+<dialog id="port-save-dialog" aria-labelledby="port-save-message">
+  <p id="port-save-message" role="status"></p>
+  <div class="save-actions"><button id="port-save-retry" class="btn accent" onclick="retryPortsSave()">try again →</button><button class="btn" onclick="document.getElementById('port-save-dialog').close()">back to chart</button></div>
+</dialog>
+<script src="leaflet/leaflet.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  const STORAGE_KEY='halyx_ports_v1';
+  const PENDING_KEY='halyx_ports_pending_v1';
+  const PENDING_PREFIX=PENDING_KEY+':',PENDING_TAB=PENDING_KEY+'_tab';
+  const PORTS_URL='/workshop/ports';
+  const PORTS_IMAGES_URL='/visit-place-images';
+  const PORTS_REGIONS_URL='/visit-place-regions';
+  const REGION_PREVIEW=new URLSearchParams(window.location.search).get('preview-regions')==='1';
+  let pins=[],editingId=null,placingMode=false,pendingLatLng=null,currentPinId=null,markers={};
+  let listOpen=true,activeFilter='all';
+  let placeImages={},placeRegions=[],viewMode='places',activeRegionId=null;
+  let pendingSave=null,pendingStored=false,pendingStorageValue=null,saving=false,preparingPin=false,pendingBlocked=false,portsRevision=null,basePins=[];
+  const saveDialog=document.getElementById('port-save-dialog');
+  const clone=function(value){return JSON.parse(JSON.stringify(value));};
+  // Match the server's semantic comparison: object key order is not an edit.
+  // Array order and every field value remain significant.
+  function chartSignature(value){return JSON.stringify(value,function(key,item){return item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.keys(item).sort().map(function(k){return [k,item[k]];})):item;});}
+  // This guided chart stays at the device's Filoli zoom. The USGS image
+  // has a fixed geographic extent and ships with the visitor pages.
+  const map=L.map('map',{center:[37.469924,-122.3113516],zoom:14,minZoom:14,maxZoom:14,
+    dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,
+    boxZoom:false,keyboard:false,zoomControl:false,attributionControl:true});
+  L.imageOverlay('filoli-map.jpg',[[37.44267044136718,-122.36285001308592],[37.497167625783156,-122.25985318691406]],{attribution:'USGS The National Map'}).addTo(map);
+  function makeIcon(status){var fill=status==='visited'?'#F07030':'#56777D',stroke=status==='visited'?'#8B654B':'#3F5D62',svg='<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30"><path d="M11 0 C4.9 0 0 4.9 0 11 C0 19 11 30 11 30 C11 30 22 19 22 11 C22 4.9 17.1 0 11 0Z" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.5"/><circle cx="11" cy="11" r="4" fill="rgba(46,33,27,.58)"/></svg>';return L.divIcon({html:'<div class="map-pin-hit">'+svg+'</div>',className:'halyx-pin',iconSize:[34,40],iconAnchor:[17,34]});}
+  function readLocal(){try{var raw=VisitStorage.getItem(STORAGE_KEY),value=raw?JSON.parse(raw):null;return Array.isArray(value)?value:null;}catch(e){return null;}}
+  function writeLocal(){try{VisitStorage.setItem(STORAGE_KEY,JSON.stringify(pins));}catch(e){}}
+  async function portsRequest(options){var controller=new AbortController(),timer=setTimeout(function(){controller.abort();},10000);try{var r=await fetch(PORTS_URL,Object.assign({cache:'no-store',signal:controller.signal},options));if(!r.ok){var error=new Error('chart request failed');error.status=r.status;throw error;}var data=await r.json();return {data:data,revision:r.headers.get('ETag')};}finally{clearTimeout(timer);}}
+  async function serverGet(){var result=await portsRequest();if(!result.data||typeof result.data.exists!=='boolean'||!Array.isArray(result.data.pins)||!result.revision)throw new Error('chart could not be read');return result;}
+  async function serverPut(pending){var result=await portsRequest({method:'POST',headers:{'Content-Type':'application/json','If-Match':pending.revision},body:JSON.stringify({pins:pending.pins})});if(!result.data||result.data.ok!==true||!result.revision)throw new Error('chart was not confirmed');return result;}
+  function showPortsSave(message){if(message)document.getElementById('port-save-message').textContent=message;if(!saveDialog.open)saveDialog.showModal();}
+  function storePending(){
+    try{
+      if(!pendingSave.pending_id)pendingSave.pending_id=Date.now().toString(36)+'-'+Array.from(crypto.getRandomValues(new Uint32Array(4)),function(n){return n.toString(36);}).join('');
+      var value=JSON.stringify(pendingSave);
+      // Each draft has its own durable copy. The shared entry is only a pointer
+      // for a fresh tab; simultaneous tabs cannot erase one another's drafts.
+      VisitStorage.setItem(PENDING_PREFIX+pendingSave.pending_id,value);pendingStored=true;
+      try{VisitStorage.setItem(PENDING_TAB,pendingSave.pending_id);}catch(e){}
+      try{VisitStorage.setItem(PENDING_KEY,value);pendingStorageValue=value;}catch(e){}
+      return true;
+    }catch(e){pendingStored=false;return false;}
+  }
+  function readPending(){
+    var id=null;try{id=VisitStorage.getItem(PENDING_TAB);}catch(e){}
+    var raw=id?VisitStorage.getItem(PENDING_PREFIX+id):null;
+    if(!raw)raw=VisitStorage.getItem(PENDING_KEY);
+    if(!raw){for(var i=0;i<VisitStorage.length;i++){var key=VisitStorage.key(i);if(key.indexOf(PENDING_PREFIX)===0){raw=VisitStorage.getItem(key);break;}}}
+    return raw;
+  }
+  function pendingMessage(){return pendingStored?'Not confirmed. These changes are still here.':'Not confirmed. Keep this page open; these changes could not be kept for a reload.';}
+  function guardPending(){if(preparingPin)return true;if(pendingSave||pendingBlocked){showPortsSave();return true;}try{if(VisitStorage.getItem(PENDING_KEY)){showPortsSave('Another chart is waiting to be filed. Keep this page open.');return true;}}catch(e){}return false;}
+  window.addEventListener('beforeunload',function(event){if(pendingSave&&!pendingStored){event.preventDefault();event.returnValue='';}});
+  async function loadPlaceImages(){try{var r=await fetch(PORTS_IMAGES_URL,{cache:'no-store'});if(!r.ok)return;var d=await r.json();placeImages=d&&d.places?d.places:{};}catch(e){placeImages={};}}
+  async function loadPlaceRegions(){try{var r=await fetch(PORTS_REGIONS_URL,{cache:'no-store'});if(!r.ok)return;var d=await r.json();placeRegions=d&&Array.isArray(d.regions)?d.regions:[];}catch(e){placeRegions=[];}}
+  // A pending chart is separate from the acknowledged cache. Loading never writes
+  // to the server, and a fresh GET cannot replace edits waiting for confirmation.
+  async function loadPins(){
+    try{var raw=readPending();if(raw){var pending=JSON.parse(raw);if(!Array.isArray(pending.pins)||!Array.isArray(pending.basePins))throw new Error('invalid pending chart');pendingSave=pending;pendingStorageValue=raw;pendingStored=true;pins=clone(pending.pins);basePins=clone(pending.basePins);portsRevision=pending.revision;document.getElementById('port-save-note').hidden=false;showPortsSave(pendingMessage());return;}}catch(e){pendingBlocked=true;pins=readLocal()||[];document.getElementById('port-save-retry').disabled=true;showPortsSave('The waiting chart could not be read. Keep this page open.');return;}
+    try{
+      var result=await serverGet(),d=result.data;portsRevision=result.revision;basePins=clone(d.pins);
+      if(d.exists){pins=d.pins;writeLocal();return;}
+      var cached=readLocal();
+      if(cached&&cached.length){pins=cached;pendingSave={pins:clone(pins),basePins:[],revision:portsRevision};storePending();document.getElementById('port-save-note').hidden=false;showPortsSave(pendingMessage());}
+      else{pins=clone(SEED_PINS);} // in-memory only, never filed on load
+    }catch(e){
+      pins=readLocal()||clone(SEED_PINS);basePins=clone(pins);
+    }
+  }
+  async function savePins(){
+    pendingSave={pins:clone(pins),basePins:clone(basePins),revision:portsRevision};
+    storePending();
+    document.getElementById('port-save-note').hidden=false;
+    updatePinCount();
+    return retryPortsSave();
+  }
+  async function retryPortsSave(){
+    if(saving||!pendingSave)return false;
+    if(!storePending()){showPortsSave(pendingMessage());return false;}
+    saving=true;document.getElementById('port-save-retry').disabled=true;showPortsSave('Filing the chart…');
+    try{
+      // Retry from a fresh revision only if the filed chart still matches the
+      // original base, or already contains this exact change after a lost reply.
+      var latest=await serverGet();
+      if(chartSignature(latest.data.pins)!==chartSignature(pendingSave.basePins)&&chartSignature(latest.data.pins)!==chartSignature(pendingSave.pins)){var conflict=new Error('chart changed');conflict.status=409;throw conflict;}
+      pendingSave.revision=latest.revision;storePending();
+      var result=await serverPut(pendingSave);
+      portsRevision=result.revision;basePins=clone(pendingSave.pins);pins=clone(pendingSave.pins);writeLocal();
+      if(VisitStorage.getItem(PENDING_KEY)===pendingStorageValue)VisitStorage.removeItem(PENDING_KEY);
+      VisitStorage.removeItem(PENDING_PREFIX+pendingSave.pending_id);
+      try{if(VisitStorage.getItem(PENDING_TAB)===pendingSave.pending_id)VisitStorage.removeItem(PENDING_TAB);}catch(e){}
+      pendingStorageValue=null;pendingSave=null;pendingStored=false;
+      document.getElementById('port-save-note').hidden=true;saveDialog.close();showPortToast('the chart is filed');return true;
+    }catch(e){showPortsSave(e.status===409?'The filed chart changed elsewhere. These changes are still here.':pendingMessage());return false;}
+    finally{saving=false;document.getElementById('port-save-retry').disabled=false;}
+  }
+  function updatePinCount(){var n=pins.length;document.getElementById('pin-count').textContent=n===1?'1 place':n+' places';}
+  function pinInBounds(pin,bounds){return pin.lat>=bounds.south&&pin.lat<=bounds.north&&pin.lng>=bounds.west&&pin.lng<=bounds.east;}
+  function regionForPin(pin){return placeRegions.find(function(region){return region.bounds&&pinInBounds(pin,region.bounds);})||null;}
+  function pinsForRegion(id){
+    if(id==='elsewhere')return pins.filter(function(pin){return !regionForPin(pin);});
+    var region=placeRegions.find(function(item){return item.id===id;});
+    return region&&region.bounds?pins.filter(function(pin){return pinInBounds(pin,region.bounds);}):[];
+  }
+  function regionGroups(){
+    var groups=placeRegions.map(function(region){return Object.assign({},region,{pins:pinsForRegion(region.id)});}).filter(function(region){return REGION_PREVIEW||region.pins.length>0;});
+    var elsewhere=pinsForRegion('elsewhere');
+    if(elsewhere.length){
+      var lat=elsewhere.reduce(function(total,pin){return total+pin.lat;},0)/elsewhere.length;
+      var lng=elsewhere.reduce(function(total,pin){return total+pin.lng;},0)/elsewhere.length;
+      groups.push({id:'elsewhere',name:'Elsewhere',pins:elsewhere,overview:{lat:lat,lng:lng,wrapped_lng:lng},empty_zoom:2});
+    }
+    return groups;
+  }
+  function makeRegionIcon(region){
+    var fill=region.pins.some(function(pin){return pin.status==='visited';})?'#F07030':'#56777D';
+    var stroke=fill==='#F07030'?'#8B654B':'#3F5D62';
+    var pin='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 30"><path d="M11 0 C4.9 0 0 4.9 0 11 C0 19 11 30 11 30 C11 30 22 19 22 11 C22 4.9 17.1 0 11 0Z" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.5"/><circle cx="11" cy="11" r="4" fill="rgba(46,33,27,.58)"/></svg>';
+    return L.divIcon({html:'<div class="region-mark"><div class="region-stack">'+pin+pin+'</div><span class="region-label">'+region.name+'</span></div>',className:'region-pin',iconSize:[174,54],iconAnchor:[22,42]});
+  }
+  function clearMarkers(){Object.values(markers).forEach(function(marker){map.removeLayer(marker);});markers={};}
+  function renderMarkers(){
+    clearMarkers();
+    if(viewMode==='regions'){
+      regionGroups().forEach(function(region){
+        var overview=region.overview||{},lng=overview.wrapped_lng!==undefined?overview.wrapped_lng:overview.lng;
+        if(overview.lat===undefined||lng===undefined)return;
+        var marker=L.marker([overview.lat,lng],{icon:makeRegionIcon(region)});
+        marker.on('click',function(){openRegion(region.id);});
+        marker.addTo(map);markers['region:'+region.id]=marker;
+      });
+      return;
+    }
+    pinsForRegion(activeRegionId).forEach(function(pin){var marker=L.marker([pin.lat,pin.lng],{icon:makeIcon(pin.status)});marker.on('click',function(){openCard(pin.id);});marker.addTo(map);markers[pin.id]=marker;});
+  }
+  function showRegionOverview(){
+    viewMode='regions';activeRegionId=null;currentPinId=null;listOpen=true;
+    setCardOpen(false);hideForm();
+    document.getElementById('list-panel').classList.add('open');
+    renderMarkers();renderList();map.setView([31,-155],2,{animate:false});
+  }
+  function openRegion(id){
+    var region=regionGroups().find(function(item){return item.id===id;});if(!region)return;
+    viewMode='places';activeRegionId=id;currentPinId=null;listOpen=true;
+    setCardOpen(false);hideForm();
+    document.getElementById('list-panel').classList.add('open');
+    renderMarkers();renderList();
+    if(region.pins.length>1){map.fitBounds(L.latLngBounds(region.pins.map(function(pin){return [pin.lat,pin.lng];})),{padding:[28,28],maxZoom:13,animate:false});}
+    else if(region.pins.length===1){map.setView([region.pins[0].lat,region.pins[0].lng],13);}
+    else if(region.overview){map.setView([region.overview.lat,region.overview.lng],region.empty_zoom||4);}
+  }
+  function initializeMapView(){var groups=regionGroups();if(REGION_PREVIEW||groups.length>1)showRegionOverview();else if(groups.length===1)openRegion(groups[0].id);else showRegionOverview();}
+  function toggleList(){listOpen=!listOpen;document.getElementById('list-panel').classList.toggle('open',listOpen);if(listOpen){setCardOpen(false);currentPinId=null;hideForm();renderList();}}
+  function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');renderList();}
+  function renderList(){
+    var body=document.getElementById('list-body');body.innerHTML='';
+    if(viewMode==='regions'){
+      regionGroups().forEach(function(region){var row=document.createElement('div');row.className='list-item region-item';row.innerHTML='<div class="list-item-name">'+region.name+'</div>';row.addEventListener('click',function(){openRegion(region.id);});body.appendChild(row);});
+      // Keep the vignette in the scrolling index; never overlay a region or a form.
+      var vignette=document.createElement('div');vignette.className='ports-vignette';vignette.setAttribute('aria-hidden','true');
+      var illustration=document.createElement('img');illustration.src='public_domain_art/prepared/ports-flying-oval.png';illustration.alt='';vignette.appendChild(illustration);body.appendChild(vignette);
+      return;
+    }
+    if(REGION_PREVIEW||regionGroups().length>1){var back=document.createElement('button');back.className='region-return';back.textContent='← all places';back.addEventListener('click',showRegionOverview);body.appendChild(back);}
+    var regionPins=pinsForRegion(activeRegionId),filtered=activeFilter==='all'?regionPins:regionPins.filter(function(pin){return pin.category===activeFilter;}),sorted=filtered.slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+    sorted.forEach(function(pin){var row=document.createElement('div');row.className='list-item';row.tabIndex=0;row.setAttribute('role','button');row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();row.click();}});row.innerHTML='<div class="list-item-name">'+pin.name+'</div>';row.addEventListener('click',function(){listOpen=false;document.getElementById('list-panel').classList.remove('open');map.flyTo([pin.lat,pin.lng],15,{duration:.6});setTimeout(function(){openCard(pin.id);},650);});body.appendChild(row);});
+    if(sorted.length===0){var empty=document.createElement('div');empty.style.cssText='padding:24px 20px;color:rgba(46,33,27,.42);font-family:var(--reading);font-size:15px;';empty.textContent='Nothing here yet.';body.appendChild(empty);}
+  }
+  function setCardOpen(open){
+    document.getElementById('card').classList.toggle('open',open);
+    document.body.classList.toggle('place-open',open);
+    map.invalidateSize({animate:false});
+    if(open){
+      var pin=pins.find(function(p){return p.id===currentPinId;});
+      if(pin)map.panTo([pin.lat,pin.lng],{animate:false});
+    }
+  }
+  function openCard(id){document.dispatchEvent(new CustomEvent('visit-place-open',{detail:{id}}));var pin=pins.find(function(p){return p.id===id;});if(!pin)return;if(listOpen){listOpen=false;document.getElementById('list-panel').classList.remove('open');}hideForm();currentPinId=id;document.getElementById('card-name').textContent=pin.name||'Unnamed place';document.getElementById('card-coords').textContent=pin.lat.toFixed(5)+', '+pin.lng.toFixed(5);var sr=document.getElementById('card-status-row');sr.innerHTML='';var st=document.createElement('span');st.className='tag '+pin.status;st.textContent=pin.status;sr.appendChild(st);if(pin.category){var ct=document.createElement('span');ct.className='tag category';ct.textContent=pin.category;sr.appendChild(ct);}document.querySelector('.v-photo-credit').open=false;var plate=placeImages[String(pin.id)],figure=document.getElementById('card-image'),image=document.getElementById('card-image-file'),caption=document.getElementById('card-image-caption');if(plate&&plate.image){image.src=plate.image;image.alt=plate.alt||'';caption.textContent=plate.caption||'';figure.classList.add('visible');}else{figure.classList.remove('visible');image.removeAttribute('src');image.alt='';caption.textContent='';}var notesEl=document.getElementById('card-notes');if(pin.notes&&pin.notes.trim()){notesEl.textContent=pin.notes;notesEl.classList.remove('empty');}else{notesEl.textContent='Nothing written here.';notesEl.classList.add('empty');}var kb=document.getElementById('card-kiwix-btn');kb.style.display='none';kb.removeAttribute('href');findArchiveUrl(pin.kiwix||pin.name||'').then(function(url){if(url&&currentPinId===pin.id){kb.href=url;kb.style.display='block';}});document.getElementById('card-body').scrollTop=0;setCardOpen(true);}
+  function closeCard(){setCardOpen(false);currentPinId=null;listOpen=true;document.getElementById('list-panel').classList.add('open');renderList();}
+  function startAddPin(){if(guardPending())return;if(listOpen){listOpen=false;document.getElementById('list-panel').classList.remove('open');}setCardOpen(false);currentPinId=null;editingId=null;pendingLatLng=null;clearForm();document.getElementById('add-form-header').textContent='Mark a place';showForm();document.getElementById('form-name').focus();}
+  function chooseMapPoint(){placingMode=true;hideForm();document.getElementById('placing-overlay').classList.add('active');document.getElementById('placing-hint').classList.add('visible');}
+  function cancelAddPin(){if(preparingPin)return;placingMode=false;pendingLatLng=null;document.getElementById('placing-overlay').classList.remove('active');document.getElementById('placing-hint').classList.remove('visible');hideForm();listOpen=true;document.getElementById('list-panel').classList.add('open');renderList();}
+  function showForm(){var f=document.getElementById('add-form');f.style.display='flex';f.classList.add('visible');}
+  function hideForm(){var f=document.getElementById('add-form');f.classList.remove('visible');f.style.display='none';}
+  function clearForm(){document.getElementById('form-name').value='';document.getElementById('form-notes').value='';document.getElementById('form-kiwix').value='';document.getElementById('form-status').value='visited';document.getElementById('form-category').value='monument';setCoordStatus('');}
+  function setCoordStatus(text){document.getElementById('coord-status').textContent=text;}
+  document.getElementById('placing-overlay').addEventListener('click',function(e){if(!placingMode)return;var rect=document.getElementById('map').getBoundingClientRect(),point=L.point(e.clientX-rect.left,e.clientY-rect.top);pendingLatLng=map.containerPointToLatLng(point);placingMode=false;this.classList.remove('active');document.getElementById('placing-hint').classList.remove('visible');setCoordStatus('Charted at '+pendingLatLng.lat.toFixed(5)+', '+pendingLatLng.lng.toFixed(5)+'.');showForm();document.getElementById('form-name').focus();});
+  async function geocodeName(name){var center=map.getCenter(),url='https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(name)+'&viewbox='+(center.lng-1)+','+(center.lat+1)+','+(center.lng+1)+','+(center.lat-1)+'&bounded=0';var r=await fetch(url,{headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('lookup failed');var data=await r.json();if(!data||!data.length)throw new Error('not found');return L.latLng(parseFloat(data[0].lat),parseFloat(data[0].lon));}
+  async function geocodeFormPlace(){var name=document.getElementById('form-name').value.trim();if(!name){document.getElementById('form-name').style.borderColor='#F07030';setCoordStatus('Name the place first, then I can look for it.');return null;}document.getElementById('form-name').style.borderColor='';setCoordStatus('Looking for '+name+'...');try{pendingLatLng=await geocodeName(name);map.flyTo(pendingLatLng,15,{duration:1});setCoordStatus('Found at '+pendingLatLng.lat.toFixed(5)+', '+pendingLatLng.lng.toFixed(5)+'.');return pendingLatLng;}catch(e){setCoordStatus('No match found. Tap Map still works.');return null;}}
+  function showPortToast(text){var toast=document.getElementById('port-toast');toast.textContent=text;toast.classList.add('visible');setTimeout(function(){toast.classList.remove('visible');},1800);}
+  async function savePin(){if(guardPending())return;preparingPin=true;try{var name=document.getElementById('form-name').value.trim(),savedId=null;if(!name){document.getElementById('form-name').style.borderColor='#F07030';return;}document.getElementById('form-name').style.borderColor='';if(editingId!==null){var pin=pins.find(function(p){return p.id===editingId;});if(pin){pin.name=name;pin.status=document.getElementById('form-status').value;pin.category=document.getElementById('form-category').value;pin.notes=document.getElementById('form-notes').value.trim();pin.kiwix=document.getElementById('form-kiwix').value.trim();if(pendingLatLng){pin.lat=pendingLatLng.lat;pin.lng=pendingLatLng.lng;}savedId=pin.id;}editingId=null;}else{if(!pendingLatLng){pendingLatLng=await geocodeFormPlace();if(!pendingLatLng)return;}savedId=Date.now();pins.push({id:savedId,name:name,lat:pendingLatLng.lat,lng:pendingLatLng.lng,status:document.getElementById('form-status').value,category:document.getElementById('form-category').value,notes:document.getElementById('form-notes').value.trim(),kiwix:document.getElementById('form-kiwix').value.trim()});pendingLatLng=null;}await savePins();var savedPin=pins.find(function(item){return item.id===savedId;});if(savedPin){var savedRegion=regionForPin(savedPin);viewMode='places';activeRegionId=savedRegion?savedRegion.id:'elsewhere';}renderMarkers();hideForm();if(savedId!==null)openCard(savedId);}finally{preparingPin=false;}}
+  function editCurrentPin(){if(guardPending())return;if(!currentPinId)return;var pin=pins.find(function(p){return p.id===currentPinId;});if(!pin)return;editingId=pin.id;pendingLatLng=L.latLng(pin.lat,pin.lng);document.getElementById('form-name').value=pin.name||'';document.getElementById('form-status').value=pin.status||'visited';document.getElementById('form-category').value=pin.category||'monument';document.getElementById('form-notes').value=pin.notes||'';document.getElementById('form-kiwix').value=pin.kiwix||'';setCoordStatus('Set at '+pin.lat.toFixed(5)+', '+pin.lng.toFixed(5)+'.');document.getElementById('add-form-header').textContent='Change place';setCardOpen(false);currentPinId=null;listOpen=false;document.getElementById('list-panel').classList.remove('open');showForm();document.getElementById('form-name').focus();}
+  function deleteCurrentPin(){if(guardPending())return;if(!currentPinId)return;pins=pins.filter(function(p){return p.id!==currentPinId;});savePins();if(viewMode==='places'&&pinsForRegion(activeRegionId).length===0)showRegionOverview();else{renderMarkers();closeCard();}}
+  const SEED_PINS=[
+    {id:1,name:"Contramar",lat:19.4168,lng:-99.1598,status:"visited",category:"food",notes:"The tuna tostadas. Always the tuna tostadas.",kiwix:""},
+    {id:2,name:"La Chicha Roma",lat:19.4175,lng:-99.1612,status:"visited",category:"food",notes:"Mezcal cocktails and market cooking in a loud, good room. Go hungry.",kiwix:""},
+    {id:3,name:"Taqueria Alvaro Obregon",lat:19.4155,lng:-99.1590,status:"visited",category:"food",notes:"Standing room, late night, perfectly charred al pastor.",kiwix:""},
+    {id:4,name:"Taqueria Orinoco",lat:19.4142,lng:-99.1673,status:"visited",category:"food",notes:"Norteno-style thick tortillas, proper carne asada, no fuss.",kiwix:""},
+    {id:5,name:"Cafe Avellaneda",lat:19.3483,lng:-99.1627,status:"visited",category:"food",notes:"Coyoacan serious coffee spot. Small, unhurried, worth the trip.",kiwix:""},
+    {id:6,name:"El Minutito",lat:19.4190,lng:-99.1580,status:"visited",category:"food",notes:"Old school counter cafe. Cheap, fast, completely itself.",kiwix:""},
+    {id:7,name:"Brew Brew",lat:19.4210,lng:-99.1640,status:"visited",category:"food",notes:"Specialty coffee in Condesa. Good place to disappear for an hour.",kiwix:""},
+    {id:8,name:"Chocolateria La Rifa",lat:19.4278,lng:-99.1470,status:"visited",category:"food",notes:"Thick hot chocolate and churros in Centro. The real version.",kiwix:""},
+    {id:9,name:"Cafe de Raiz",lat:19.4160,lng:-99.1600,status:"visited",category:"food",notes:"Natural wine, good beans, unpretentious. A neighborhood regular.",kiwix:""},
+    {id:10,name:"Quentin Cafe",lat:19.4185,lng:-99.1555,status:"visited",category:"food",notes:"Quiet corner in Roma. The kind of place you find and do not tell anyone.",kiwix:""},
+    {id:11,name:"Cafe Trucha",lat:19.4172,lng:-99.1618,status:"visited",category:"food",notes:"Brunch spot in Roma. Beautiful cakes, worth going just for those.",kiwix:""},
+    {id:12,name:"Vulevu Bakery",lat:19.4200,lng:-99.1650,status:"visited",category:"food",notes:"French technique, Mexican ingredients. The croissants are serious.",kiwix:""},
+    {id:13,name:"Panaderia Rosetta",lat:19.4188,lng:-99.1632,status:"visited",category:"food",notes:"The guava roll. That is all you need to know.",kiwix:""},
+    {id:14,name:"Cafe de Nadie",lat:19.4260,lng:-99.1450,status:"visited",category:"food",notes:"Mezcal, low light, Centro Historico. Named well.",kiwix:""},
+    {id:15,name:"Bar Las Brujas",lat:19.4155,lng:-99.1605,status:"visited",category:"food",notes:"Dive bar with a spell on it. Cash only, stay late.",kiwix:""},
+    {id:16,name:"Pulqueria Spiritu Santo",lat:19.4270,lng:-99.1435,status:"visited",category:"food",notes:"Traditional pulqueria, Centro. Order the curado, trust the process.",kiwix:""},
+    {id:17,name:"Museo de Arte Moderno",lat:19.4270,lng:-99.1885,status:"visited",category:"monument",notes:"Tamayo, Carrington, Varo. The surrealists found a home here.",kiwix:""},
+    {id:18,name:"National Art Museum",lat:19.4358,lng:-99.1398,status:"visited",category:"monument",notes:"The grand Palacio de Mineria building. Mexican art floor to ceiling.",kiwix:""},
+    {id:19,name:"Museo Nacional de Antropologia",lat:19.4260,lng:-99.1860,status:"visited",category:"monument",notes:"The sunstone. The Olmec heads. Give it a full day, minimum.",kiwix:""},
+    {id:20,name:"Frida Kahlo Museum",lat:19.3550,lng:-99.1627,status:"visited",category:"monument",notes:"La Casa Azul. The garden is smaller than you expect. The paintings are not.",kiwix:""},
+    {id:21,name:"Palacio de Bellas Artes",lat:19.4353,lng:-99.1412,status:"visited",category:"monument",notes:"The mural hall on the fourth floor, Rivera and Orozco side by side. Morning light through the art nouveau dome.",kiwix:""},
+    {id:22,name:"Chapultepec Castle",lat:19.4203,lng:-99.1822,status:"visited",category:"monument",notes:"Hilltop above the park. Maximilians folly, now a history museum with great views.",kiwix:""},
+    {id:23,name:"Mercado de Artesanias La Ciudadela",lat:19.4295,lng:-99.1468,status:"visited",category:"other",notes:"Two floors of craft vendors. Better quality than it looks from the street.",kiwix:""},
+    {id:24,name:"Coyoacan Market",lat:19.3508,lng:-99.1627,status:"visited",category:"other",notes:"Tostadas and tlacoyas inside, textiles and noise outside.",kiwix:""},
+    {id:25,name:"Tianguis La Lagunilla",lat:19.4398,lng:-99.1322,status:"visited",category:"other",notes:"Sunday flea market. Antiques, oddities, things you did not know you needed.",kiwix:""},
+    {id:26,name:"Proyecto Rufina Condesa",lat:19.4135,lng:-99.1712,status:"visited",category:"other",notes:"Ceramics and Mexican design objects. The edit is good.",kiwix:""},
+    {id:27,name:"Xinu Perfumes Marsella",lat:19.4248,lng:-99.1538,status:"visited",category:"other",notes:"Botanical perfumery in Col. Juarez. Smell everything.",kiwix:""},
+    {id:28,name:"Roso Guest House",lat:19.4178,lng:-99.1622,status:"visited",category:"other",notes:"Small, considered, Roma Norte. A SLH hotel that earns it.",kiwix:""}
+  ];
+  function localArchivePath(value){
+    var text=(value||'').trim();if(!text)return null;
+    try{
+      var url=new URL(text,window.location.origin),host=url.hostname.toLowerCase();
+      if(host==='en.wikivoyage.org'&&url.pathname.indexOf('/wiki/')===0)return '/voyage/'+url.pathname.slice(6);
+      if(host==='en.wikipedia.org'&&url.pathname.indexOf('/wiki/')===0)return '/article/'+url.pathname.slice(6);
+      var localHost=host===window.location.hostname.toLowerCase()||host==='localhost'||host==='127.0.0.1';
+      if(url.origin!==window.location.origin&&!localHost)return null;
+      text=url.pathname+url.search;
+    }catch(e){}
+    if(text.indexOf('/ports/voyage/')===0||text.indexOf('/ports/article/')===0||text.indexOf('/ports/content/')===0)return text.slice(6);
+    if(text.indexOf('/voyage/')===0||text.indexOf('/article/')===0||text.indexOf('/content/')===0)return text;
+    return null;
+  }
+  function portsReaderPath(path){return path.indexOf('/ports/')===0?path:'/ports'+path;}
+  async function findArchiveUrl(value){
+    var entered=localArchivePath(value);
+    if(entered){
+      try{var check=await fetch(entered);if(check.ok)return portsReaderPath(entered);}catch(e){}
+      return null;
+    }
+    var slug=encodeURIComponent(value.replace(/ /g,'_'));
+    // Stable aliases that resolve the current ZIM book at runtime — never a
+    // hardcoded dated content path (the Guessed-Kiwix-paths fault).
+    var candidates=['/voyage/'+slug,'/article/'+slug];
+    for(var i=0;i<candidates.length;i++){
+      try{var r=await fetch(candidates[i]);if(r.ok)return portsReaderPath(candidates[i]);}catch(e){}
+    }
+    return null;
+  }
+  Promise.all([loadPins(),loadPlaceImages(),loadPlaceRegions()]).then(function(){updatePinCount();initializeMapView();window.VisitPorts={map,markers:()=>markers,openRegion,openCard,pins:()=>pins,current:()=>currentPinId};document.dispatchEvent(new Event('visit-ports-ready'));});
+  window.showPortsSave=showPortsSave;window.retryPortsSave=retryPortsSave;
+  window.startAddPin=startAddPin;window.cancelAddPin=cancelAddPin;window.savePin=savePin;window.closeCard=closeCard;window.editCurrentPin=editCurrentPin;window.deleteCurrentPin=deleteCurrentPin;window.toggleList=toggleList;window.setFilter=setFilter;window.chooseMapPoint=chooseMapPoint;window.geocodeFormPlace=geocodeFormPlace;
+});
+</script>
+<script src="guide.js"></script></body>
+</html>

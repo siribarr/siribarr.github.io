@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'"><script src="edition.js"></script><script src="offline.js"></script><script src="isolation.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=800, initial-scale=1">
+<title>Sundae Forecast — Halyx</title>
+<style>
+@font-face{font-family:'Linden Hill';src:url('fonts/LindenHill.woff') format('woff');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Linden Hill';src:url('fonts/LindenHill-Italic.woff') format('woff');font-weight:400;font-style:italic;font-display:swap}
+*{box-sizing:border-box}
+html,body{width:800px;height:480px;margin:0;overflow:hidden;background:#2b2119;color:#17130f;font-family:Sligoil,monospace;font-synthesis:none}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+.sheet{position:relative;width:744px;height:440px;margin:20px 28px;padding:22px 28px 20px;background:#f2e8c9;box-shadow:0 2px 0 #17130f;overflow:hidden}
+.masthead{position:relative;text-align:center;border-bottom:3px double #17130f;padding-bottom:10px}
+.masthead h1{margin:0;font-family:'Linden Hill',serif;font-size:36px;font-style:italic;font-weight:400;line-height:1}
+.masthead p{margin:3px 0 0;font-family:'Linden Hill',serif;font-size:13px;font-style:italic}
+.return{position:absolute;right:0;top:0;min-width:90px;min-height:34px;border:0;background:none;text-align:right;text-decoration:underline;text-underline-offset:3px;font-size:9px;letter-spacing:.08em}
+.readings{height:34px;display:flex;align-items:center;justify-content:center;gap:18px;border-bottom:1px solid #17130f;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.reading{white-space:nowrap}.reading::after{content:'·';margin-left:18px}.reading:last-child::after{content:'';margin:0}
+.work{height:270px;display:grid;grid-template-columns:275px 1fr;gap:26px;padding-top:16px}
+.seasonal{border-right:1px solid #17130f;padding-right:22px;min-width:0}
+.section-label{display:block;margin-bottom:9px;font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+.produce-list{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px}
+.produce{position:relative;min-height:34px;border:0;background:none;padding:4px 7px;text-align:left;font-family:'Linden Hill',serif;font-size:17px;line-height:1.05}
+.produce:active{transform:scale(.98)}
+.produce.selected::after{content:'';position:absolute;inset:1px -2px;border:1.5px solid #17130f;border-radius:47% 53% 48% 52%;transform:rotate(-1deg);pointer-events:none}
+.produce.selected::before{content:attr(data-order);position:absolute;right:2px;top:-2px;z-index:2;width:15px;height:15px;border:1px solid #17130f;border-radius:50%;background:#f2e8c9;font-family:Sligoil,monospace;font-size:8px;line-height:14px;text-align:center}
+.produce:focus-visible,.order-action:focus-visible,.again:focus-visible,.return:focus-visible{outline:2px solid #17130f;outline-offset:2px}
+.instrument{min-width:0;position:relative}
+.causal-line{display:none;height:36px;border-bottom:1px solid #17130f;padding-top:3px;font-family:'Linden Hill',serif;font-size:24px;font-style:italic;line-height:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.causal-choice{display:inline}
+.causal-line.active{display:block}
+.causal-line.device-choice{font-size:20px}
+.waiting{height:218px;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Linden Hill',serif;font-size:20px;font-style:italic}
+.reels{display:none;border-top:1px solid #17130f}.reels.active{display:block}
+.reel-group{height:13px;padding-top:3px;font-size:7px;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid rgba(23,19,15,.28)}
+.reel{display:grid;grid-template-columns:76px 92px 1fr 22px;align-items:center;height:30px;border-bottom:1px solid rgba(23,19,15,.45);opacity:.48;transition:opacity 180ms ease-out}
+.reel.consulting,.reel.settled{opacity:1}
+.reel-label{font-size:8px;letter-spacing:.15em;text-transform:uppercase}
+.reel-source{font-family:'Linden Hill',serif;font-size:12px;font-style:italic;white-space:nowrap}
+.reel-window{height:24px;overflow:hidden;display:flex;align-items:center;font-family:'Linden Hill',serif;font-size:18px}
+.reel-text{display:block;transition:transform 110ms ease-out,opacity 110ms ease-out}
+.reel-text.turning{transform:translateY(-7px);opacity:.35}
+.check{font-family:'Linden Hill',serif;font-size:18px;opacity:0;transform:rotate(-8deg);transition:opacity 180ms ease-out}.reel.settled .check{opacity:1}
+.environment-rows.hidden{display:none}
+.choice-group,.choice-stage{display:none}
+.reels.choosing .choice-group{display:block}
+.reels.choosing .choice-stage{display:block}
+.choice-stage{height:190px;padding:18px 4px 0;text-align:center}
+.choice-equation{min-height:39px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Linden Hill',serif;font-size:19px}
+.choice-token,.choice-plus{opacity:0;transition:opacity 220ms ease-out}.choice-token.shown,.choice-plus.shown{opacity:1}
+.choice-token{border-bottom:1px solid rgba(23,19,15,.55);padding:2px 3px}
+.choice-element{min-height:39px;margin-top:12px;font-family:'Linden Hill',serif;font-size:25px;font-style:italic;opacity:0;transition:opacity 240ms ease-out}
+.choice-element.shown{opacity:1}
+.choice-counter{max-width:350px;margin:7px auto 0;font-family:'Linden Hill',serif;font-size:15px;line-height:1.22;opacity:0;transition:opacity 240ms ease-out}
+.choice-counter.shown{opacity:1}
+.order-action{position:absolute;right:0;bottom:0;min-width:170px;min-height:42px;border:1px solid #17130f;background:#17130f;color:#f2e8c9;padding:8px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.order-action:disabled{background:transparent;color:rgba(23,19,15,.42);cursor:default}
+.order-action:active:not(:disabled){transform:scale(.98)}
+.result{display:none;height:216px;overflow-y:auto;padding:18px 6px 0}.result.active{display:block}
+.result-label{font-size:8px;letter-spacing:.18em;text-transform:uppercase}
+.result h2{margin:13px 0 5px;font-family:'Linden Hill',serif;font-size:31px;font-style:italic;font-weight:400;line-height:1.02;text-wrap:balance}
+.result-line{margin:0;font-family:'Linden Hill',serif;font-size:18px;line-height:1.2;text-wrap:pretty}
+.provenance{margin-top:18px;padding-top:8px;border-top:1px solid #17130f;font-size:8px;letter-spacing:.08em;text-transform:uppercase}
+.order-up{display:inline-block;margin-left:12px;border:1px solid #17130f;padding:3px 6px;transform:rotate(-2deg)}
+.again{display:none;position:absolute;right:0;bottom:0;min-width:130px;min-height:38px;border:0;border-bottom:1px solid #17130f;background:none;font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.weather-source{height:16px;text-align:center;font-size:8px;line-height:16px;letter-spacing:.03em}.weather-retry{border:0;background:none;text-decoration:underline;font-size:8px;margin-left:8px}.history-button{position:absolute;right:28px;bottom:9px;min-height:25px;border:0;background:none;text-decoration:underline;font-size:8px}.history-panel{position:absolute;inset:12px;z-index:30;background:#f2e8c9;border:1px solid #17130f;padding:18px;overflow-y:auto}.history-panel h2{font:italic 28px "Linden Hill",serif;margin:0 0 12px}.history-panel button{min-height:34px;border:0;border-bottom:1px solid rgba(23,19,15,.3);background:none;text-align:left}.history-entry{display:block;width:100%;padding:10px 0}.history-detail{white-space:pre-wrap;font:14px/1.5 "Linden Hill",serif}.save-note{font:12px "Linden Hill",serif;margin:8px 0}.save-retry{min-height:32px;background:none;border:1px solid #17130f;font-size:9px}.result.active+.again{display:block}.again:disabled{opacity:.4}.status{position:absolute;left:28px;bottom:15px;font-size:8px;letter-spacing:.08em;text-transform:uppercase}
+@media(prefers-reduced-motion:reduce){.reel-text,.check{transition:none}}
+</style>
+<style>
+@font-face{font-family:Basteleur;src:url('fonts/Basteleur-Moonlight.woff2') format('woff2');font-display:swap}
+html,body{background:#bad0d6;color:#452e25;font-family:Sligoil,monospace}
+.sheet{width:776px;height:460px;margin:10px 12px;padding:18px 25px 42px;background:#faf0db;border:1px solid #72533b;box-shadow:inset 0 0 0 4px #faf0db,inset 0 0 0 5px #adbbb9,0 2px 0 #6f533f;overflow:hidden}
+.masthead{height:84px;border-bottom:0;padding:0 45px 9px}
+.masthead h1{font:46px/1.22 Basteleur,serif;letter-spacing:-1.6px;color:#823b32;white-space:nowrap}
+.masthead p{font:italic 16px/1.25 'Linden Hill',serif;margin:1px 0 0}
+.menu-flower{position:absolute;top:-4px;left:-3px;width:108px;height:94px}
+.menu-flower:last-of-type{left:auto;right:-3px;transform:scaleX(-1)}
+.readings{height:29px;border-bottom:0;font:10px/1 Sligoil,monospace;letter-spacing:0;text-transform:none;gap:17px}
+.reading::after{margin-left:17px;color:#a99177}
+.weather-source{height:15px;font:9px/15px 'Linden Hill',serif;color:#806b58}
+.work{height:259px;grid-template-columns:225px 1fr;gap:20px;padding-top:12px}
+.seasonal{border-right:1px solid #b8aaa0;padding-right:19px}
+.section-label{font:italic 20px/1.1 'Linden Hill',serif;letter-spacing:0;text-transform:none;margin-bottom:7px;color:#823b32}
+.produce-list{gap:1px 6px}
+.produce{font:18px/1.1 'Linden Hill',serif;min-height:32px;padding:4px 4px 4px 1px;border-bottom:1px dotted #c7b9a0;transition:color .1s,background .1s}
+.produce:hover:not(:disabled){background:#e4e9df;color:#823b32}
+.produce.selected{color:#823b32;background:#f0dfcd}
+.produce.selected::after{border-color:#994738;inset:2px -3px}
+.produce.selected::before{color:#823b32;border-color:#994738;background:#faf0db;font-family:Sligoil;font-size:8px;right:0;top:0}
+html body .produce:disabled{opacity:.65}.produce.selected:disabled{opacity:1}
+.sundae-art{position:absolute;left:-4px;top:12px;width:188px;height:218px;pointer-events:none}
+.waiting{margin-left:189px;height:188px;flex-direction:column;gap:10px;font:italic 25px/1.1 'Linden Hill',serif;color:#823b32}
+.waiting small{font:16px/1.25 'Linden Hill',serif;color:#452e25;max-width:204px}
+.result{margin-left:187px;height:205px;padding:7px 0 8px 8px;scrollbar-width:thin;scrollbar-color:#baa38b #f6e8ce}
+.result-label{font:10px Sligoil;color:#823b32;letter-spacing:0;text-transform:none}
+.result h2{font:italic 26px/1.02 'Linden Hill',serif;margin:8px 0 7px;text-wrap:pretty;color:#823b32}
+.result-line{font:17px/1.13 'Linden Hill',serif}
+.provenance{font:10px/1.25 'Linden Hill',serif;text-transform:none;letter-spacing:0;margin:9px 0 0;padding-top:6px;border-color:#b9a48a}
+.save-note{font:10px Sligoil;margin-top:6px;color:#806b58}
+.order-action,.again{bottom:0;min-height:31px;min-width:0;font:11px/1.2 Sligoil;text-transform:none;letter-spacing:0;padding:5px 10px}
+.order-action:disabled{background:#e6d8bd;color:#624938}
+.causal-line{font:italic 23px/30px 'Linden Hill',serif;height:35px;border-color:#bda88d;padding:0;color:#823b32}
+.instrument:has(.reels.active) .sundae-art{display:none}
+.reels{border:0}.reel{grid-template-columns:81px 94px 1fr 18px;height:29px;border-color:#cbbba4}
+.reel-label{font:8px Sligoil;letter-spacing:0}.reel-group{font:8px Sligoil;letter-spacing:0;color:#823b32}.reel-window{font-size:17px}.reel-source{font-size:12px}.choice-stage{padding-top:10px}
+.return{position:absolute;left:12px;bottom:9px;top:auto;right:auto;text-align:center;letter-spacing:0}
+.status{left:50%;bottom:19px;transform:translateX(-50%);font:9px Sligoil;letter-spacing:0;text-transform:none;color:#806b58}
+.history-button{right:12px;bottom:9px;min-height:31px;font:10px Sligoil;text-decoration:none;padding:4px 7px}
+.history-panel{background:#faf0db;border-color:#70513c}.history-panel h2{color:#823b32}
+</style><style>.market-instruction{font:italic 14px/1.1 'Linden Hill',serif;margin:0 0 6px;color:#72533b}.section-label{margin-bottom:4px}.produce{min-height:29px}.instrument:not(.ready-to-order) #churn{visibility:hidden}</style><style>
+.assortment{position:absolute;left:0;top:6px;width:100%;height:153px;display:flex;gap:7px;align-items:end;justify-content:center}
+.assortment .sundae-art{position:static;width:calc((100% - 21px)/4);height:140px;display:block}
+.assortment .sundae-art:nth-child(2){height:147px}.assortment .sundae-art:nth-child(3){height:124px}.assortment .sundae-art:nth-child(4){height:137px}
+.waiting{margin-left:0;padding:0 9px;height:72px;position:absolute;top:160px;width:100%;font-size:26px;text-wrap:balance;line-height:1.15}
+.instrument.ready-to-order .waiting{top:157px;height:53px;font-size:23px}
+.instrument:has(.reels.active) .assortment{display:none}
+.instrument:has(.result.active) .assortment{width:178px;height:205px;left:-3px;top:1px;display:grid;grid-template-columns:1fr 1fr;gap:8px 5px;align-items:end}
+.instrument:has(.result.active) .assortment .sundae-art{width:86px;height:96px}
+@media(prefers-reduced-motion:no-preference){.waiting{animation:menu-ink .3s ease-out}@keyframes menu-ink{from{opacity:0}to{opacity:1}}}
+</style><style id="unruled-sundae-build">.instrument :is(.causal-line,.reels,.reel-group,.reel,.choice-token){border-color:transparent}</style><style>
+.pantry-corner{position:absolute;left:-1px;top:59px;width:117px;height:185px;pointer-events:none}
+.pantry-corner svg{position:absolute}.pantry-jar{left:1px;top:0;width:84px;height:160px}.pantry-berries{left:57px;bottom:5px;width:63px;height:56px}.pantry-cherry{left:4px;bottom:0;width:38px;height:44px}
+.assortment{left:104px;width:calc(100% - 104px);top:3px;height:151px;gap:5px}.assortment .sundae-art{width:calc((100% - 15px)/4);height:113px}.assortment .sundae-art:nth-child(2){height:119px}.assortment .sundae-art:nth-child(3){height:101px}.assortment .sundae-art:nth-child(4){height:112px}
+.waiting,.instrument.ready-to-order .waiting{left:121px;width:calc(100% - 121px);padding:0 4px;font-size:24px}
+.instrument:has(.reels.active) .pantry-corner{display:none}
+.instrument:has(.result.active) .assortment{height:128px;top:0;gap:0 5px}.instrument:has(.result.active) .assortment .sundae-art{height:63px}
+.instrument:has(.result.active) .pantry-corner{left:5px;top:137px;width:155px;height:108px}.instrument:has(.result.active) .pantry-jar{width:53px;height:101px}.instrument:has(.result.active) .pantry-berries{left:55px;bottom:6px;width:70px;height:47px}.instrument:has(.result.active) .pantry-cherry{left:118px;bottom:10px;width:32px;height:40px}
+</style><style>
+.fruit-wait{display:none;position:absolute;right:1px;top:64px;width:82px;height:110px;pointer-events:none}
+.instrument:has(.reels.active) .fruit-wait{display:block}
+.fruit-wait svg{position:absolute;inset:0;width:82px;height:110px;opacity:0;animation:pantry-glimpse 10.8s infinite ease-in-out}
+.fruit-wait svg:nth-child(2){animation-delay:3.6s}.fruit-wait svg:nth-child(3){animation-delay:7.2s}
+@keyframes pantry-glimpse{0%,33.3%,100%{opacity:0;transform:translateY(5px)}5%,27%{opacity:1;transform:translateY(0)}}
+.instrument:has(.reels.active) .reels{margin-right:93px}.instrument:has(.reels.active) .causal-line{padding-right:3px;width:calc(100% - 90px);font-size:20px}
+.instrument:has(.reels.active) .reel{grid-template-columns:76px 73px 1fr 15px}.instrument:has(.reels.active) .reel-window{font-size:16px}.instrument:has(.reels.active) .reel-source{font-size:11px}.instrument:has(.reels.active) .choice-equation{font-size:17px;gap:5px;flex-wrap:wrap}.instrument:has(.reels.active) .choice-element{font-size:23px}
+@media(prefers-reduced-motion:reduce){.fruit-wait svg{animation:none}.fruit-wait svg:first-child{opacity:1}}
+
+.pantry-corner{top:100px;height:144px}.pantry-jar{width:69px;height:131px}.pantry-berries{left:48px;bottom:5px;width:61px;height:43px}.pantry-cherry{left:4px;bottom:0;width:31px;height:36px}
+.instrument:has(.result.active) .pantry-corner{top:160px;height:85px}.instrument:has(.result.active) .pantry-jar{width:44px;height:84px}.instrument:has(.result.active) .pantry-berries{left:46px;bottom:4px;width:66px;height:42px}.instrument:has(.result.active) .pantry-cherry{left:110px;bottom:6px;width:28px;height:35px}
+</style><style id="lower-pantry-centered-menu">
+.pantry-corner{left:-39px;top:152px;height:137px;z-index:2}
+.assortment{left:0;top:6px;width:100%;height:153px;gap:7px}
+.assortment .sundae-art{width:calc((100% - 21px)/4);height:140px}.assortment .sundae-art:nth-child(2){height:147px}.assortment .sundae-art:nth-child(3){height:124px}.assortment .sundae-art:nth-child(4){height:137px}
+.waiting,.instrument.ready-to-order .waiting{left:0;width:100%;padding:0 9px}.waiting{font-size:26px}.instrument.ready-to-order .waiting{font-size:23px}
+.instrument:has(.result.active) .pantry-corner{display:none}
+.instrument:has(.result.active) .assortment{left:-3px;width:178px;top:1px;height:205px;gap:8px 5px}
+.instrument:has(.result.active) .assortment .sundae-art{width:86px;height:96px}
+</style><style id="selected-pantry-art">
+.pantry-corner{width:132px}.pantry-corner img{position:absolute;object-fit:contain;bottom:6px;top:auto}.pantry-jar{left:1px;width:69px;height:131px;z-index:2}.pantry-cocoa{left:53px;width:57px;height:77px;z-index:1;transform:rotate(11deg);transform-origin:50% 90%;bottom:8px}
+.fruit-wait{width:96px;right:0;height:112px}.wait-illustration{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:translateY(3px);transition:opacity .32s ease,transform .32s ease}.wait-illustration.is-visible{opacity:1;transform:none}.wait-illustration[data-pantry-id="sweet-chocolate-wrapper"]{padding:8px 22px}.wait-illustration[data-pantry-id="marshmallow-tin-hand"]{padding:4px}
+.sheet:has(.pantry-corner):not(:has(.reels.active)):not(:has(.result.active)) .status{left:57%}
+@media(prefers-reduced-motion:reduce){.wait-illustration{transition:none;transform:none}}
+</style><style id="checks-follow-values">
+.instrument:has(.reels.active) .reel{grid-template-columns:76px 73px minmax(0,1fr);height:auto;min-height:29px;padding:3px 26px 3px 0}
+.instrument:has(.reels.active) .reel-window{width:fit-content;max-width:100%;min-width:0;box-sizing:border-box;height:auto;min-height:23px;overflow:visible;gap:9px;line-height:1.15}
+.reel-window .reel-text{flex:0 1 auto;min-width:0;overflow-wrap:anywhere}
+.reel-window .check{flex:0 0 13px;align-self:center}
+</style><style>.wait-illustration[data-pantry-id="wild-strawberry"],.wait-illustration[data-pantry-id="hoke-cherry"]{padding:12px}.wait-illustration[data-pantry-id="meyer-lemon"]{padding:4px}</style><style id="illustrated-preparation-heading">
+.instrument:has(.reels.active) .fruit-wait{left:0;right:auto;top:0;width:76px;height:70px}
+.instrument:has(.reels.active) .causal-line{margin-left:94px;width:calc(100% - 94px);height:76px;display:flex;align-items:center;padding:0 6px 4px 0;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.2;font-size:22px}
+.instrument:has(.reels.active) .reels{margin-right:0}
+.instrument:has(.reels.active) .choice-stage{height:170px;padding-top:8px}
+.fruit-wait .wait-illustration[data-pantry-id="sweet-chocolate-wrapper"]{padding:2px 19px}
+.fruit-wait .wait-illustration[data-pantry-id="wild-strawberry"],.fruit-wait .wait-illustration[data-pantry-id="hoke-cherry"]{padding:5px}
+</style><style id="confectioner-contribution">
+.choice-stage{position:relative}.choice-element{margin-top:25px;position:relative;z-index:2;transform:translateY(7px);transition:opacity .7s ease,transform .85s cubic-bezier(.2,.7,.2,1)}.choice-element.shown{transform:none}
+.choice-element:before{content:"The Confectioner adds";position:absolute;top:-13px;left:0;width:100%;font:8px Sligoil,monospace;color:#823b32}.sugar-flourish{position:absolute;left:50%;top:96px;width:0;height:0;pointer-events:none;z-index:3}
+.sugar-flourish i{position:absolute;display:block;width:5px;height:9px;border-radius:2px;background:var(--sugar);opacity:0;animation:sugar-scatter 2.6s var(--lag) cubic-bezier(.2,.65,.3,1) both}
+.sugar-flourish i:nth-child(3n){width:6px;height:6px;border-radius:50%}.sugar-flourish i.glint{width:2px;height:13px;border-radius:0;background:#81a8b6}.sugar-flourish i.glint:after{content:'';position:absolute;left:-5px;top:5px;width:12px;height:2px;background:inherit}
+@keyframes sugar-scatter{0%{opacity:0;transform:translate(0,0) scale(.35) rotate(0)}12%{opacity:1}48%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1) rotate(var(--turn))}100%{opacity:0;transform:translate(var(--dx),var(--fall)) scale(.3) rotate(var(--turn))}}
+@media(prefers-reduced-motion:reduce){.choice-element{transform:none;transition:opacity .3s ease}.sugar-flourish{display:none}}
+</style><!-- HALYX CONTROLS START -->
+<style>
+/* Shared Halyx controls. Run python3 scripts/sync_halyx_controls.py after editing.
+   Embedded into the three standalone pages; no runtime server change required.
+   Existing selectors below are adapters. New apparatuses can use hx-control,
+   hx-primary, and hx-studiolo without inheriting a window or page layout. */
+@font-face{font-family:Sligoil;src:url('fonts/Sligoil-Micro.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+:root{
+  --control-ink:#302720;--control-cream:#ddc9a7;--control-light:#fff0d1;
+  --control-edge:#70513c;--control-shadow:#9d7e59;--control-orange:#f07030;
+  --control-orange-light:#ffc18a;--control-orange-shadow:#a64d22;
+  --control-focus:#70513c;--control-font:Sligoil,monospace;
+}
+/* Ordinary push controls, including link elements used for a system action. */
+:is(.hx-control,footer [data-studiolo],footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a){
+  font-family:var(--control-font);font-weight:400;font-synthesis:none;
+  color:var(--control-ink);background:var(--control-cream);
+  border:1px solid var(--control-edge);border-radius:0;
+  box-shadow:inset 1px 1px var(--control-light),inset -1px -1px var(--control-shadow);
+  text-decoration:none;cursor:pointer;touch-action:manipulation;
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent){
+  background:var(--control-orange);
+  box-shadow:inset 1px 1px var(--control-orange-light),inset -1px -1px var(--control-orange-shadow);
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):hover:not(:disabled){
+  filter:brightness(1.045);color:var(--control-ink);text-decoration:none;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):active:not(:disabled){
+  box-shadow:inset 1px 1px var(--control-edge),inset -1px -1px var(--control-light);
+  transform:translateY(1px);
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent):active:not(:disabled){background:var(--control-orange)}
+/* All three exits have the same lettering and compact proportions. */
+:is(.hx-studiolo,footer [data-studiolo],.home-exit,#topbar-right .btn.return){
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:31px;padding:4px 7px;font:11px/1.2 var(--control-font);white-space:nowrap;
+}
+/* Shared interaction signals, independent of the amount of window chrome. */
+.hx-back-arrow{font:16px/1 Arial,sans-serif;flex:none;margin-right:4px}
+html body :is(button,a,input,textarea,select,[tabindex]):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+html body button:disabled{opacity:.45;cursor:default;filter:none;transform:none}
+html body .appnav button:hover:not(:disabled):not(.active){background:var(--control-cream);color:var(--control-ink)}
+html body .appnav button:disabled{color:var(--control-ink)}
+html body ::selection{background:#f5bf88;color:var(--control-ink)}
+/* Paper stays local. The scrollbar hardware is shared. */
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap){scrollbar-width:auto;scrollbar-color:auto}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar{width:13px;height:13px}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-track{background:#e9dfcc;border-left:1px solid #b7a58b}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-thumb{background:#b8a584;border:1px solid #8b765d;box-shadow:inset 1px 1px #e4d7b9,inset -1px -1px #998267}
+@media(prefers-reduced-motion:reduce){html body :is(button,a,input,textarea,select){transition:none}}
+</style>
+<!-- HALYX CONTROLS END -->
+<link rel="stylesheet" href="guide.css"><link rel="stylesheet" href="guided.css"><script src="guided.js" defer></script></head>
+<body>
+<main class="sheet">
+  <header class="masthead">
+    <svg class="menu-flower" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="480 1155 440 380"><defs><filter id="ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .38 0 0 0 0 .53 0 0 0 0 .60 -3 -3 -3 0 7.1"/></filter></defs><image href="public_domain_art/sundae/guide-page-92.png" width="1404" height="2042" filter="url(#ink)"/></svg><h1>Sundae Forecast</h1><svg class="menu-flower" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="480 1155 440 380"><defs><filter id="ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .38 0 0 0 0 .53 0 0 0 0 .60 -3 -3 -3 0 7.1"/></filter></defs><image href="public_domain_art/sundae/guide-page-92.png" width="1404" height="2042" filter="url(#ink)"/></svg>
+    <p>pick two; the weather and the Confectioner do the rest</p>
+
+  </header>
+
+  <div class="readings" id="readings" aria-label="Today’s weather"></div>
+
+  <div class="weather-source"><span id="weatherSource"></span><button class="weather-retry hx-control" id="retryWeather" hidden>check again</button></div>
+  <div class="work">
+    <section class="seasonal" aria-labelledby="seasonalLabel">
+      <span class="section-label" id="seasonalLabel">Today’s market</span>
+      <p class="market-instruction" id="marketInstruction">Pick two from the market.</p><div class="produce-list" id="produceList"></div>
+    </section>
+
+    <section class="instrument" aria-live="polite"><div class="pantry-corner" aria-hidden="true"><img class="pantry-jar" src="public_domain_art/sundae/ingredients/cherry-jar.png" alt=""><img class="pantry-cocoa" src="public_domain_art/sundae/toppings/creamy-cocoa-tin.png" alt=""></div><div class="assortment" aria-label="Four historical sundae illustrations"><svg class="sundae-art" role="img" aria-label="Historical illustration of a cherry sundae in a footed dish" xmlns="http://www.w3.org/2000/svg" viewBox="320 955 425 490"><defs><clipPath id="serving-0"><path d="M333 1150 L353 1148 Q363 1116 391 1104 Q377 1072 406 1056 Q422 1048 439 1058 Q428 1032 449 1013 Q461 1005 483 1008 L510 987 Q523 958 545 973 Q557 973 567 997 Q582 995 599 1024 L607 1031 Q628 1028 640 1052 L644 1076 L632 1078 Q648 1090 647 1104 Q679 1110 690 1148 L728 1151 L730 1162 L713 1170 Q669 1214 625 1265 Q583 1313 550 1318 L553 1388 Q555 1407 581 1414 L622 1422 L626 1430 L487 1430 L488 1421 L518 1410 Q533 1405 532 1388 L527 1318 Q481 1318 449 1285 Q412 1246 369 1175 L334 1164 Z"/></clipPath></defs><image href="public_domain_art/sundae/soda-fountain-cover-184.png" width="1200" height="1692" clip-path="url(#serving-0)"/></svg><svg class="sundae-art" xmlns="http://www.w3.org/2000/svg" viewBox="350 900 470 550" role="img" aria-label="Historical sundae illustration"><defs><clipPath id="serving-1"><path d="M372 1178 L397 1176 L402 1161 L414 1147 L414 1133 L435 1119 Q426 1087 445 1066 L457 1058 L455 1046 L480 1038 Q495 1011 515 996 L539 968 Q559 943 591 946 Q608 945 611 978 L632 973 Q649 974 655 994 L674 1006 L682 1024 L699 1037 L723 1047 L744 1066 Q770 1073 772 1097 L785 1111 L785 1127 L793 1145 L800 1170 L804 1179 Q789 1276 653 1317 Q624 1325 608 1336 L602 1386 L619 1404 L672 1429 L688 1437 L482 1437 L535 1408 L581 1386 L578 1338 Q563 1322 529 1318 Q405 1293 372 1178 Z"/></clipPath></defs><image href="public_domain_art/sundae/soda-fountain-cover-46.png" width="1200" height="1704" clip-path="url(#serving-1)"/></svg><svg class="sundae-art" xmlns="http://www.w3.org/2000/svg" viewBox="363 1062 398 420" role="img" aria-label="Historical sundae illustration"><defs><clipPath id="serving-2"><path d="M377 1257 L394 1252 L407 1229 L421 1214 L432 1204 L454 1168 L477 1153 L484 1128 Q498 1103 519 1090 Q541 1071 559 1080 Q581 1080 592 1093 Q620 1098 633 1124 L651 1148 L670 1165 L681 1185 L690 1199 L710 1215 L722 1238 L733 1253 L749 1258 L750 1269 Q731 1350 655 1375 L603 1395 L578 1410 L572 1446 L591 1459 L629 1466 L630 1473 L487 1473 L490 1465 L536 1455 L549 1440 L546 1410 L528 1396 Q405 1379 383 1296 L377 1270 Z"/></clipPath></defs><image href="public_domain_art/sundae/soda-fountain-cover-297.png" width="1200" height="1696" clip-path="url(#serving-2)"/></svg><svg class="sundae-art" xmlns="http://www.w3.org/2000/svg" viewBox="428 733 320 423" role="img" aria-label="Historical sundae illustration"><defs><clipPath id="serving-3"><path d="M457 896 L472 883 L494 881 L506 866 L509 841 L523 824 L534 814 L540 793 L557 781 L573 770 Q575 745 595 745 Q617 747 625 768 L643 779 L651 798 L650 808 Q674 817 686 842 L699 865 L709 892 L727 898 Q715 968 652 997 L615 1013 L602 1027 L600 1065 L604 1093 L612 1113 L632 1118 L741 1123 L726 1134 L710 1147 L488 1148 L455 1135 L438 1122 L565 1117 L575 1105 L580 1071 L575 1034 L568 1018 Q480 992 464 931 Z"/></clipPath></defs><image href="public_domain_art/sundae/soda-fountain-cover-385.png" width="1200" height="1656" clip-path="url(#serving-3)"/></svg></div>
+      <div aria-hidden="true" class="fruit-wait"><img class="wait-illustration" data-pantry-id="single-strawberry" src="public_domain_art/sundae/ingredients/single-strawberry.png" alt=""><img class="wait-illustration" data-pantry-id="orange-wedge" src="public_domain_art/sundae/ingredients/orange-wedge.png" alt=""><img class="wait-illustration" data-pantry-id="long-stem-cherry" src="public_domain_art/sundae/ingredients/long-stem-cherry.png" alt=""><img class="wait-illustration" data-pantry-id="marshmallow-tin-hand" src="public_domain_art/sundae/toppings/marshmallow-tin-hand.png" alt=""><img class="wait-illustration" data-pantry-id="chocolate-caramel-walnuts" src="public_domain_art/sundae/toppings/chocolate-caramel-walnuts.png" alt=""><img class="wait-illustration" data-pantry-id="mint-assortment" src="public_domain_art/sundae/toppings/mint-assortment.png" alt=""><img class="wait-illustration" data-pantry-id="chocolate-peanut-brittle" src="public_domain_art/sundae/toppings/chocolate-peanut-brittle.png" alt=""><img class="wait-illustration" data-pantry-id="sweet-chocolate-wrapper" src="public_domain_art/sundae/toppings/sweet-chocolate-wrapper.png" alt=""><img class="wait-illustration" data-pantry-id="wild-strawberry" src="public_domain_art/sundae/pomological/wild-strawberry.png" alt=""><img class="wait-illustration" data-pantry-id="meyer-lemon" src="public_domain_art/sundae/pomological/meyer-lemon.png" alt=""><img class="wait-illustration" data-pantry-id="hoke-cherry" src="public_domain_art/sundae/pomological/hoke-cherry.png" alt=""></div><div class="causal-line" id="causalLine"></div>
+      <div class="waiting" id="waiting">A chance of sprinkles.<small>Choose two ingredients.<br>The weather supplies<br>the rest.</small></div>
+
+      <div class="reels" id="reels" aria-label="Sundae preparation">
+        <div class="environment-rows" id="environmentRows">
+          <div class="reel-group">Ice cream</div>
+          <div class="reel" data-key="base"><span class="reel-label">Base</span><span class="reel-source">—</span><span class="reel-window"><span class="reel-text">—</span><span class="check" aria-hidden="true">✓</span></span></div>
+          <div class="reel" data-key="preparation"><span class="reel-label">Preparation</span><span class="reel-source">—</span><span class="reel-window"><span class="reel-text">—</span><span class="check" aria-hidden="true">✓</span></span></div>
+          <div class="reel" data-key="contrast"><span class="reel-label">Contrast</span><span class="reel-source">—</span><span class="reel-window"><span class="reel-text">—</span><span class="check" aria-hidden="true">✓</span></span></div>
+          <div class="reel-group">On top</div>
+          <div class="reel" data-key="topping"><span class="reel-label">Topping</span><span class="reel-source">—</span><span class="reel-window"><span class="reel-text">—</span><span class="check" aria-hidden="true">✓</span></span></div>
+          <div class="reel" data-key="time"><span class="reel-label">Time</span><span class="reel-source">—</span><span class="reel-window"><span class="reel-text">—</span><span class="check" aria-hidden="true">✓</span></span></div>
+        </div>
+        <div class="reel-group choice-group">Your two ingredients</div>
+        <div class="choice-stage" id="choiceStage"><div class="sugar-flourish" aria-hidden="true"></div>
+          <div class="choice-equation">
+            <span class="choice-token" id="choiceIngredient"></span>
+            <span class="choice-plus" id="choicePlusOne">+</span>
+            <span class="choice-token" id="choiceAccent"></span>
+            <span class="choice-plus" id="choicePlusTwo">+</span>
+            <span class="choice-token" id="choiceTreatment"></span>
+          </div>
+          <div class="choice-element" id="choiceElement"></div>
+          <p class="choice-counter" id="choiceCounter"></p>
+        </div>
+      </div>
+
+      <article class="result" id="result">
+        <span class="result-label" id="resultLabel">One order</span>
+        <h2 id="orderName"></h2>
+        <p class="result-line" id="orderLine"></p>
+        <p class="provenance" id="provenance" hidden></p>
+        <div class="save-note" id="saveNote"></div><button class="save-retry hx-control" id="retryChoice" hidden>try again</button><button class="save-retry hx-control" id="retrySave" hidden>file this order again</button>
+      </article>
+      <button class="again hx-control" id="again">another order</button>
+
+      <button class="order-action hx-control hx-primary" id="churn" disabled>pick two from the market</button>
+    </section>
+  </div>
+  <button class="return hx-control hx-studiolo" onclick="location.href='bench.html'"><span class="hx-back-arrow" aria-hidden="true">←</span> the studiolo</button>
+<div class="status" id="status">checking the weather</div>
+  <button class="history-button hx-control" id="historyButton">previous orders</button>
+  <section class="history-panel hx-scroll" id="historyPanel" hidden><button id="historyClose" class="hx-control hx-studiolo"><span class="hx-back-arrow" aria-hidden="true">←</span> this order</button><h2>Previous orders</h2><div id="historyEntries"></div><pre class="history-detail" id="historyDetail" hidden></pre></section>
+</main>
+
+
+<script>
+'use strict';
+const WORKSHOP='';
+const LEGACY_GENERATING_VERSION='sundae-v4', RULES_VERSION='sundae-v5', RECIPE_COPY_SOURCE='sundae-recipe-description-v1', PENDING_KEY='halyx-sundae-pending-v1', PENDING_VERSION='sundae-pending-v2';
+const OPTIONS={base:['custard','sweet cream','buttermilk','sherbet','sorbet','granita'],preparation:['steeped','candied','jammed','roasted','poached','caramelized'],contrast:['mellow','herbal','salted','tart','peppery','spiced'],topping:['fruit ripple','oat crumb','wafer crumb','cornflake crisp','brown-sugar brittle','macaroon crumbs','sponge cake'],time:['honey','oat','fruit syrup','toasted sugar','caramel','cocoa']};
+const PREPARATIONS={0:'roasted',1:'roasted',2:'poached',3:'poached',45:'steeped',48:'steeped',51:'candied',53:'candied',55:'candied',56:'candied',57:'candied',61:'jammed',63:'jammed',65:'jammed',66:'jammed',67:'jammed',71:'poached',73:'poached',75:'poached',77:'poached',80:'jammed',81:'jammed',82:'jammed',85:'poached',86:'poached',95:'caramelized',96:'caramelized',99:'caramelized'};
+const EDGE_PHRASES={mellow:'a mellow edge',herbal:'an herbal edge',salted:'a salted edge',tart:'a tart edge',peppery:'a peppery edge',spiced:'a spiced edge'};
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const title=s=>String(s||'').replace(/\b\w/g,c=>c.toUpperCase());
+const number=v=>typeof v==='number'&&Number.isFinite(v)?v:null;
+const clone=value=>JSON.parse(JSON.stringify(value));
+let conditions=null,weatherRecord=null,weatherCurrent=false,conditionsObservedAt=null;
+let conditionsRequest=null,latestConditionsResults=null,marketData=null,marketContext=null;
+let produce=[],selected=[],resolving=false,orderFrozen=false,frozenOrder=null,pendingOrder=null,pendingPhase=null,savingOrder=false,recoveryBlocked=false,pendingStored=false;
+let selectionNotice='';
+
+function calendarNow(instant=new Date(Edition.clock),timezone=marketData?.timezone||'America/Los_Angeles'){
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:timezone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).formatToParts(instant).map(part=>[part.type,part.value]));
+  return {iso:instant.toISOString(),month:String(Number(parts.month)),period:`${Number(parts.month)}-${Number(parts.day)<16?'early':'late'}`,local_date:`${parts.year}-${parts.month}-${parts.day}`,hour:Number(parts.hour),label:new Intl.DateTimeFormat('en-US',{timeZone:timezone,hour:'numeric',minute:'2-digit'}).format(instant).toLowerCase(),timezone};
+}
+function validChoice(choice,key){return choice&&['ingredient','accent','treatment','element','counterLine'].every(field=>typeof choice[field]==='string'&&choice[field].trim())&&choice.ingredient===key;}
+function validChoiceProvenance(value,required=false){
+  if(!value)return !required;
+  if(typeof value!=='object'||!['authored','model'].includes(value.source))return false;
+  const keys=Object.keys(value),expected=value.source==='model'?['model','source']:['source'];
+  return keys.length===expected.length&&expected.every(key=>keys.includes(key))&&(value.source!=='model'||typeof value.model==='string'&&value.model.trim());
+}
+function validFinish(finish,legacy=false){
+  return finish&&[['toppings',legacy?OPTIONS.topping.filter(key=>!['sponge cake','macaroon crumbs'].includes(key)):OPTIONS.topping],['times',OPTIONS.time]].every(([group,keys])=>{
+    const values=finish[group];return values&&Object.keys(values).length===keys.length&&keys.every(key=>typeof values[key]==='string'&&values[key].trim()&&values[key].length<=48);
+  });
+}
+function marketLabel(market){
+  if(!market)return 'Seasonal market';
+  const month=['January','February','March','April','May','June','July','August','September','October','November','December'][Number(market.month)-1];
+  const half=typeof market.period==='string'&&market.period.match(/-(early|late)$/)?.[1];
+  return `${half?`${title(half)} `:''}${month} market`;
+}
+function displayedOption(key,value,order=frozenOrder){
+  return (key==='topping'?order?.finish?.toppings?.[value]:key==='time'?order?.finish?.times?.[value]:null)||value;
+}
+function validFinishVariants(data,profile){
+  const bank=data.finish_variants?.[profile];
+  if(bank===undefined)return true;
+  return bank&&typeof bank==='object'&&!Array.isArray(bank)&&Object.entries(bank).every(([key,values])=>
+    OPTIONS.time.includes(key)&&Array.isArray(values)&&values.length>=2&&values.length<=8&&new Set(values).size===values.length&&
+    values.every(value=>typeof value==='string'&&value.trim()&&value.length<=48));
+}
+const lastTimeFlavors={};
+function rotateTimeFlavor(finish,timeKey){
+  const variants=marketData.finish_variants?.[finish?.profile]?.[timeKey];
+  if(!finish||!variants)return;
+  const storageKey=`halyx-sundae-last-flavor-v1:${finish.profile}:${timeKey}`;
+  let previous=lastTimeFlavors[storageKey];
+  if(!previous)try{previous=VisitStorage.getItem(storageKey);}catch(_){}
+  previous=previous||finish.times[timeKey];
+  const chosen=variants[(variants.indexOf(previous)+1)%variants.length];
+  finish.times[timeKey]=chosen;lastTimeFlavors[storageKey]=chosen;
+  try{VisitStorage.setItem(storageKey,chosen);}catch(_){}
+}
+function currentMarket(data,instant=new Date(Edition.clock)){
+  if(!data||typeof data.version!=='string'||typeof data.region!=='string'||typeof data.timezone!=='string')return null;
+  try{
+    const calendar=calendarNow(instant,data.timezone),hasPeriods=Object.hasOwn(data,'periods');
+    const entry=hasPeriods?data.periods?.[calendar.period]:data.months?.[calendar.month],foods=entry?.produce;
+    if(!Array.isArray(foods)||foods.length<2||foods.length>12||new Set(foods).size!==foods.length||!foods.every(food=>typeof food==='string'&&validChoice(data.choices?.[food],food)))return null;
+    const market={version:data.version,region:data.region,month:calendar.month,produce:foods.slice()};
+    if(hasPeriods)market.period=calendar.period;
+    if(Object.hasOwn(data,'finish_profiles')||Object.hasOwn(data,'finish_months')){
+      const profile=data.finish_months?.[calendar.month];
+      if(typeof profile!=='string'||!validFinish(data.finish_profiles?.[profile])||!validFinishVariants(data,profile))return null;
+      market.finish_profile=profile;
+    }
+    return market;
+  }catch(_){return null;}
+}
+function validWeather(weather,instant=new Date(Edition.clock)){
+  if(!weather||weather.stale!==false||weather.timestamp_source!=='provider')return false;
+  const temp=number(weather.current_temp_f),wind=number(weather.current_wind_mph),humidity=number(weather.current_humidity_pct),code=weather.weather_code;
+  const observed=Date.parse(weather.observed_at),fetched=Date.parse(weather.fetched_at),age=instant.getTime()-observed;
+  return temp!==null&&temp>=-130&&temp<=140&&wind!==null&&wind>=0&&wind<=250&&humidity!==null&&humidity>=0&&humidity<=100
+    &&Number.isInteger(code)&&Object.hasOwn(PREPARATIONS,code)&&typeof weather.condition==='string'&&weather.condition.trim()
+    &&Number.isFinite(age)&&age>=0&&age<=3600000&&Number.isFinite(fetched)&&fetched>=observed&&fetched<=instant.getTime()
+    &&typeof weather.source==='string'&&weather.source.trim()&&weather.location&&typeof weather.location.name==='string'&&weather.location.name.trim()&&weather.location.timezone===(marketData?.timezone||'America/Los_Angeles');
+}
+function weatherView(weather,hour){return {temp:weather.current_temp_f,wind:weather.current_wind_mph,humidity:weather.current_humidity_pct,condition:weather.condition,code:weather.weather_code,hour};}
+function derive(input=conditions){
+  if(!input)throw new Error('current weather required');
+  const t=input.temp,h=input.humidity,w=input.wind,hour=input.hour;
+  return {base:t<51?'custard':t<58?'buttermilk':t<73?'sweet cream':t<79?'sherbet':t<86?'sorbet':'granita',preparation:PREPARATIONS[input.code],contrast:w<3?'mellow':w<7?'herbal':w<11?'salted':w<15?'peppery':w<20?'tart':'spiced',topping:h>=85?'cornflake crisp':h>=72?'macaroon crumbs':h>=62?'wafer crumb':h>=50?'sponge cake':h>=40?'oat crumb':h>=30?'fruit ripple':'brown-sugar brittle',time:hour<10?'honey':hour<12?'oat':hour<16?'toasted sugar':hour<19?'fruit syrup':hour<22?'caramel':'cocoa'};
+}
+function renderReadings(){
+  const readings=document.getElementById('readings');
+  readings.replaceChildren();
+  if(!conditions){readings.textContent='Current weather is unavailable.';readings.setAttribute('aria-label','Weather unavailable');document.getElementById('weatherSource').textContent=marketData?.region||'';return;}
+  for(const text of [`${Math.round(conditions.temp)}°`,conditions.condition,`${Math.round(conditions.wind)} mph wind`,`${Math.round(conditions.humidity)}% humidity`]){const span=document.createElement('span');span.className='reading';span.textContent=text;readings.appendChild(span);}
+  readings.setAttribute('aria-label',orderFrozen?'Weather recorded for this order':'Current model weather');
+  const record=orderFrozen?frozenOrder.weather:weatherRecord;
+  const zone=orderFrozen?frozenOrder.timezone:marketData?.timezone||record.location.timezone||'America/Los_Angeles';
+  const label=new Intl.DateTimeFormat('en-US',{timeZone:zone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(record.observed_at));
+  document.getElementById('weatherSource').textContent=`${record.location.name} · model weather at ${label}${orderFrozen?' · this order':''}`;
+}
+function updateSelection(message){
+  const locked=resolving||orderFrozen||recoveryBlocked;
+  const market=orderFrozen?frozenOrder.market:marketContext;
+  document.getElementById('seasonalLabel').textContent=marketLabel(market);
+  document.querySelectorAll('.produce').forEach(button=>{const index=selected.indexOf(button.textContent);button.disabled=locked || (!Edition.fruits.includes(button.textContent) && !selected.some(f=>Edition.fruits.includes(f)));button.classList.toggle('selected',index>=0);button.dataset.order=index>=0?String(index+1):'';button.setAttribute('aria-pressed',String(index>=0));});
+  document.getElementById('marketInstruction').textContent=orderFrozen?'Your two ingredients.':selected.length===2?'Your two ingredients.':selected.length?'Pick one more.':'Pick two from the market.';
+  document.querySelector('.instrument').classList.toggle('ready-to-order',selected.length===2&&!orderFrozen);
+  const button=document.getElementById('churn');button.disabled=locked||!weatherCurrent||!marketContext||selected.length!==2||!selected.some(f=>Edition.fruits.includes(f));
+  button.textContent=!weatherCurrent?'weather unavailable':!marketContext?'market unavailable':selected.length<2?(selected.length?'pick one more':'pick two from the market'):`churn ${selected[0]} + ${selected[1]}`;
+  if(!orderFrozen)document.getElementById('waiting').textContent=message||selectionNotice||(selected.length===2?`${title(selected[0])} and ${selected[1]}. Coming up.`:selected.length?`${title(selected[0])}. What else?`:'A chance of sprinkles.');
+}
+function renderProduce(){
+  const list=document.getElementById('produceList');list.replaceChildren();
+  for(const item of produce){const button=document.createElement('button');button.className='produce';button.textContent=item;button.addEventListener('click',()=>selectProduce(item));list.appendChild(button);}
+  updateSelection();
+}
+function selectProduce(item){
+  if(resolving||orderFrozen||recoveryBlocked||!produce.includes(item))return;
+  selectionNotice='';
+  const index=selected.indexOf(item);if(index>=0)selected.splice(index,1);else if(selected.length<2)selected.push(item);else selected[1]=item;
+  updateSelection();
+}
+function creameryChoiceFor(item){const choice=marketData?.choices?.[item];if(!validChoice(choice,item))throw new Error('market choice unavailable');return clone(choice);}
+function sourceFor(key){
+  if(key==='base')return `${Math.round(conditions.temp)}°`;
+  if(key==='preparation')return conditions.condition;
+  if(key==='topping')return `${Math.round(conditions.humidity)}% humidity`;
+  if(key==='contrast')return `${Math.round(conditions.wind)} mph wind`;
+  return frozenOrder?frozenOrder.time.label:calendarNow().label;
+}
+function causalParts(key){
+  const source=sourceFor(key);
+  if(key==='base')return [`${source} makes it `,''];
+  if(key==='preparation')return [`${source} calls for `,''];
+  if(key==='topping')return [`${source} puts `,' on top'];
+  if(key==='contrast')return [`${source} gives it a `,' edge'];
+  return [`${source} brings in `,''];
+}
+
+function showCausal(key,value){
+  const causal=document.getElementById('causalLine');
+  causal.classList.remove('device-choice');
+  const [before,after]=causalParts(key);
+  const sentence=document.createElement('span');
+  sentence.className='causal-sentence';
+  sentence.append(document.createTextNode(before));
+  const choice=document.createElement('span');
+  choice.className='causal-choice';
+  choice.textContent=value;
+  sentence.append(choice,document.createTextNode(`${after}${value==='…'?'':'.'}`));
+  causal.replaceChildren(sentence);
+}
+
+async function spinRow(key,target){
+  const row=document.querySelector(`.reel[data-key="${key}"]`);
+  const text=row.querySelector('.reel-text');
+  const causal=document.getElementById('causalLine');
+  row.classList.add('consulting');
+  row.querySelector('.reel-source').textContent=sourceFor(key);
+  showCausal(key,'…');
+  await pause(240);
+  const options=OPTIONS[key].map(value=>displayedOption(key,value));
+  const sequence=options.filter(value=>value!==target).slice(0,2).concat(target);
+  for(const [index,value] of sequence.entries()){
+    text.classList.add('turning');
+    await pause(95);
+    text.textContent=value;
+    showCausal(key,value);
+    text.classList.remove('turning');
+    await pause(135+Math.min(index*22,110));
+  }
+  row.classList.add('settled');
+  row.classList.remove('consulting');
+  await pause(580);
+}
+
+function resetChoiceStage(){
+  document.querySelector('.sugar-flourish').replaceChildren();
+  document.getElementById('environmentRows').classList.remove('hidden');
+  document.getElementById('reels').classList.remove('choosing');
+  for(const id of ['choiceIngredient','choiceAccent','choiceTreatment','choicePlusOne','choicePlusTwo','choiceElement','choiceCounter']){
+    document.getElementById(id).classList.remove('shown');
+  }
+}
+
+function scatterSugar(){
+  const tray=document.querySelector('.sugar-flourish');tray.replaceChildren();
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  for(let i=0;i<30;i++){
+    const fleck=document.createElement('i');
+    const side=i%2?1:-1, reach=58+(i*37%130), rise=24+(i*19%68);
+    fleck.style.cssText=`--dx:${side*reach}px;--dy:${-rise}px;--fall:${12+i%5*5}px;--turn:${i*43}deg;--lag:${i%6*.055}s;--sugar:${i%7===0?'#a54434':i%3===0?'#81a8b6':'#c6a16a'};`;
+    if(i%6===0)fleck.className='glint';
+    tray.append(fleck);
+  }
+}
+async function revealCreameryChoice(choice){
+  const reels=document.getElementById('reels'),causal=document.getElementById('causalLine');
+  document.getElementById('environmentRows').classList.add('hidden');reels.classList.add('choosing');
+  causal.classList.add('device-choice');causal.textContent='A little something from the house.';
+  document.getElementById('status').textContent='the finishing touch';
+  // Let one historical illustration settle during consideration.
+  clearTimeout(pantryTimer);pantryTimer=null;
+  document.querySelector('.choice-group').textContent='Your two ingredients';
+  const ingredient=document.getElementById('choiceIngredient'),accent=document.getElementById('choiceAccent');
+  const element=document.getElementById('choiceElement'),counter=document.getElementById('choiceCounter');
+  ingredient.textContent=frozenOrder?.primary||selected[0];accent.textContent=frozenOrder?.companion||selected[1];
+  ingredient.classList.add('shown');accent.classList.add('shown');document.getElementById('choicePlusOne').classList.add('shown');
+  document.getElementById('choicePlusTwo').style.display='none';document.getElementById('choiceTreatment').style.display='none';
+  element.textContent=choice.element;counter.textContent=choice.counterLine;
+  // The model has answered; preserve the visual reveal and reading pauses.
+  await pause(750);
+  document.querySelector('.choice-group').textContent='Your two ingredients';
+  element.classList.add('shown');scatterSugar();
+  await pause(800);counter.classList.add('shown');
+  await pause(2900);
+  document.querySelector('.sugar-flourish').replaceChildren();
+}
+
+function normalizeRecipePhrase(value){return String(value||'').toLocaleLowerCase('en-US').replace(/[-–—]+/g,' ').replace(/\s+/g,' ').trim();}
+function hasWholeRecipePhrase(value,phrase){return ` ${normalizeRecipePhrase(value)} `.includes(` ${normalizeRecipePhrase(phrase)} `);}
+function describeRecipe(order){
+  const resolved=order.resolved,choice=order.creamery_choice;
+  const contrast={mellow:'a mellow finish',herbal:'an herbal finish',salted:'a little salt',tart:'a tart finish',peppery:'a peppery finish',spiced:'a spiced finish'}[resolved.contrast];
+  let topping=displayedOption('topping',resolved.topping,order);if(topping==='wafer crumb')topping='wafer crumbs';if(topping==='oat crumb')topping='oat crumbs';
+  const flavor=displayedOption('time',resolved.time,order),parts=[choice.element,topping];
+  if(!parts.some(part=>hasWholeRecipePhrase(part,flavor)))parts.push(flavor);
+  parts.push(contrast);
+  return `${title(resolved.preparation)} ${order.primary} and ${resolved.base}, with ${parts.slice(0,-1).join(', ')} and ${parts[parts.length-1]}.`;
+}
+
+function buildOrder(instant=new Date(Edition.clock)){
+  const time=calendarNow(instant),resolved=derive({...conditions,hour:time.hour}),primary=selected[0],companion=selected[1],choice=creameryChoiceFor(companion);
+  const profile=marketContext.finish_profile,finish=profile?{profile,...clone(marketData.finish_profiles[profile])}:null;
+  // Freeze one seasonal variation now; generation/recording retries reuse it.
+  rotateTimeFlavor(finish,resolved.time);
+  const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);
+  const weather={};for(const key of ['current_temp_f','current_wind_mph','current_humidity_pct','condition','weather_code','observed_at','fetched_at','source','location'])weather[key]=clone(weatherRecord[key]);
+  const order={request_id:Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join(''),created_at:time.iso,local_date:time.local_date,timezone:time.timezone,rules_version:RULES_VERSION,primary,companion,market:clone(marketContext),...(finish?{finish}:{}),weather,time:{iso:time.iso,hour:time.hour,label:time.label},resolved,creamery_choice:choice,creamery_choice_provenance:{source:'authored'},name:`${title(resolved.preparation)} ${title(primary)} ${['custard','sweet cream','buttermilk'].includes(resolved.base)?'Sundae':title(resolved.base)}`,copy_source:RECIPE_COPY_SOURCE};order.line=describeRecipe(order);return order;
+}
+async function requestCreameryChoice(order){
+  return {choice:creameryChoiceFor(order.companion),provenance:{source:'authored'}};
+}
+function orderWithChoice(order,result){
+  const final=clone(order);final.rules_version=RULES_VERSION;final.creamery_choice=clone(result.choice);final.creamery_choice_provenance=clone(result.provenance);delete final.line_provenance;final.copy_source=RECIPE_COPY_SOURCE;final.line=describeRecipe(final);return final;
+}
+function persistOrder(){try{VisitStorage.setItem(PENDING_KEY,JSON.stringify({version:PENDING_VERSION,phase:pendingPhase,order:pendingOrder}));pendingStored=true;}catch(_){pendingStored=false;}}
+function showOrder(order,filed=false){
+  stopPantryArt();
+  document.getElementById('waiting').style.display='none';document.getElementById('churn').style.display='none';document.getElementById('reels').classList.remove('active');document.getElementById('causalLine').classList.remove('active');document.getElementById('result').classList.add('active');
+  document.getElementById('orderName').textContent=order.name;document.getElementById('orderLine').textContent=order.line;
+  document.getElementById('provenance').textContent=`${order.primary} + ${order.companion} · ${order.time.label} · ${order.local_date}`;
+  document.getElementById('resultLabel').textContent=filed?'Order up':'One order';document.getElementById('again').disabled=!filed;
+  document.getElementById('retryChoice').hidden=true;document.getElementById('retrySave').hidden=filed;document.getElementById('saveNote').hidden=filed;
+  document.getElementById('saveNote').textContent=filed?'':pendingStored?'Not yet recorded. This order is still here.':'Not yet recorded. Keep this page open.';
+  if(filed)Visit.completedOrder(order);document.getElementById('status').textContent=filed?'order up':'not yet recorded';updateSelection();renderReadings();
+}
+function showGenerationFailure(){
+  stopPantryArt();document.getElementById('waiting').style.display='none';document.getElementById('churn').style.display='none';document.getElementById('reels').classList.remove('active');document.getElementById('causalLine').classList.remove('active','device-choice');document.getElementById('result').classList.add('active');
+  document.getElementById('resultLabel').textContent='Order unfinished';document.getElementById('orderName').textContent='The Creamery couldn’t make its choice.';document.getElementById('orderLine').textContent='Your ingredients and weather are still held for this order.';document.getElementById('provenance').textContent=`${pendingOrder.primary} + ${pendingOrder.companion} · ${pendingOrder.time.label} · ${pendingOrder.local_date}`;
+  document.getElementById('saveNote').hidden=false;document.getElementById('saveNote').textContent='No order has been filed.';document.getElementById('retryChoice').hidden=false;document.getElementById('retryChoice').disabled=false;document.getElementById('retrySave').hidden=true;document.getElementById('again').disabled=true;document.getElementById('status').textContent='order unfinished';updateSelection();renderReadings();
+}
+async function savePendingOrder(){
+  if(!pendingOrder||pendingPhase==='generating'||savingOrder||resolving)return;
+  const payload=pendingOrder;savingOrder=true;document.getElementById('retrySave').disabled=true;document.getElementById('saveNote').textContent='Recording the order…';
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
+  try{
+    const response=await fetch(`${WORKSHOP}/workshop/creamery/keep`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});
+    if(!response.ok)throw new Error('not acknowledged');const acknowledgement=await response.json();
+    if(acknowledgement.ok!==true||acknowledgement.request_id!==payload.request_id)throw new Error('invalid acknowledgement');
+    pendingOrder=null;pendingPhase=null;try{VisitStorage.removeItem(PENDING_KEY);}catch(_){}showOrder(payload,true);
+  }catch(_){showOrder(payload,false);}
+  finally{clearTimeout(timeout);savingOrder=false;document.getElementById('retrySave').disabled=false;}
+}
+
+// Decorative only: this shuffle never changes recipe choices or recipe randomness.
+let pantryTimer=null, pantryBag=[], pantryLastId=null, pantryPreviousOrder=[];
+try { pantryPreviousOrder=JSON.parse(VisitStorage.getItem('sundae-pantry-last-order')||'[]'); } catch (_) {}
+function shufflePantryArt(){
+  const art=[...document.querySelectorAll('.wait-illustration')];
+  for(let i=art.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[art[i],art[j]]=[art[j],art[i]];}
+  if(art.length>1 && art[0].dataset.pantryId===pantryLastId)[art[0],art[1]]=[art[1],art[0]];
+  if(art.map(x=>x.dataset.pantryId).join('|')===pantryPreviousOrder.join('|'))[art[art.length-1],art[art.length-2]]=[art[art.length-2],art[art.length-1]];
+  pantryPreviousOrder=art.map(x=>x.dataset.pantryId);
+  try{VisitStorage.setItem('sundae-pantry-last-order',JSON.stringify(pantryPreviousOrder));}catch(_){}
+  return art;
+}
+function stopPantryArt(){clearTimeout(pantryTimer);pantryTimer=null;document.querySelectorAll('.wait-illustration').forEach(x=>x.classList.remove('is-visible'));}
+function showNextPantryArt(){
+  if(!document.querySelector('.reels.active')){stopPantryArt();return;}
+  if(!pantryBag.length)pantryBag=shufflePantryArt();
+  const next=pantryBag.shift();pantryLastId=next.dataset.pantryId;
+  document.querySelectorAll('.wait-illustration').forEach(x=>x.classList.toggle('is-visible',x===next));
+  pantryTimer=setTimeout(showNextPantryArt,4800);
+}
+function startPantryArt(){stopPantryArt();pantryBag=shufflePantryArt();showNextPantryArt();}
+
+async function churn(){
+  if(resolving||orderFrozen||recoveryBlocked)return;
+  const instant=new Date(Edition.clock);applyConditions(instant);if(selected.length!==2||!weatherCurrent||!marketContext)return;
+  frozenOrder=buildOrder(instant);pendingOrder=clone(frozenOrder);pendingPhase='generating';persistOrder();orderFrozen=true;resolving=true;conditions=weatherView(frozenOrder.weather,frozenOrder.time.hour);updateSelection();renderReadings();
+  const choiceRequest=requestCreameryChoice(frozenOrder).then(result=>({result}),error=>({error}));
+  document.getElementById('churn').style.display='none';document.getElementById('waiting').style.display='none';document.getElementById('result').classList.remove('active');document.getElementById('reels').classList.add('active');resetChoiceStage();startPantryArt();
+  document.querySelectorAll('.reel').forEach(row=>{row.classList.remove('settled','consulting');row.querySelector('.reel-source').textContent='—';row.querySelector('.reel-text').textContent='—';});
+  const causal=document.getElementById('causalLine');causal.classList.add('active');causal.textContent='Let’s see what we’ve got.';document.getElementById('status').textContent='churning';
+  try{for(const key of Object.keys(OPTIONS))await spinRow(key,displayedOption(key,frozenOrder.resolved[key]));}
+  catch(_){/* The complete snapshot remains recoverable even if animation fails. */}
+  causal.classList.add('device-choice');causal.textContent='The Confectioner is considering…';document.getElementById('status').textContent='the Creamery is choosing';
+  const choiceOutcome=await choiceRequest;if(choiceOutcome.error){resolving=false;showGenerationFailure();return;}const choiceResult=choiceOutcome.result;
+  frozenOrder=orderWithChoice(frozenOrder,choiceResult);pendingOrder=clone(frozenOrder);pendingPhase='ready-to-file';persistOrder();
+  try{await revealCreameryChoice(frozenOrder.creamery_choice);}catch(_){/* The final snapshot remains recoverable. */}
+  resolving=false;showOrder(frozenOrder,false);await savePendingOrder();
+}
+async function retryCreameryChoice(){
+  if(resolving||pendingPhase!=='generating'||!pendingOrder)return;
+  resolving=true;document.getElementById('retryChoice').disabled=true;document.getElementById('result').classList.remove('active');document.getElementById('reels').classList.add('active');document.getElementById('causalLine').classList.add('active','device-choice');document.getElementById('causalLine').textContent='The Confectioner is considering…';document.getElementById('status').textContent='churning';startPantryArt();updateSelection();
+  let result;try{result=await requestCreameryChoice(pendingOrder);}catch(_){resolving=false;showGenerationFailure();return;}
+  frozenOrder=orderWithChoice(pendingOrder,result);pendingOrder=clone(frozenOrder);pendingPhase='ready-to-file';persistOrder();
+  try{await revealCreameryChoice(frozenOrder.creamery_choice);}catch(_){/* The complete model order remains recoverable. */}
+  resolving=false;showOrder(frozenOrder,false);await savePendingOrder();
+}
+function reset(){
+  if(resolving||pendingOrder||savingOrder||recoveryBlocked)return;
+  Visit.newOrder();orderFrozen=false;frozenOrder=null;selected=[];selectionNotice='';resetChoiceStage();document.getElementById('result').classList.remove('active');document.getElementById('reels').classList.remove('active');document.getElementById('causalLine').classList.remove('active','device-choice');document.getElementById('waiting').style.display='flex';document.getElementById('churn').style.display='block';applyConditions();loadConditions();
+}
+function applyConditions(instant=new Date(Edition.clock)){
+  if(orderFrozen){renderReadings();return;}
+  const [weatherResult,marketResult]=latestConditionsResults||[];
+  if(marketResult?.status==='fulfilled'&&currentMarket(marketResult.value,instant))marketData=marketResult.value;
+  const nextMarket=currentMarket(marketData,instant),changedPeriod=marketContext&&nextMarket&&(marketContext.month!==nextMarket.month||marketContext.period!==nextMarket.period);
+  const changedFoods=nextMarket&&selected.some(food=>!nextMarket.produce.includes(food));
+  if(changedPeriod||changedFoods){selected=[];selectionNotice='The market changed. Pick two again.';}
+  marketContext=nextMarket;produce=nextMarket?nextMarket.produce.slice():[];
+  weatherCurrent=weatherResult?.status==='fulfilled'&&Boolean(validWeather(weatherResult.value,instant));
+  weatherRecord=weatherCurrent?clone(weatherResult.value):null;conditionsObservedAt=weatherCurrent?Date.parse(weatherRecord.observed_at):null;
+  conditions=weatherCurrent?weatherView(weatherRecord,calendarNow(instant).hour):null;
+  document.getElementById('status').textContent=recoveryBlocked?'unfinished order needs attention':!marketContext?'market unavailable':weatherCurrent?'weather current':'weather unavailable';
+  document.getElementById('retryWeather').hidden=weatherCurrent&&Boolean(marketContext);renderReadings();renderProduce();
+}
+function loadConditions(){
+  applyConditions();if(conditionsRequest)return conditionsRequest;
+  const read=async url=>{const response=await fetch(url,{signal:AbortSignal.timeout(12000),cache:'no-store'});if(!response.ok)throw new Error('unavailable');return response.json();};
+  conditionsRequest=Promise.allSettled([read(`${WORKSHOP}/workshop/weather`),read('/sundae_market.json')]).then(results=>{latestConditionsResults=results;applyConditions();}).finally(()=>{conditionsRequest=null;});return conditionsRequest;
+}
+function restoreOrder(){
+  let raw;try{raw=VisitStorage.getItem(PENDING_KEY);if(!raw)return;const parsed=JSON.parse(raw),isEnvelope=parsed?.version===PENDING_VERSION&&['generating','ready-to-file'].includes(parsed.phase),saved=isEnvelope?parsed.order:parsed;
+    if(!saved||!/^[0-9a-f]{32}$/.test(saved.request_id)||!['sundae-v1','sundae-v2','sundae-v3',LEGACY_GENERATING_VERSION,RULES_VERSION].includes(saved.rules_version)||typeof saved.name!=='string'||typeof saved.line!=='string'||!Number.isFinite(Date.parse(saved.weather?.observed_at))||!saved.weather?.location?.name||!saved.time||!Array.isArray(saved.market?.produce)||!Number.isInteger(Number(saved.market.month))||Number(saved.market.month)<1||Number(saved.market.month)>12||!saved.resolved||!validChoice(saved.creamery_choice,saved.companion)||!validChoiceProvenance(saved.creamery_choice_provenance,[LEGACY_GENERATING_VERSION,RULES_VERSION].includes(saved.rules_version)))throw new Error('invalid pending order');
+    if(Object.hasOwn(saved.market,'period')&&saved.market.period!==calendarNow(new Date(saved.created_at),saved.timezone).period)throw new Error('invalid pending market period');
+    if(['sundae-v2','sundae-v3',LEGACY_GENERATING_VERSION,RULES_VERSION].includes(saved.rules_version)&&(!validFinish(saved.finish,saved.rules_version==='sundae-v2')||saved.finish.profile!==saved.market.finish_profile))throw new Error('invalid pending finish');
+    if(saved.rules_version===RULES_VERSION&&(saved.copy_source!==RECIPE_COPY_SOURCE||Object.hasOwn(saved,'line_provenance')||saved.line!==describeRecipe(saved)))throw new Error('invalid recipe description');
+    const legacyReady=isEnvelope&&parsed.phase==='ready-to-file'&&saved.rules_version===LEGACY_GENERATING_VERSION;
+    if(isEnvelope&&((parsed.phase==='generating'&&(![LEGACY_GENERATING_VERSION,RULES_VERSION].includes(saved.rules_version)||saved.creamery_choice_provenance?.source!=='authored'))||(parsed.phase==='ready-to-file'&&(![LEGACY_GENERATING_VERSION,RULES_VERSION].includes(saved.rules_version)||saved.creamery_choice_provenance?.source!=='authored'))))throw new Error('invalid pending phase');
+    if(!isEnvelope&&saved.rules_version===RULES_VERSION&&saved.creamery_choice_provenance?.source!=='authored')throw new Error('invalid completed recipe');
+    pendingOrder=saved;pendingPhase=legacyReady||!isEnvelope?'legacy-ready':parsed.phase;frozenOrder=clone(saved);pendingStored=true;orderFrozen=true;selected=[saved.primary,saved.companion];marketContext=clone(saved.market);produce=saved.market.produce.slice();conditions=weatherView(saved.weather,saved.time.hour);renderProduce();if(pendingPhase==='generating')showGenerationFailure();else showOrder(saved,false);
+  }catch(_){if(raw){pendingOrder=null;pendingPhase=null;frozenOrder=null;orderFrozen=false;conditions=null;recoveryBlocked=true;document.getElementById('status').textContent='The unfinished order could not be read. Keep this page open.';updateSelection();}}
+}
+function describeOrder(order){
+  const weather=order.weather||{},location=weather.location||{},choice=order.creamery_choice||{};
+  return `${order.name}\n${order.line}\n\nOrdered: ${order.local_date} · ${order.time?.label} (${order.timezone})\nFirst choice: ${order.primary}\nSecond choice: ${order.companion}\nMarket: ${order.market?.region} · ${marketLabel(order.market)}\nOffered that day: ${(order.market?.produce||[]).join(', ')}\n\nModel weather: ${weather.current_temp_f}°F · ${weather.condition}\nWind: ${weather.current_wind_mph} mph\nHumidity: ${weather.current_humidity_pct}%\nLocation: ${location.name||''}\nWeather at: ${new Date(weather.observed_at).toLocaleString('en-US',{timeZone:order.timezone})}\nFrom: ${weather.source||''}\n\nTemperature chose ${order.resolved?.base}.\nThe weather chose ${order.resolved?.preparation}.\nWind chose a ${order.resolved?.contrast} edge.\nHumidity chose ${displayedOption('topping',order.resolved?.topping,order)}.\nTime chose ${displayedOption('time',order.resolved?.time,order)}.\n\nThe Confectioner: ${choice.ingredient} + ${choice.accent} + ${choice.treatment}\n${choice.element}\n${choice.counterLine}`;
+}
+async function showHistory(){
+  document.getElementById('historyPanel').hidden=false;const entries=document.getElementById('historyEntries'),detail=document.getElementById('historyDetail');entries.hidden=false;detail.hidden=true;entries.textContent='Reading previous orders…';
+  try{const response=await fetch(`${WORKSHOP}/workshop/creamery/churns`,{cache:'no-store',signal:AbortSignal.timeout(12000)});if(!response.ok)throw new Error('unavailable');const result=await response.json();if(!Array.isArray(result.orders))throw new Error('invalid history');entries.replaceChildren();
+    if(!result.orders.length){entries.textContent='No orders filed yet.';return;}
+    for(const order of result.orders.slice().reverse()){const button=document.createElement('button');button.className='history-entry';button.textContent=`${order.local_date||'Earlier order'} · ${order.name||'Order'}`;button.addEventListener('click',()=>{entries.hidden=true;detail.hidden=false;detail.textContent=describeOrder(order);});entries.appendChild(button);}
+  }catch(_){entries.textContent='Previous orders could not be read. Try previous orders again.';}
+}
+function refreshVisibleConditions(){if(document.visibilityState==='visible')return loadConditions();}
+setInterval(refreshVisibleConditions,60000);document.addEventListener('visibilitychange',refreshVisibleConditions);
+window.addEventListener('beforeunload',event=>{if(pendingOrder||recoveryBlocked){event.preventDefault();event.returnValue='';}});
+document.getElementById('churn').addEventListener('click',churn);document.getElementById('again').addEventListener('click',reset);document.getElementById('retryChoice').addEventListener('click',retryCreameryChoice);document.getElementById('retrySave').addEventListener('click',savePendingOrder);document.getElementById('retryWeather').addEventListener('click',loadConditions);document.getElementById('historyButton').addEventListener('click',showHistory);document.getElementById('historyClose').addEventListener('click',()=>{document.getElementById('historyPanel').hidden=true;});
+restoreOrder();loadConditions();
+</script>
+<script src="guide.js"></script></body>
+</html>

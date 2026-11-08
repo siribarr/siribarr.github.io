@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Halyx — Sophie Iribarren</title>
+<meta name="description" content="Halyx, a handmade Raspberry Pi cyberdeck by Sophie Iribarren. A look at its readings, coins, pinboard, weather and sundae-making applications.">
+<style>
+@font-face{font-family:Linden;src:url('assets/LindenHill.woff')}@font-face{font-family:Linden;src:url('assets/LindenHill-Italic.woff');font-style:italic}@font-face{font-family:Basteleur;src:url('assets/Basteleur.woff2')}
+:root{--paper:#f0ecdf;--ink:#263d35;--muted:#5b6559;--rule:#a9ab96;--orange:#F07030}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--paper);color:var(--ink);font:21px/1.45 Linden,Georgia,serif}a{color:inherit;text-underline-offset:5px}a:focus-visible{outline:3px solid var(--orange);outline-offset:6px}img{display:block;max-width:100%;height:auto}p,h1,h2,h3,figure{margin:0}p+p{margin-top:16px}.shell{max-width:1240px;margin:auto;padding:0 54px}.top{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 0 24px;border-bottom:1px solid var(--ink)}.wordmark{font-size:27px;text-decoration:none}.nav{display:flex;gap:24px;font-size:18px}.nav a{text-decoration:none}.nav a:hover{text-decoration:underline}.intro{padding:48px 0 35px}.back{font-size:18px}.intro-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:70px;align-items:start;margin-top:34px}h1{font:88px/1 Basteleur,Georgia,serif;letter-spacing:-.04em}.lede{font-size:29px;line-height:1.35;max-width:650px}.intro-detail{font-size:21px;max-width:620px}.opening{padding:25px 0 48px}.opening img{width:100%}.opening figcaption{margin-top:12px;color:var(--muted);font-size:18px}.contents{display:flex;flex-wrap:wrap;gap:10px 28px;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);padding:19px 0;font-size:19px}.feature{display:grid;grid-template-columns:.85fr 1.5fr;gap:55px;align-items:center;padding:58px 0;border-bottom:1px solid var(--rule);scroll-margin-top:20px}.feature h2{font:37px/1.15 Basteleur,Georgia,serif;letter-spacing:-.025em;margin-bottom:19px}.feature p{font-size:22px}.feature figure img{width:100%}.feature figcaption{font-size:17px;color:var(--muted);margin-top:10px}.feature.reverse{grid-template-columns:1.5fr .85fr}.feature.reverse .copy{grid-column:2;grid-row:1}.feature.reverse figure{grid-column:1;grid-row:1}.feature figure a{display:block}.more{padding:43px 0 49px}.more h2,.making h2{font:30px/1.2 Basteleur,Georgia,serif;letter-spacing:-.02em;margin-bottom:25px}.more-list{display:grid;grid-template-columns:1fr 1fr;gap:28px 55px}.more h3{font-size:25px;font-weight:400;margin-bottom:7px}.more p{font-size:20px;max-width:480px}.making{display:grid;grid-template-columns:.85fr 1.5fr;gap:55px;border-top:1px solid var(--ink);padding:38px 0 50px}.making p{font-size:22px}.build-note{font-size:18px;color:var(--muted);border-top:1px solid var(--rule);padding:22px 0 30px}.return{padding-bottom:46px}.return a{font-size:22px}footer{background:var(--ink);color:var(--paper);padding:22px 0}footer .shell{display:flex;justify-content:space-between;font-size:17px}
+@media(max-width:900px){.shell{padding:0 30px}.intro-grid{gap:35px;grid-template-columns:.8fr 1.2fr}h1{font-size:70px}.lede{font-size:25px}.feature,.making{gap:30px}.feature h2{font-size:30px}.feature p{font-size:20px}}
+@media(max-width:650px){.shell{padding:0 23px}.top{flex-wrap:wrap;gap:12px;padding-top:21px}.wordmark{font-size:23px}.nav{width:100%;justify-content:space-between;font-size:17px}.intro{padding:28px 0 20px}.intro-grid{grid-template-columns:1fr;gap:22px;margin-top:28px}h1{font-size:72px}.lede{font-size:26px}.intro-detail{font-size:21px}.opening{padding:10px 0 30px}.opening figcaption{font-size:16px}.contents{gap:9px 22px;font-size:18px}.feature,.feature.reverse{grid-template-columns:1fr;gap:24px;padding:35px 0}.feature.reverse .copy,.feature.reverse figure{grid-column:auto;grid-row:auto}.feature h2{font-size:32px;margin-bottom:15px}.feature p{font-size:21px}.more-list,.making{grid-template-columns:1fr;gap:25px}.more{padding:34px 0}.making{padding:32px 0}.making h2{margin-bottom:0}footer .shell{font-size:15px;gap:15px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Match the revised homepage masthead. */
+.top{padding:38px 0 27px}.wordmark{font-family:Basteleur,Georgia,serif;font-size:30px;letter-spacing:-.03em}@media(max-width:650px){.top{padding-top:25px}.wordmark{font-size:26px}}
+.sample-switch{display:flex;gap:25px;margin-bottom:15px}.sample-switch button{font:20px Linden,Georgia,serif;color:var(--muted);background:none;border:0;padding:5px 0;cursor:pointer}.sample-switch button[aria-pressed="true"]{color:var(--ink);text-decoration:underline;text-underline-offset:6px;text-decoration-color:var(--orange)}.sample-switch button:focus-visible{outline:3px solid var(--orange);outline-offset:5px}
+</style>
+<link rel="stylesheet" href="halyx-edition.css">
+<link rel="stylesheet" href="site-nav.css"/></head>
+<body>
+<div class="shell site-frame">
+<header class="top"><a class="wordmark" href="material-study.html">Sophie Iribarren</a><nav class="nav" aria-label="Main"><a href="index.html#about">About me</a><a href="index.html#contact">Contact</a></nav></header>
+<details class="site-sections" open><summary>Sections</summary><nav aria-label="Portfolio sections">
+<a href="material-study.html">Projects</a>
+<a href="index.html#publications">Publications</a>
+<a href="index.html#product-development">Product development</a>
+<a href="index.html#permanent-collection">Permanent collection</a>
+<a href="index.html#awards">Awards</a>
+<a href="index.html#continuing-education">Continuing education</a>
+<a href="index.html#references">References</a>
+<a href="https://app.thestorygraph.com/profile/sophiesf">What I’m reading</a>
+</nav></details>
+<main>
+<header class="intro"><div class="intro-grid"><h1>Halyx</h1><div><p class="lede">A handmade computer in a briefcase, with a few things rattling around inside.</p><p class="intro-detail">The odds and ends have promoted themselves to software. The fountain has opinions now, and the coins remember your day.</p></div><figure class="opening" id="short-visit"><a class="visit-launch" href="visit/index.html"><img src="assets/studiolo-folio.webp" alt="The embroidered Folio at the center of the Studiolo carousel" width="800" height="428"><span>Take a short visit <span aria-hidden="true">→</span></span></a></figure></div></header>
+<nav class="contents" aria-label="Halyx functions"><a href="#vernierscope">Vernierscope</a><a href="#mint">The Mint</a><a href="#rum-standard">The Rum Standard</a><a href="#sundae">Sundae Forecast</a><a href="#folio">Folio</a><a href="#sky">Heliograph & Lunidex</a><a href="#more">More inside</a></nav>
+<div class="instrument-pair">
+<section class="feature" id="vernierscope"><div class="copy"><h2>The Vernierscope</h2><p>The Vernierscope has the appeal of a horoscope, with eight temperaments of its own, each with particular pleasures and contradictions. A few choices of words and symbols lead to a short personal notice: the satisfaction of getting one small detail right, the discovery that rearranges an afternoon, or the wish to be known without giving everything away.</p></div><figure><a href="assets/notice.png" aria-label="View the Vernierscope image at full size"><img src="assets/notice.png" alt="A result from the Vernierscope’s invented horoscope" width="800" height="480" loading="lazy"></a></figure></section>
+<section class="feature reverse" id="mint"><div class="copy"><h2>The Mint</h2><p>Answer questions about your day, and the Mint uses your responses to determine a coin’s design, drawing on historical medal imagery. Each coin is saved with its date and answers, so you can reopen it later and see the day that produced it.</p></div><figure><a href="assets/mint.png" aria-label="View the Mint image at full size"><img src="assets/mint.png" alt="A completed coin revealed in the Mint" width="800" height="480" loading="lazy"></a></figure></section>
+</div>
+<section class="feature" id="rum-standard"><div class="copy"><h2>The Rum Standard</h2><p>Circle your preferences on an illustrated drinks menu. It filters the recipe collection to match your choices, then uses your recommendation history to vary what it serves. Each drink comes with its recipe and a note about its origins.</p></div><figure class="rum-sample"><div class="sample-switch" role="group" aria-label="Rum Standard sample screens"><button type="button" data-rum-screen="menu" aria-pressed="false">The menu</button><button type="button" data-rum-screen="recipe" aria-pressed="true">The drink</button></div><a id="rum-sample-link" href="assets/rum-recipe.png" aria-label="View the Rum Standard recipe screen at full size"><img id="rum-sample-image" src="assets/rum-recipe.png" alt="The Rum Standard recommends a Saturn, with its illustrated glass, recipe, and a note about its planetary garnish" width="800" height="480" loading="lazy"></a></figure></section>
+<div class="instrument-pair">
+<section class="feature" id="sundae"><div class="copy"><h2>Sundae Forecast</h2><p>Choose two seasonal ingredients. Live weather shapes the sundae. For each order, a small language model running on the Pi decides what to do with the second ingredient.</p></div><figure><a href="assets/sundae.png" aria-label="View Sundae Forecast at full size"><img src="assets/sundae.png" alt="Sundae Forecast’s seasonal food menu, with illustrated bowls of ice cream" width="800" height="480" loading="lazy"></a></figure></section>
+<section class="feature reverse" id="folio"><div class="copy"><h2>Folio</h2><p>Folio holds notes and saved excerpts on a pinboard of movable slips. When you file something from Signal, a language model running on the Pi can condense the excerpt into a short note. Its source stays attached, and your arrangement is saved for the next visit.</p></div><figure><a href="assets/folio.png" aria-label="View Folio at full size"><img src="assets/folio.png" alt="Folio’s pinboard holding illustrated notes about paper stencils, pomegranates, and the Tonga Room" width="800" height="480" loading="lazy"></a></figure></section>
+</div>
+<section class="feature" id="sky"><div class="copy"><h2>Heliograph & Lunidex</h2><p>A historical astronomical diagram adapted into an interactive sun-and-moon wheel. It calculates sunrise and sunset for San Francisco and the moon’s phase for the date you choose.</p></div><figure><a href="assets/lunidex.png" aria-label="View Lunidex at full size"><img src="assets/lunidex.png" alt="Lunidex showing the moon, its phase, and a time readout on blue woven fabric" width="800" height="480" loading="lazy"></a></figure></section>
+<section class="more" id="more"><h2>More inside</h2><div class="more-list"><div><h3>The Matinal</h3><p>A morning paper assembled from weather and air-quality feeds, incoming headlines, and a seasonal produce calendar. Turn it over for NASA’s astronomy image and its accompanying explanation.</p></div><div><h3>The Archive</h3><p>A searchable copy of Wikipedia stored on the Pi, with an interface built from historical encyclopaedia illustrations. Articles and their links work offline.</p></div><div><h3>Signal</h3><p>Articles from selected RSS feeds arrive as telegrams. Open one to read the article and its images, then file an excerpt in Folio with its source attached.</p></div></div></section>
+<p class="build-note">I built the interface as a set of web applications running on a Raspberry Pi with Linux. Local services handle the collections, incoming feeds, and language model; public-domain artwork supplies the menus, diagrams, and objects you use to navigate.</p>
+<div class="return"><a href="material-study.html">← Home</a></div>
+</main></div>
+<footer><div class="shell"><span>Sophie Iribarren</span><span>San Francisco</span></div></footer>
+<script>
+const rumScreens = {
+  menu: {src:'assets/rum-menu.png',alt:'The Rum Standard printed menu, with Gin, Citrusy, Golden age and Steady current circled'},
+  recipe: {src:'assets/rum-recipe.png',alt:'The Rum Standard recommends a Saturn, with its illustrated glass, recipe, and a note about its planetary garnish'}
+};
+for (const button of document.querySelectorAll('[data-rum-screen]')) {
+  button.addEventListener('click', () => {
+    const key = button.dataset.rumScreen;
+    const screen = rumScreens[key];
+    const image = document.querySelector('#rum-sample-image');
+    image.src = screen.src;
+    image.alt = screen.alt;
+    const link = document.querySelector('#rum-sample-link');
+    link.href = screen.src;
+    link.setAttribute('aria-label', 'View the Rum Standard ' + key + ' screen at full size');
+    for (const peer of document.querySelectorAll('[data-rum-screen]')) peer.setAttribute('aria-pressed', String(peer === button));
+  });
+}
+</script>
+<script src="edition.js"></script></body></html>

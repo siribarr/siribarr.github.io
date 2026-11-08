@@ -1,0 +1,126 @@
+@font-face{font-family:VisitLinden;src:url('fonts/LindenHill.woff')}@font-face{font-family:VisitSligoil;src:url('fonts/Sligoil-Micro.woff2')}
+/* The sample metal needs a clearer selected state than its soft source tones. */
+html .a-mint.slot-center .mint-tray-coin{filter:drop-shadow(0 2px 1px #30231566)}
+html .a-mint.slot-center .mint-tray-coin img{filter:brightness(1.12) contrast(1.22)}
+/* A small software window shared by the visit, not a paper annotation. */
+.v-guide{position:fixed;z-index:15000;box-sizing:border-box;background:#e9dfcc;color:#302720;border:1px solid var(--control-edge,#70513c);box-shadow:inset 1px 1px var(--control-light,#fff0d1),inset -1px -1px var(--control-shadow,#9d7e59),2px 2px 0 #30272080;padding:28px 10px 9px;font:17px/1.18 VisitLinden,Georgia,serif;text-transform:none;letter-spacing:0;text-align:left;max-height:432px;overflow:auto;animation:v-window-in .38s ease-out;transition:opacity .45s ease,visibility .45s}
+.v-window-bar{position:absolute;top:3px;left:3px;right:3px;height:18px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--control-shadow,#9d7e59);background:repeating-linear-gradient(to bottom,var(--control-cream,#ddc9a7) 0 3px,var(--control-shadow,#9d7e59) 3px 4px,var(--control-cream,#ddc9a7) 4px 6px);pointer-events:none}
+.v-window-bar span{padding:1px 6px;background:var(--control-cream,#ddc9a7);font:9px/1.25 VisitSligoil,monospace}
+.v-guide p{white-space:pre-line;margin:0 0 6px;font:inherit}.v-guide p:last-child{margin-bottom:0}.v-guide h2{font:22px/1.1 VisitLinden,Georgia,serif;margin:0 0 10px}.v-guide small{display:block;font:13px/1.25 VisitLinden,Georgia,serif;margin-top:5px}.v-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.v-guide button,.v-hint-tab,.v-resume,.v-menu,.v-season button{font:10px/1.25 VisitSligoil,monospace;color:#302720;background:#ddc9a7;border:1px solid #70513c;border-radius:0;box-shadow:inset 1px 1px #fff0d1,inset -1px -1px #9d7e59;padding:6px 8px;min-height:32px;cursor:pointer;text-transform:none;letter-spacing:0}
+.v-guide button.v-primary,.v-season .v-primary{background:#f07030;box-shadow:inset 1px 1px #ffc18a,inset -1px -1px #a64d22}.v-guide .v-close{position:absolute;top:2px;right:2px;min-height:22px;height:22px;width:24px;border:1px solid var(--control-edge,#70513c);background:var(--control-cream,#ddc9a7);box-shadow:inset 1px 1px var(--control-light,#fff0d1),inset -1px -1px var(--control-shadow,#9d7e59);padding:0;font:18px/1 VisitLinden}
+.v-guide button:active,.v-resume:active,.v-season button:active{box-shadow:inset 1px 1px #70513c,inset -1px -1px #fff0d1;translate:0 1px}
+.v-hint-tab:focus-visible,.v-guide button:focus-visible,.v-season button:focus-visible,.v-resume:focus-visible{outline:2px dotted #7b3f26;outline-offset:3px}.v-guide .v-quiet{background:transparent;box-shadow:none;border:0;text-decoration:underline;padding:5px}
+@keyframes v-window-in{0%{opacity:0;translate:0 5px}55%{opacity:1;translate:0 -3px}80%{translate:0 1px}100%{translate:0 0}}
+.v-guide.v-dozing{opacity:0;visibility:hidden;pointer-events:none}
+.v-hint-tab{position:fixed;z-index:15001;min-height:28px;padding:4px 8px}
+.v-hint-tab[hidden]{display:none}
+@media(prefers-reduced-motion:reduce){.v-guide{transition:none!important}}
+/* Attention belongs to the object; no tour-target bounding boxes. */
+:root{--visit-glow:drop-shadow(0 0 5px #efb960a6) drop-shadow(0 0 13px #efb96066)}
+.v-target:not(.card),.card.v-target .card-face,.v-pin-ring .map-pin-hit{filter:var(--visit-glow)}
+/* The desktop disables decorative card animations; this active guidance cue is intentional. */
+.v-bounce .card-face,.v-bounce:not(.card),.v-foods.v-target{animation:var(--visit-motion,v-lift) var(--visit-tempo,1.2s) ease-in-out infinite!important}
+/* Match the invitation to the object without adding new target frames. */
+[data-open=season].v-target{--visit-motion:v-rock;--visit-tempo:1.8s;transform-origin:50% 85%}
+.v-foods.v-target,#produceList.v-target{--visit-motion:v-sway;--visit-tempo:1.8s}
+#churn.v-target,.v-season .v-primary.v-target{--visit-motion:v-shake;--visit-tempo:1.4s}
+.leaflet-marker-icon.v-target{--visit-motion:v-hover;--visit-tempo:1.8s}
+/* The same destination can be opened from its map pin or its list name. */
+.list-item.v-target{filter:none}
+.list-item.v-target .list-item-name{transform-origin:left center;filter:var(--visit-glow);animation:v-place-pulse 1.4s ease-in-out infinite}
+@keyframes v-place-pulse{0%,100%{scale:1;filter:var(--visit-glow)}50%{scale:1.06;filter:drop-shadow(0 0 3px #efb960) drop-shadow(0 0 8px #efb960cc)}}
+@media(prefers-reduced-motion:reduce){.list-item.v-target .list-item-name{animation:none!important}}
+
+@keyframes v-rock{0%,100%{rotate:0deg}25%{rotate:-1.2deg}75%{rotate:1.2deg}}
+@keyframes v-sway{0%,100%{translate:0 0}25%{translate:-2.5px 0}75%{translate:2.5px 0}}
+@keyframes v-shake{0%,75%,100%{translate:0 0}15%{translate:-2px 0}30%{translate:2px 0}45%{translate:-1.5px 0}60%{translate:1.5px 0}}
+@keyframes v-hover{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes v-lift{0%,40%,75%,100%{translate:0 0;filter:var(--visit-glow)}20%{translate:0 -6px;filter:drop-shadow(0 0 7px #efb960cc) drop-shadow(0 0 17px #efb96080)}58%{translate:0 -3px;filter:var(--visit-glow)}}
+.v-resume{position:fixed;z-index:15500;right:12px;bottom:7px;background:#f3ecda;max-width:355px;min-height:34px}.v-resume[hidden]{display:none}
+.v-carry{display:inline-block;background:#e9dfc8;border:1px solid #b6a48a;padding:2px 8px;margin-right:10px;font-style:italic}.v-fly{animation:v-fly .35s ease-in forwards}@keyframes v-fly{to{translate:-90px 60px;opacity:0}}
+.v-note-peek{position:absolute;z-index:-1;top:-13px;left:43px;width:128px;max-height:85px;overflow:hidden;padding:7px;background:#f3ecda;border:1px solid #725641;font:13px/1.2 VisitLinden;color:#392d25;rotate:-5deg}.v-note-peek img{height:58px;width:100%;object-fit:contain}
+.v-season{margin-top:10px;border-top:1px solid #b7a58b;padding-top:10px;font:18px VisitLinden}.v-season p{margin:0 0 8px}.v-season .v-foods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;max-width:300px}.v-season .v-food{font:20px VisitLinden;min-height:42px;background:transparent;border:1px solid #b7a58b;box-shadow:none;padding:5px 13px}.v-season .v-food[aria-pressed=true]{border:2px solid #56332b;border-radius:50% 44% 48% 43%;rotate:-2deg}.v-season .v-food[aria-pressed=true]:after{content:'  ①';font-size:16px}.v-season .v-primary{margin-top:10px}.v-season button:disabled{opacity:.5;cursor:default}
+.v-article-picture{float:left;margin:0 18px 10px 0;width:190px}.v-article-picture img{display:block;width:190px;height:180px;object-fit:contain;background:#ece3cc}.v-article-picture figcaption{font:12px/1.2 VisitLinden;margin-top:5px}.article.v-article .article-header h1{font-size:29px}.article.v-article p{font-size:18px;line-height:1.25}.article.v-article .source{font-size:13px}.article.v-article .endnote{clear:both;font-size:13px}.v-preview-image{display:block;max-width:240px;max-height:110px;object-fit:contain;margin:6px auto}.v-saved-image{display:block;width:100%;max-height:150px;object-fit:contain;margin:0 0 12px}.slip .read-slip:has(.v-saved-image){display:block}.slip .v-saved-image{float:right;width:64px;max-height:72px;margin:0 0 5px 9px}.v-pin-ring .map-pin-hit{animation:v-lift 1.2s ease-out infinite}
+@media(prefers-reduced-motion:reduce){.v-guide,.v-bounce .card-face,.v-bounce:not(.card),.v-fly,.v-foods.v-target,.v-pin-ring .map-pin-hit{animation:none!important}.card{transition:none!important}}
+
+.panel.v-guest-note{padding:12px 20px}.panel.v-guest-note h2{font-size:26px;margin-bottom:8px}.panel.v-guest-note .body{font-size:18px;line-height:1.2}.panel.v-guest-note .v-saved-image{max-height:112px;margin-bottom:8px}.panel.v-guest-note .details{margin-top:10px;padding-top:6px}.panel.v-guest-note .remove{margin-top:8px}
+
+.v-article-picture img{height:150px}.article.v-article .endnote{margin-top:6px;padding-top:6px}
+
+/* Keep the reading clear; this short question and its two actions share a row. */
+.v-guide.v-keep-choice{display:flex;align-items:center;gap:12px}.v-keep-choice>p{margin:0;flex:1}.v-keep-choice .v-actions{margin:0;flex-wrap:nowrap;flex-shrink:0}
+
+/* Image provenance is available on request, outside the photograph. */
+.v-photo-credit{font:13px/1.3 VisitLinden,Georgia,serif;margin:0 0 12px;color:#70513c}
+.v-photo-credit summary{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.v-photo-credit p{margin:6px 0}
+#card-content:has(#card-image:not(.visible)) .v-photo-credit{display:none}
+
+/* Existing Durer beetle, positioned beside its current speech bubble. */
+.v-guide-beetle{position:fixed;left:174px;top:14px;width:68px;height:68px;z-index:15002;pointer-events:none;overflow:hidden;transform:rotate(-13deg);animation:v-beetle-arrive .8s linear both}
+.v-guide-beetle img{display:block;width:68px;height:auto;filter:url(#visit-beetle-ink);clip-path:polygon(0 0,100% 0,100% 77%,0 77%)}
+.v-guide.v-beetle-message{overflow:visible;animation:v-window-in .3s ease-out .65s backwards}
+.v-guide-beetle.v-beetle-leaving{animation:v-beetle-leave .6s ease-in .2s both}
+@keyframes v-beetle-arrive{0%{opacity:0;transform:translate(-250px,78px) rotate(-26deg)}15%{opacity:1;transform:translate(-198px,65px) rotate(-17deg)}35%{transform:translate(-142px,44px) rotate(-24deg)}55%{transform:translate(-83px,28px) rotate(-12deg)}75%{transform:translate(-30px,12px) rotate(-19deg)}90%{transform:translate(-8px,3px) rotate(-10deg)}100%{opacity:1;transform:translate(0,0) rotate(-13deg)}}
+@keyframes v-beetle-leave{0%{opacity:1;transform:translate(0,0) rotate(-13deg)}30%{opacity:1;transform:translate(-48px,18px) rotate(-24deg)}70%{opacity:1;transform:translate(-156px,57px) rotate(-17deg)}100%{opacity:0;transform:translate(-250px,78px) rotate(-26deg)}}
+@media(prefers-reduced-motion:reduce){.v-guide-beetle{animation:none!important}.v-guide-beetle.v-beetle-leaving{visibility:hidden}.v-guide.v-beetle-message{overflow:visible;animation:none!important}}
+
+/* A software control shaped like a speech balloon, not a titled window. */
+.v-guide.v-beetle-message{padding:17px 40px 17px 18px;min-height:62px;border-radius:16px;background:#e9dfcc;border:1px solid #70513c;box-shadow:inset 2px 2px #fff0d1,inset -2px -2px #9d7e59,2px 3px 0 #30272070;font:14px/1.4 VisitSligoil,monospace}
+.v-beetle-message .v-window-bar{display:none}
+.v-beetle-message .v-close{top:8px;right:8px;width:22px;height:22px;min-height:22px;font-size:17px}
+.v-beetle-message::before,.v-beetle-message::after{content:"";position:absolute;left:-22px;top:23px;width:24px;height:24px;pointer-events:none}
+.v-beetle-message::before{background:#70513c;clip-path:polygon(100% 0,100% 100%,0 100%)}
+.v-beetle-message::after{background:#e9dfcc;clip-path:polygon(100% 2px,100% 22px,3px 22px)}
+
+
+/* The final invitation teaches the native return control. */
+#studiolo.v-target{--visit-motion:v-shake;--visit-tempo:1.4s}
+
+/* The invitation belongs to the carousel; a kept fragment may carry one personal line. */
+.v-invitation .v-actions{margin-top:8px}.v-invitation small{margin-top:3px}
+.v-personal-label{display:block;margin-top:8px;font:15px/1.2 VisitLinden,Georgia,serif}
+.v-personal-line{display:block;box-sizing:border-box;width:100%;margin-top:4px;padding:5px 7px;min-height:32px;background:#f3ecda;color:#302720;border:1px solid #70513c;box-shadow:inset 1px 1px #9d7e59;font:16px/1.2 VisitLinden,Georgia,serif}
+.v-personal-line:focus-visible{outline:2px dotted #7b3f26;outline-offset:2px}
+
+/* A visitor's actual sundae and chosen fragment share one pin. */
+.v-visit-pin{--paper:#f4ebd6!important;--bar:#bbcfcb!important;box-shadow:2px 4px 6px #30272055}
+.v-visit-pin .read-slip{display:block;padding-top:10px}
+.v-journey{display:flex;gap:10px;align-items:center;border-bottom:1px solid #8ba6a1;padding:0 0 9px;margin:0 0 12px;color:#304f4d;text-align:left}
+.v-sundae-mark{width:65px;height:78px;object-fit:contain;flex:none}
+.v-journey-words strong{display:block;font:21px/1.08 VisitLinden,Georgia,serif;color:#71382a}
+.v-journey-words span{display:block;font:16px/1.2 VisitLinden,Georgia,serif;margin:5px 0}
+.v-journey-words small{display:block;font:14px/1.2 VisitLinden,Georgia,serif}
+.v-visit-pin .read-slip h2{font-size:23px;line-height:1.1;margin-bottom:8px}
+.v-visit-pin .read-slip p{display:-webkit-box!important;-webkit-line-clamp:4!important;font-size:17px;line-height:1.2;overflow:hidden}
+.v-visit-pin .v-saved-image{width:62px;max-height:76px;margin:0 0 7px 10px}
+.v-pin-head{position:absolute;top:3px;left:calc(50% - 5px);width:11px;height:11px;border-radius:50%;background:#b55d36;border:1px solid #744529;box-shadow:inset 2px 2px #efb477,1px 2px 2px #30272055;pointer-events:none}
+.v-visit-pin.v-pinning{animation:v-pin-land 1s ease-out both;z-index:30!important}
+.v-pinning .v-pin-head{animation:v-pin-press 1s ease-out both}
+@keyframes v-pin-land{0%{opacity:0;translate:26px 85px;scale:.91;rotate:5deg}50%{opacity:1;translate:-2px -7px;scale:1.025;rotate:-1deg}75%{translate:0 2px;scale:.995;rotate:.3deg}100%{opacity:1;translate:0 0;scale:1;rotate:0deg}}
+@keyframes v-pin-press{0%,65%{opacity:0;scale:2}80%{opacity:1;scale:1.4}100%{opacity:1;scale:1}}
+@media(prefers-reduced-motion:reduce){.v-visit-pin.v-pinning,.v-pinning .v-pin-head{animation:none!important}}
+
+/* The Folio aside stays in the narrow margin, clear of pins and the return. */
+.v-guide.v-folio-speech{padding:27px 8px 10px;font:12px/1.35 VisitSligoil,monospace;border-radius:12px}
+.v-folio-speech::before,.v-folio-speech::after{left:24px;top:auto;bottom:-20px;width:22px;height:22px}
+.v-folio-speech::before{clip-path:polygon(0 0,100% 0,0 100%)}
+.v-folio-speech::after{clip-path:polygon(1px 0,20px 0,1px 19px)}
+
+/* One speaking guide. Small side bubbles leave the apparatus visible. */
+.v-guide.v-beetle-message{font-size:13px}
+.v-guide.v-compact-speech{padding:28px 10px 10px;font:12px/1.35 VisitSligoil,monospace}
+.v-beetle-below::before,.v-beetle-below::after{left:24px;top:auto;bottom:-20px;width:22px;height:22px}
+.v-beetle-below::before{clip-path:polygon(0 0,100% 0,0 100%)}
+.v-beetle-below::after{clip-path:polygon(1px 0,20px 0,1px 19px)}
+.v-guide.v-keep-choice{padding:14px 40px 14px 18px;min-height:62px}
+.v-guide.v-kept-preview{padding:18px 32px 12px 16px;font:15px/1.2 VisitLinden,Georgia,serif}
+.v-kept-preview>p:first-child{font:12px/1.35 VisitSligoil,monospace;margin-bottom:8px}
+.v-kept-preview h2{font-size:21px;margin-bottom:5px}
+.v-kept-preview .v-preview-image{max-height:90px;margin:5px auto}
+.v-kept-preview .v-route-memory{font-size:13px}
+
+/* Recognition and keeping choices fit beside the Archive reading, above its return. */
+.v-guide.v-archive-speech{padding:28px 8px 10px;font:12px/1.32 VisitSligoil,monospace}
+.v-archive-speech .v-actions{gap:5px}

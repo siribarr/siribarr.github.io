@@ -1,0 +1,344 @@
+/* Interior pages of the approved material study. Real scanned paper, quiet type,
+   personal objects. home.css retains the existing artifact interactions. */
+:root{--paper:#f0e5cf;--ink:#392b23;--soft:#71604e;--line:#c6b596;--accent:#91492f}
+body.material-pages{background:var(--paper);color:var(--ink);position:relative;isolation:isolate}
+body.material-pages::before{content:"";position:fixed;inset:0;z-index:-1;background:url('assets/material-study/paper.svg') center/cover;opacity:.34;filter:saturate(.65);pointer-events:none}
+.material-pages h1,.material-pages h2,.material-pages h3{font-family:Linden,Georgia,serif;font-weight:400;letter-spacing:0}
+.portfolio body.material-pages{overflow:auto}
+.portfolio .material-pages .page{max-width:1260px;min-height:100dvh;height:auto;padding:0 50px;display:flex;flex-direction:column}
+.portfolio .material-pages .masthead{border:0;padding:32px 0 24px;gap:30px;align-items:baseline;display:flex}
+.portfolio .material-pages .masthead h1{font:34px/1.1 Linden,Georgia,serif;letter-spacing:0;white-space:nowrap}
+.masthead-actions{display:flex;align-items:center;gap:32px;font-size:19px}
+.material-pages .masthead button,.material-pages footer button{border:0;padding:5px 0;background:none}
+.material-pages .masthead a:hover,.material-pages .masthead button:hover,.material-pages footer a:hover,.material-pages footer button:hover{text-decoration:none;text-underline-offset:5px}
+.portfolio .material-pages .layout{display:block;flex:1}
+.portfolio .material-pages #main{overflow:visible;height:auto}
+.portfolio .material-pages #main>section{height:auto;overflow:visible;padding:28px 0 45px;border:0;animation:none}
+.portfolio .material-pages #main>section>h2,.material-pages .collection-heading h2{font:36px/1.12 Linden,Georgia,serif;margin:0 0 35px;letter-spacing:0}
+.portfolio .material-pages footer{border:0;padding:18px 0 26px;font-size:17px;display:flex;gap:25px;align-items:center;margin:0}
+.material-pages footer a{text-decoration:none}.material-pages footer>span{margin-left:auto}
+.material-pages .text-link{border:0;text-decoration:none;text-decoration-thickness:1px;text-underline-offset:5px;min-height:40px;padding:5px 0;font-size:19px;gap:12px}
+.material-pages .text-link:hover{color:var(--accent)}
+/* Shared index and object viewers. */
+.material-pages dialog{border:0;background:var(--paper) url('assets/material-study/paper.svg') center/cover;padding:28px 32px;box-shadow:0 18px 70px #392b2333}
+.material-pages dialog::backdrop{background:#30251f80}
+.material-pages .dialog-top{margin-bottom:20px;border:0}
+.material-pages .dialog-top h2{font:28px/1.2 Linden,Georgia,serif}
+.material-pages #contents-dialog{width:min(760px,calc(100vw - 32px))}
+.portfolio .material-pages .margin{position:static;max-height:none;overflow:visible;padding:0;border:0}
+.material-pages .margin nav{display:grid;grid-template-columns:1fr 1fr;gap:16px 35px;align-items:start;font-size:25px;padding:12px 0 20px}
+.material-pages .margin nav a{padding:4px 0;border:0}
+.material-pages #colophon-dialog{width:min(650px,calc(100vw - 32px));font-size:20px}
+/* Selected work is a quiet set of project tabs, not a second landing page. */
+.portfolio .material-pages .project-tabs{border:0;margin:0 0 35px;padding:0;gap:16px 34px}
+.material-pages .project-tabs button{font-size:21px;padding:5px 0;color:var(--soft)}
+.material-pages .project-tabs button[aria-selected=true]{color:var(--ink);text-decoration-color:var(--ink);text-underline-offset:7px}
+.portfolio .material-pages .halyx-project{grid-template-columns:minmax(220px,.8fr) minmax(0,1.4fr);gap:18px 60px;max-width:1040px;margin:15px auto 0}
+.portfolio .material-pages .project-heading h3{font:43px/1.1 Linden,Georgia,serif}
+.portfolio .material-pages .project-heading>p{font-size:23px;line-height:1.4}
+.portfolio .material-pages .halyx-images{padding:0;margin:0}
+.portfolio .material-pages .screen-link img{box-shadow:2px 5px 9px #392b2320}
+.portfolio .material-pages .fountain-link{left:auto;right:-15px;width:90px;bottom:-40px}
+.portfolio .material-pages .project-ending{margin:0;display:block}
+.portfolio .material-pages .project-ending p{font-size:20px}
+.portfolio .material-pages .traveler-project{grid-template-columns:minmax(260px,1.2fr) minmax(250px,1fr);gap:70px;max-width:1000px;margin:0 auto;padding:0;border:0}
+.portfolio .material-pages .traveler-copy h3{font:36px/1.1 Linden,Georgia,serif;margin-bottom:22px}
+.material-pages .traveler-copy h3 br{display:none}
+.portfolio .material-pages .traveler-copy p{font-size:21px;line-height:1.4}
+.material-pages #companion-image{height:clamp(290px,47vh,410px)}
+.material-pages #companion-photo-label{border:0;text-decoration:none;text-underline-offset:5px;font-style:italic}
+.portfolio .material-pages .ears{display:grid;grid-template-columns:1.1fr 1fr;gap:18px 55px;max-width:970px;margin:auto;padding:0}
+.portfolio .material-pages .ears>img{grid-column:1;grid-row:1/5;width:100%!important;max-height:410px;object-fit:contain;margin:0!important;align-self:center}
+.portfolio .material-pages .ears h3{font:34px/1.1 Linden,Georgia,serif;margin:0}
+.portfolio .material-pages .ears p{font-size:21px;line-height:1.4;margin:0;grid-column:2}
+.portfolio .material-pages .ears .ears-statement{font:italic 27px/1.15 Linden,Georgia,serif}
+.material-pages .ears-statement br{display:none}
+/* Awards retain the scale and irregularity of the real objects. */
+.material-pages .award-objects{display:grid;grid-template-columns:.85fr 1fr .8fr;gap:28px 55px;max-width:1080px;margin:0 auto;align-items:center}
+.material-pages .trophy-award{grid-column:1;grid-row:1/3;align-self:center}
+.material-pages .trophy-award img{height:300px;width:auto}
+.material-pages .award-objects figcaption{font-size:20px;line-height:1.3;margin-top:20px}
+.material-pages .trivia-award{grid-column:2;grid-row:1;padding:0;max-width:330px}
+.material-pages .trivia-award svg{height:115px}
+.material-pages .award-objects .certificate{grid-column:2;grid-row:2;transform:rotate(1deg);padding:20px 15px;max-width:330px;background:#f5f0e5;border:3px double #a79576;box-shadow:2px 3px 5px #392b2314}
+.material-pages .award-objects .certificate h3{font-size:19px}
+.material-pages .award-objects .certificate p{font-size:16px;margin-top:10px}
+.material-pages .award-objects .recipient{font-size:23px;margin:8px 0}
+.material-pages .award-objects .reading-award{display:block;grid-column:3;grid-row:1/3;padding:0;border:0;align-self:center}
+.material-pages .reading-award .artifact-button{width:min(100%,195px);margin:auto}
+.material-pages .award-objects .reading-award figcaption{text-align:center;margin:25px 0 0;font-size:20px}
+/* A working kitchen, a course list, and a journal each keep their own measure. */
+.portfolio .material-pages #product-development{display:grid;grid-template-columns:.75fr 1.3fr;gap:65px}
+.material-pages .product .product-heading{display:block;margin:0;padding:0}
+.portfolio .material-pages .product-heading h2{font:36px/1.12 Linden,Georgia,serif}
+.material-pages .product-intro{font-size:23px;line-height:1.35;margin-top:25px}
+.material-pages .scoop-cluster{position:static;justify-content:center;width:100%;padding:20px 0;margin-top:24px}
+.material-pages .scoop-cut{width:95px;height:95px}
+.material-pages .scoop-cut+.scoop-cut{margin-left:-15px}
+.material-pages .product-layout{display:block}
+.material-pages .product-layout .flavors{column-count:2;column-gap:35px}
+.portfolio .material-pages .product-layout .flavors li{border:0;font-size:22px;line-height:1.25;padding:0 0 17px}
+.material-pages .product-layout .draft-note{font-size:16px;margin-top:12px}
+.material-pages .product-layout .kitchen-batch{display:flex;align-items:end;gap:20px;padding:0;min-height:0;width:auto;max-width:none;margin:25px 0 0 30px}
+.material-pages .kitchen-batch img{width:105px;height:auto;transform:rotate(-3deg)}
+.material-pages .kitchen-batch figcaption{max-width:140px;font-size:18px;margin:0 0 12px}
+.material-pages .courses{display:grid;grid-template-columns:1fr 1fr;gap:38px 75px;max-width:850px;margin:12px 0 0 65px}
+.portfolio .material-pages .courses>div{border:0;padding:0;display:block}
+.portfolio .material-pages .courses dt{font-size:29px;line-height:1.2;margin-bottom:9px}
+.portfolio .material-pages .courses dd{display:block;font-size:21px;line-height:1.3}
+.portfolio .material-pages .courses dd span{font-size:19px;display:block;margin-top:5px;font-style:italic}
+.material-pages .notebook-layout{grid-template-columns:minmax(180px,.4fr) minmax(0,1fr);gap:50px;max-width:980px;margin:0 auto}
+.material-pages .notebook-layout .publication-copy{padding-top:18px}
+.material-pages .notebook-layout .publication-copy h3{font:28px/1.15 Linden,Georgia,serif}
+.material-pages .notebook-layout .publication-copy p{font-size:21px}
+.material-pages .notebook-reader #notebook-page{height:clamp(300px,56vh,550px)}
+.material-pages .notebook-controls{max-width:560px;margin:15px auto 0;justify-content:space-between}
+.material-pages .collection-heading{margin:0;align-items:baseline}
+.material-pages .collection-heading .collection-subject{font-size:23px}
+.material-pages .tattoo-gallery{max-width:1050px;margin:0 auto 10px;height:clamp(330px,52vh,500px)}
+.material-pages .collection-credit{font-size:16px!important}
+.portfolio .material-pages .references{display:block}
+.material-pages .testimonials{display:grid;grid-template-columns:1.2fr 1fr;gap:44px 90px;max-width:950px;margin:45px auto 10px}
+.portfolio .material-pages .testimonials figure{border:0;padding:0;margin:0}
+.material-pages .testimonials figure:first-child{grid-row:1/3}
+.material-pages .testimonials blockquote{font:28px/1.35 Linden,Georgia,serif}
+.material-pages .testimonials figure:first-child blockquote{font-size:33px}
+.material-pages .testimonials figcaption{font-size:18px;margin-top:18px}
+.portfolio .material-pages .about{display:block;max-width:820px;margin:0 auto}
+.portfolio .material-pages .about>p{font:24px/1.45 Linden,Georgia,serif;max-width:760px;margin-top:22px}
+.portfolio .material-pages .about>p:last-child{font-style:italic;margin-top:30px}
+@media(max-width:900px){
+.portfolio .material-pages .page{padding:0 32px}.material-pages .award-objects{gap:25px}.material-pages .trophy-award img{height:260px}.material-pages .courses{margin-left:20px;gap:35px 50px}.portfolio .material-pages #product-development{gap:35px;grid-template-columns:.8fr 1.2fr}.material-pages .product-layout .flavors{column-count:1}.portfolio .material-pages .traveler-project{gap:35px}.material-pages .testimonials{gap:40px 55px}
+}
+@media(max-width:650px){
+.portfolio .material-pages .page{padding:0 23px}.portfolio .material-pages .masthead{padding:26px 0 15px;flex-wrap:wrap;gap:17px}.portfolio .material-pages .masthead h1{font-size:30px}.masthead-actions{font-size:18px;gap:26px}.portfolio .material-pages #main>section{padding:25px 0 30px}.portfolio .material-pages #main>section>h2,.material-pages .collection-heading h2,.portfolio .material-pages .product-heading h2{font-size:32px;margin-bottom:26px}.portfolio .material-pages .project-tabs{gap:10px 23px;margin-bottom:28px}.material-pages .project-tabs button{font-size:18px}.portfolio .material-pages .halyx-project{display:flex;flex-direction:column;gap:24px;margin:0}.portfolio .material-pages .project-heading{display:block}.portfolio .material-pages .project-heading h3{font-size:36px;margin-bottom:15px}.portfolio .material-pages .halyx-images{width:calc(100% - 20px);margin-bottom:25px}.portfolio .material-pages .fountain-link{width:65px}.portfolio .material-pages .project-ending .text-link{margin-top:12px}.portfolio .material-pages .traveler-project{display:flex;flex-direction:column;gap:30px}.material-pages .companion-object{max-width:420px}.material-pages #companion-image{height:320px}.portfolio .material-pages .traveler-copy h3{font-size:32px}.portfolio .material-pages .ears{display:flex;flex-direction:column;gap:18px}.portfolio .material-pages .ears>img{max-height:320px;width:85%!important;align-self:center}.portfolio .material-pages .ears h3{font-size:32px}.material-pages .award-objects{grid-template-columns:1fr;gap:45px;max-width:360px}.material-pages .award-objects>*{grid-column:auto!important;grid-row:auto!important}.material-pages .trophy-award img{height:300px}.material-pages .award-objects .reading-award{max-width:300px;margin:auto}.material-pages .trivia-award svg{height:145px}.portfolio .material-pages #product-development{display:block}.material-pages .product-intro{font-size:22px}.material-pages .scoop-cluster{justify-content:start;margin:0;padding:30px 0}.material-pages .product-layout .flavors{column-count:1}.material-pages .product-layout .kitchen-batch{margin:30px 0 0}.material-pages .courses{grid-template-columns:1fr;gap:30px;margin:0}.portfolio .material-pages .courses dt{font-size:27px}.material-pages .notebook-layout{display:block}.material-pages .notebook-layout .publication-copy{padding:0;margin-bottom:25px}.material-pages .notebook-reader #notebook-page{height:370px}.material-pages .notebook-controls .text-link{font-size:17px}.material-pages .collection-heading{display:block}.material-pages .collection-heading h2{margin-bottom:10px}.material-pages .collection-subject{margin:0}.material-pages .tattoo-gallery{height:365px;--piece-height:275px;overflow:hidden;margin:15px -15px 0}.material-pages .testimonials{display:block;margin:0}.portfolio .material-pages .testimonials figure{margin:0 0 40px}.material-pages .testimonials blockquote,.material-pages .testimonials figure:first-child blockquote{font-size:28px}.portfolio .material-pages .about>p{font-size:23px}.material-pages .margin nav{grid-template-columns:1fr;font-size:24px;gap:12px}.material-pages dialog{padding:22px}.portfolio .material-pages footer{font-size:16px;gap:20px}.material-pages footer>span{margin-left:auto}
+}
+
+/* Keep the paper quiet behind modal content, too. */
+.material-pages dialog{background-image:linear-gradient(#f0e5cfa8,#f0e5cfa8),url('assets/material-study/paper.svg')}
+@media(min-width:651px) and (max-height:800px){
+.material-pages .notebook-reader #notebook-page{height:48vh;min-height:300px}
+.material-pages .tattoo-gallery{height:46vh;min-height:320px;--piece-height:clamp(240px,40vh,355px)}
+}
+
+/* Links stay quiet; color and keyboard focus carry interaction feedback. */
+body.material-pages a:any-link,body.material-pages a:any-link:hover,
+body.material-pages button.text-link,body.material-pages #companion-photo-label,
+body.material-pages .project-tabs button[aria-selected=true]{text-decoration:none;border-bottom:0}
+body.material-pages a:any-link:hover,body.material-pages button:hover{color:var(--accent)}
+body.material-pages .project-tabs button[aria-selected=true],body.material-pages .margin nav a[aria-current=page]{font-style:italic}
+
+/* Public field-study link stays with the Ears description. */
+.portfolio .material-pages .ears .ears-notes{grid-column:2;justify-self:start;margin-top:4px}
+
+.portfolio .material-pages #product-development { display: block; }
+.portfolio .material-pages #main > #references {
+  max-width: 920px; margin: 0 auto;
+  padding-top: clamp(38px, 7vh, 74px);
+}
+.portfolio .material-pages #main > #references h2 { margin: 0 0 36px; font-size: clamp(36px, 4vw, 54px); }
+.reference-transcript { display: grid; gap: clamp(25px, 4vh, 45px); }
+.reference-transcript figure { margin: 0; }
+.reference-transcript blockquote { margin: 0; font: clamp(25px, 2.6vw, 37px)/1.2 Linden, Georgia, serif; max-width: 36ch; }
+.reference-transcript figcaption { margin: 8px 0 0; font: italic 19px/1.25 Linden, Georgia, serif; }
+@media (max-width: 720px) {
+  .reference-transcript figcaption { font-size: 18px; }
+}
+
+/* Project introductions precede process notes and each object's controls. */
+.portfolio .material-pages #traveler,
+.portfolio .material-pages #disney-ears {
+  display: grid; max-width: 980px; margin: 0 auto;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 28px clamp(28px, 4vw, 65px);
+  align-items: start;
+}
+.device-intro { grid-column: 1; grid-row: 1; }
+.portfolio .material-pages .device-intro h3 { font: 38px/1.05 Linden, Georgia, serif; margin: 0 0 16px; }
+.device-intro p, .device-edition p, .device-mail p, .ears-process p { font: 21px/1.36 Linden, Georgia, serif; }
+.portfolio .material-pages #disney-ears .ears-statement { font: italic 24px/1.2 Linden, Georgia, serif; margin-bottom: 12px; }
+#traveler .companion-object { grid-column: 2; grid-row: 1/3; align-self: start; text-align: center; }
+.material-pages #companion-image { height: clamp(230px,33vh,340px); }
+.device-edition { grid-column: 1; }
+.device-mail { grid-column: 1/-1; max-width: 54ch; }
+.portfolio .material-pages #disney-ears > img { grid-column: 2; grid-row: 1; width: 100%; max-height: 340px; align-self: center; }
+.ears-process { grid-column: 1/-1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px clamp(28px, 4vw, 65px); }
+.portfolio .material-pages .ears-process p { grid-column: auto; }
+.portfolio .material-pages .ears-process .ears-notes { grid-column: 2; }
+.portfolio .material-pages .project-tabs { margin-bottom: 24px; }
+.postcard-actions { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 24px; margin: 10px 0 18px; }
+.material-pages .postcard-invite { color: var(--accent); font: 25px/1.2 Linden, Georgia, serif; padding-block: 6px; }
+.material-pages .postcard-invite:hover { color: var(--ink); }
+.portfolio .material-pages .postcard-actions button { font-size: 18px; }
+
+/* Personal pages share a heading edge; the objects determine the space below. */
+.portfolio .material-pages #main > section { max-width: 1060px; margin-inline: auto; }
+.portfolio .material-pages #main > section > h2,
+.portfolio .material-pages .collection-heading h2 { font-size: clamp(32px, 3.2vw, 46px); margin: 0 0 28px; }
+.portfolio .material-pages #publications .notebook-layout {
+  grid-template-columns: minmax(175px, .65fr) minmax(0,1.35fr);
+  gap: clamp(28px, 4vw, 65px); align-items: start; max-width: 880px; margin: 0;
+}
+#publications .publication-copy { max-width: 21ch; }
+.material-pages .notebook-reader { width: min(100%, 52vh); justify-self: center; }
+.material-pages .notebook-reader #notebook-page { height: auto; aspect-ratio: 1/1.08; }
+.material-pages .notebook-controls { gap: 12px; width: 100%; margin: 7px auto 0; }
+.material-pages .collection-heading { display: block; }
+.material-pages .collection-heading h2 { margin-bottom: 6px; }
+.material-pages .collection-heading .collection-subject { margin: 0; font: italic 21px/1.2 Linden,Georgia,serif; }
+.material-pages .tattoo-gallery { width: 100%; max-width: 850px; }
+.material-pages .collection-controls { margin: 4px 0 0; }
+.material-pages .award-objects { grid-template-columns: 1.13fr 1fr .85fr; gap: 24px 4%; max-width: none; }
+.material-pages .trophy-award img { height: clamp(230px, 35vh, 330px); }
+.material-pages .award-objects figcaption { font-size: 20px; max-width: 27ch; margin-inline: auto; }
+.material-pages .award-objects .reading-award figcaption { margin-inline: auto; }
+.portfolio .material-pages .courses {
+  display: block; max-width: 780px; margin: 0;
+}
+.portfolio .material-pages .courses > div {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 5%; align-items: baseline; padding: 0 0 19px;
+}
+.portfolio .material-pages .courses dt { font-size: clamp(23px,2.2vw,30px); margin: 0; }
+.portfolio .material-pages .courses dd { font-size: 20px; }
+.portfolio .material-pages .courses dd span { font-size: 17px; margin-top: 2px; }
+.about-letter { max-width: 53ch; }
+.about-letter p { font: 22px/1.43 Linden,Georgia,serif; margin: 0 0 18px; }
+.about-letter p:first-child { font-size: clamp(24px, 2.25vw, 30px); line-height: 1.25; }
+.about-letter p:last-child { font-style: italic; }
+.portfolio .material-pages #main > #references { padding-top: 28px; }
+@media (max-width: 720px) {
+  .portfolio .material-pages #traveler,.portfolio .material-pages #disney-ears { display: flex; flex-direction: column; gap: 24px; }
+  .portfolio .material-pages #disney-ears > img { width: min(90%,355px); }
+  #traveler .companion-object { align-self: center; }
+  .ears-process { display: block; }
+  .portfolio .material-pages .ears-process p + p { margin-top: 16px; }
+  .portfolio .material-pages .ears-process .ears-notes { margin-top: 12px; }
+  .material-pages .notebook-reader { width: min(100%,430px); margin: 15px auto 0; }
+  .portfolio .material-pages #publications .notebook-layout { display: block; }
+  .material-pages .award-objects { display: flex; flex-direction: column; gap: 38px; }
+  .material-pages .award-objects > * { width: min(100%,340px); align-self: center; }
+  .material-pages .award-objects .reading-award { display: block; }
+  .portfolio .material-pages .courses > div { display: block; margin-bottom: 6px; }
+  .portfolio .material-pages .courses dd { margin-top: 4px; }
+  .material-pages .tattoo-gallery { margin-inline: 0; }
+}
+
+/* An open journal and a contact sheet of its actual spreads. */
+.portfolio .material-pages #publications .notebook-layout {
+  display:grid;grid-template-columns:minmax(180px,.58fr) minmax(0,1.45fr);gap:5%;
+  align-items:start;max-width:1030px
+}
+#publications .publication-copy {max-width:none;padding-top:0}
+#publications .publication-copy h3 {margin:0 0 20px}
+.spread-index {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-width:260px}
+.spread-index button {border:0;padding:0;background:transparent url('assets/journal-index.webp') 0 center/1500% 100% no-repeat;aspect-ratio:1;min-width:0;cursor:pointer;opacity:.77}
+.spread-index button:is(:hover,:focus-visible,[aria-pressed=true]) {opacity:1}
+.spread-index button[aria-pressed=true] {outline:1px solid var(--accent);outline-offset:2px}
+#publications .notebook-reader {width:min(100%,65vh);margin:0 auto}
+#publications .notebook-reader #notebook-page {width:100%;aspect-ratio:1;height:auto}
+#traveler .device-mail {max-width:none;display:grid;grid-template-columns:minmax(0,.87fr) minmax(0,1.13fr);gap:6%;align-items:center;margin-top:20px}
+.mail-copy p {margin:12px 0;max-width:34ch}
+.material-pages .mail-copy .postcard-invite {display:inline-block;font-size:clamp(26px,3vw,39px)}
+.mail-sample {min-width:0;text-align:center}
+.mail-sample #turn-card {margin:4px auto 0}
+.portfolio .material-pages #disney-ears {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:16px 5%}
+.portfolio .material-pages #disney-ears > img {grid-column:2;grid-row:1/3;width:100%!important;max-height:460px}
+.portfolio .material-pages #disney-ears .ears-process {display:block;grid-column:1;max-width:44ch}
+.portfolio .material-pages #disney-ears .ears-process p {margin:0 0 14px}
+@media(min-width:721px){
+  .reference-transcript {grid-template-columns:1fr 1fr;gap:38px 6%;max-width:920px}
+  .reference-transcript figure:first-child {grid-column:1/-1;max-width:740px}
+  .reference-transcript figure:first-child blockquote {font-size:clamp(36px,4.1vw,59px);max-width:26ch}
+  .reference-transcript figure:not(:first-child) blockquote {font-size:clamp(24px,2.35vw,33px)}
+}
+
+@media(max-width:720px){
+  .portfolio .material-pages #publications .notebook-layout {display:flex;flex-direction:column;gap:0}
+  #publications .publication-copy {display:contents}
+  #publications .publication-copy h3 {order:0;margin:0 0 12px}
+  #publications .notebook-reader {order:1;width:min(100%,54vh)}
+  #publications .spread-index {order:2;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;max-width:430px;margin:18px auto 0;gap:7px}
+  #traveler .device-mail {display:flex;flex-direction:column;align-items:stretch;gap:16px;margin:0}
+  .mail-sample {width:100%;max-width:520px;align-self:center}
+
+}
+.material-pages .project-tabs a {font-size:21px;padding:5px 0;color:var(--soft)}
+.material-pages .project-tabs a[aria-current="page"] {color:var(--ink);font-style:italic}
+@media (max-width:650px) {.material-pages .project-tabs a {font-size:18px}}
+
+/* The professional entry leads; its menu sits underneath. */
+.portfolio .material-pages #main > #product-development {display:block}
+#product-development .product-statement {
+  margin:0; max-width:48ch; font:clamp(22px,2.2vw,28px)/1.32 Linden,Georgia,serif;
+}
+.ice-menu {max-width:690px;margin:clamp(32px,4vw,50px) auto 0}
+.ice-menu .cream-title {
+  display:flex;justify-content:center;align-items:center;gap:15px;margin:0 0 22px;
+}
+.material-pages .ice-menu .cream-title h3 {
+  margin:0;color:#813c29;font:normal 30px/1.12 Basteleur,Georgia,serif;
+}
+.material-pages .ice-menu .scoop-cluster {position:static;width:auto;display:flex;align-items:center;margin:0;padding:0}
+.material-pages .ice-menu .scoop-cut {width:28px;height:auto;aspect-ratio:1}
+.material-pages .ice-menu .scoop-cut + .scoop-cut {margin-left:-5px}
+.ice-menu .recipe-list {
+  margin:0;padding:0;list-style:none;columns:2;column-gap:clamp(24px,3.5vw,50px);text-align:center;
+}
+.ice-menu .recipe-list li {break-inside:avoid;padding:0 0 18px}
+.ice-menu .recipe-list h4 {
+  color:#783e2c;margin:0 auto 3px;font:normal 21px/1.14 Linden,Georgia,serif;text-wrap:balance;
+}
+.ice-menu .recipe-list p {margin:0 auto;max-width:36ch;font:17px/1.32 Linden,Georgia,serif;text-wrap:pretty}
+.ice-menu .cereal-batch img {display:block;width:84px;height:auto;margin:7px auto 0}
+@media(max-width:660px) {
+  .ice-menu {max-width:360px}
+  .ice-menu .recipe-list {columns:1}
+}
+
+.reference-transcript .reference-note img { display:block; width:100%; height:auto; }
+.reference-transcript .reference-note details { margin-top:9px; }
+.reference-note summary { width:fit-content; cursor:pointer; font-size:17px; color:var(--accent); }
+.reference-transcript .reference-note details blockquote { font:20px/1.4 Linden,Georgia,serif; max-width:62ch; margin:12px 0; }
+@media(min-width:721px) {
+  .reference-transcript .student-note:first-child { grid-column:auto; align-self:center; }
+  .reference-transcript .colleague-note { grid-column:1 / -1; width:min(100%,760px); }
+}
+
+.award-film {
+  display: block;
+  width: min(100%, 380px);
+  margin: clamp(42px, 5vw, 66px) auto 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+.filmstrip {
+  --film-stock: #30251d;
+  display: block;
+  padding-inline: 5px;
+  transform: rotate(-1.4deg);
+}
+.filmstrip::before, .filmstrip::after {
+  content: "";
+  display: block;
+  height: 5px;
+  box-sizing: content-box;
+  border-block: 3px solid var(--film-stock);
+  background: repeating-linear-gradient(to right, var(--film-stock) 0 6px, transparent 6px 12px, var(--film-stock) 12px 17px);
+}
+.filmstrip img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-inline: 5px solid var(--film-stock);
+}
+.award-film-caption {
+  margin: 15px 5px 0;
+  text-align: center;
+}
+.award-film-caption h3 { margin: 0; font-size: 26px; line-height: 1.1; }
+.award-film-caption p { margin: 3px 0 0; font-size: 18px; line-height: 1.3; }
+.award-film-watch { display: inline-block; margin-top: 7px; color: var(--accent); font-size: 17px; }
+.award-film:hover .award-film-watch, .award-film:focus-visible .award-film-watch { text-decoration: underline; }
+
+.contact-links { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 28px; margin-top: 16px; }

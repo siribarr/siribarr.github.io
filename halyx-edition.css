@@ -1,0 +1,51 @@
+/* Same scanned album paper and Linden Hill typography as the portfolio. */
+:root{--paper:#f0e5cf;--ink:#392b23;--muted:#71604e;--orange:#91492f}
+body{border:0;position:relative;isolation:isolate;background:var(--paper);min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:url('assets/material-study/paper.svg') center/cover;opacity:.34;filter:saturate(.65);pointer-events:none}
+.shell{max-width:1260px;padding:0 50px}
+.top{padding:32px 0 24px;border:0;align-items:baseline}
+.wordmark{font:34px/1.1 Linden,Georgia,serif;letter-spacing:0}
+.nav{font-size:19px;gap:32px}
+.intro{padding:30px 0 35px}.back{font-size:18px;text-decoration:none}.back:hover{text-decoration:none}
+.intro-grid{grid-template-columns:.65fr 1.35fr;gap:65px;margin-top:35px;align-items:start}
+.intro h1{font:58px/1 Linden,Georgia,serif;letter-spacing:0;font-weight:400}
+.lede{font-size:28px;line-height:1.3;max-width:650px}.intro-detail{font-size:22px;line-height:1.4}
+.opening{max-width:960px;margin:0 auto;padding:10px 0 30px}.opening>a{display:block;padding:0;border:0}.opening img{box-shadow:2px 5px 9px #392b2320}.opening figcaption{text-align:center;font-style:italic;margin-top:14px}
+.contents{border:0;padding:20px 0 30px;gap:12px 28px;justify-content:center}.contents a{font-size:19px;text-decoration:none}.contents a:hover{text-decoration:none}
+.feature,.feature.reverse{border:0;grid-template-columns:.8fr 1.4fr;gap:65px;padding:50px 0}
+.feature.reverse{grid-template-columns:1.4fr .8fr}
+.feature h2{font:34px/1.12 Linden,Georgia,serif;letter-spacing:0;margin-bottom:20px}
+.feature p{font-size:22px;line-height:1.4}
+.feature figure{border:0;padding:0}.feature figure img{box-shadow:2px 5px 9px #392b231a}
+.sample-switch{gap:28px;margin-bottom:13px}.sample-switch button{font-size:19px}
+.more{padding:55px 0}.more h2{font:34px/1.1 Linden,Georgia,serif;letter-spacing:0;margin-bottom:30px}
+.more-list{grid-template-columns:repeat(3,1fr);gap:40px}.more-list>div{border:0;padding:0}.more-list h3{font:27px/1.15 Linden,Georgia,serif;margin-bottom:12px}.more-list p{font-size:21px;line-height:1.4}
+.build-note{border:0;padding:0 0 25px;font-size:18px}.return{padding-bottom:45px}.return a{font-size:20px}
+footer{background:none;color:var(--ink);padding:18px 0 26px}
+@media(max-width:900px){.shell{padding:0 32px}.intro-grid{gap:35px}.feature,.feature.reverse{gap:35px}.more-list{gap:28px}}
+@media(max-width:650px){.shell{padding:0 23px}.top{padding:26px 0 15px;flex-wrap:wrap;gap:17px}.wordmark{font-size:30px}.nav{width:auto;font-size:18px;gap:26px}.intro{padding:25px 0}.intro-grid{display:block;margin-top:25px}.intro h1{font-size:48px;margin-bottom:24px}.lede{font-size:26px}.intro-detail{font-size:22px}.opening{padding:10px 0 20px}.contents{justify-content:start;gap:10px 22px;padding:15px 0}.feature,.feature.reverse{display:flex;flex-direction:column;gap:25px;padding:35px 0;align-items:stretch}.feature h2{font-size:32px}.feature p{font-size:21px}.feature figure{width:100%}.more-list{grid-template-columns:1fr;gap:30px}.more{padding:35px 0}.more h2{font-size:32px}.return{padding-bottom:25px}}
+
+/* Match the portfolio’s unruled links. */
+body a:any-link,body a:any-link:hover,body .sample-switch button[aria-pressed=true]{text-decoration:none}
+body a:any-link:hover,body .sample-switch button:hover{color:var(--orange)}
+body .sample-switch button[aria-pressed=true]{font-style:italic}
+
+.intro-grid { grid-template-columns: minmax(205px,.8fr) minmax(0,1.35fr); gap: 16px 5%; align-items: start; }
+.intro-grid h1 { grid-column: 1; grid-row: 1; align-self: end; }
+.intro-grid > div { grid-column: 1; grid-row: 2; }
+.intro-grid .opening { grid-column: 2; grid-row: 1/3; padding: 0; margin: 0; align-self: center; }
+.intro-grid .lede { font-size: clamp(24px, 2.2vw, 31px); }
+.intro-grid .intro-detail, .feature p { font-size: 20px; }
+.contents { justify-content: start; }
+.instrument-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px,5vw,72px); }
+.instrument-pair .feature { display: flex; flex-direction: column; align-items: stretch; gap: 18px; }
+.instrument-pair .feature figure { margin-top: auto; }
+@media (max-width: 700px) {
+  .intro-grid { display: block; }
+  .intro-grid .opening { margin-top: 22px; }
+  .instrument-pair { display: block; }
+}
+
+.opening .visit-launch { display:block; width:100%; }
+.visit-launch > span { display:table; margin:10px auto 0; padding:4px 13px; background:#f5e7c9; border:1px solid #958269; box-shadow:1px 2px #8c75543b; color:#563726; font:20px/1.3 Linden,Georgia,serif; }
+.visit-launch:hover > span { color:#843d27; background:#f8dfb4; }

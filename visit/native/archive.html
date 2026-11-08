@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'"><script src="edition.js"></script><script src="offline.js"></script><script src="isolation.js"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Encyclopaedia Perpetua — Halyx</title>
+<style>
+
+@font-face{font-family:Linden;src:url('fonts/LindenHill.woff')}@font-face{font-family:Linden;src:url('fonts/LindenHill-Italic.woff');font-style:italic}@font-face{font-family:Sligoil;src:url('fonts/Sligoil-Micro.woff2')}
+:root{--paper:#f8f0dc;--margin:#e9dfc8;--ink:#482e23;--rule:#b7a58b;--orange:#f07030;--link:#325c70;--red:#78392f;--blue:#d8e2df}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:20px/1.3 Linden,Georgia,serif}button,input{font:inherit}button,a,input{-webkit-tap-highlight-color:transparent}a{color:var(--link);text-underline-offset:3px}a:hover{color:var(--red);text-decoration-thickness:2px}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #b54513;outline-offset:3px}button:disabled{cursor:default;opacity:.45}::selection{background:#f5bf88;color:#482e23}.screen{height:100dvh;min-height:400px;display:grid;grid-template-columns:145px minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden}.margin{min-height:0;background:var(--margin);padding:14px 12px 10px;overflow-x:hidden;display:flex;flex-direction:column;border-right:1px solid var(--rule);overflow:auto}.art{display:block;width:86px;height:151px;object-fit:cover;margin:1px auto 5px;mix-blend-mode:multiply}.wordmark{font-size:23px;line-height:1.05;text-align:center;margin:2px 0 17px;color:var(--ink);text-decoration:none}.margin nav{display:grid;gap:7px;font-size:17px}.margin h2{font:12px Sligoil,monospace;color:#705446;margin:19px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--rule)}#contents{display:grid;gap:6px;font-size:15px}.home-exit{margin-top:auto;padding-top:16px;font-size:15px}.leaf{min-height:0;min-width:0;display:flex;flex-direction:column}.toolbar{height:35px;min-height:35px;display:flex;gap:10px;align-items:center;padding:0 17px;background:#eae0cc;border-bottom:1px solid var(--rule);font:12px Sligoil,monospace}.tool{border:0;padding:3px 1px;color:var(--ink);background:transparent}.tool:hover:not(:disabled){text-decoration:underline}.toolbar .edition{margin-left:auto;font-size:11px;color:#6b584a}.tabs{height:33px;min-height:33px;border-bottom:1px solid var(--rule);padding:6px 21px 0;display:flex;gap:4px;background:linear-gradient(#eae0cc,var(--margin))}.tab{font:12px Sligoil,monospace;border:1px solid var(--rule);padding:3px 13px 5px;background:#dedacb;color:var(--ink);position:relative}.tab[aria-pressed=true]{background:var(--paper);border-bottom-color:var(--paper);border-top:2px solid var(--orange);margin-bottom:-1px}.reading{flex:1;overflow-y:auto;scrollbar-color:#ad8e6d #e9dfcc;scrollbar-width:auto;min-height:0;padding:14px 25px 14px}.reading::-webkit-scrollbar{width:15px}.reading::-webkit-scrollbar-track{background:#e9dfcc;border-left:1px solid var(--rule)}.reading::-webkit-scrollbar-thumb{background:#bca182;border:3px solid #e9dfcc}.masthead{text-align:center;margin:0 0 14px;border-bottom:3px double var(--rule);padding-bottom:13px}.masthead h1{font:39px/1.05 Linden,serif;font-weight:400;letter-spacing:-.8px;margin:0 0 8px;white-space:nowrap}.masthead p{margin:0;font:12px Sligoil,monospace;color:#715341}.search label{font-size:22px;display:block;margin-bottom:7px}.search-row{display:flex;gap:7px}.search input{min-width:0;width:100%;height:37px;padding:5px 10px;background:#fff8e9;border:1px solid #987f64;box-shadow:inset 1px 1px 0 #d3c3a6;border-radius:0;color:var(--ink);font-size:19px}.search button{background:var(--orange);border:1px solid #754326;box-shadow:inset 1px 1px #ffd6a4,inset -1px -1px #b84417;padding:4px 14px;font:13px Sligoil,monospace;color:#362519}.search button:active{box-shadow:inset 1px 1px #884018}.browse{margin-top:14px}.section-heading{font-size:23px;line-height:1.15;font-weight:400;border-bottom:1px solid var(--rule);margin:0 0 9px;padding-bottom:5px}.entries{display:grid;grid-template-columns:1fr 1fr;column-gap:22px;row-gap:7px}.entry a{font-size:21px}.entry p{font-size:16px;line-height:1.2;margin:3px 0 0;color:#725647}.entry:first-child{grid-row:span 2;border-right:1px solid #d3c2a6;padding-right:16px}.entry:first-child a{font-size:29px}.entry:first-child p{font-size:18px;line-height:1.3;margin-top:7px}.status{min-height:25px;display:flex;align-items:center;justify-content:space-between;gap:6px;border-top:1px solid var(--rule);background:#eae0cc;padding:3px 15px;font:11px Sligoil,monospace}.status-indicator{display:inline-block;width:6px;height:6px;background:var(--orange);margin-right:7px}.article-header h1,.results h1{font-size:35px;font-weight:400;line-height:1.1;margin:0 0 7px;border-bottom:1px solid var(--rule);padding-bottom:6px}.article-header .source{font-size:14px;margin:0 0 15px;color:#735c4a}.article p a{text-decoration:none}.article p a:hover{text-decoration:underline}.article p{font-size:20px;line-height:1.4;margin:0 0 13px}.article h2{font-size:27px;font-weight:400;border-bottom:1px solid var(--rule);margin:24px 0 10px;scroll-margin-top:14px}.article .endnote{font-size:15px;border-top:3px double var(--rule);margin-top:24px;padding-top:12px}.results .result{padding:13px 0;border-bottom:1px solid #d3c2a6}.result a{font-size:25px}.result p{font-size:18px;margin:3px 0}.results .search{margin:15px 0}.empty{font-size:18px}.studiolo-note{padding-top:5px}.studiolo-note p{font-size:21px}.article-links{font-size:16px}
+@media(max-width:660px){.screen{grid-template-columns:115px 1fr}.margin{padding:12px 9px}.art{width:74px;height:126px}.reading{padding:16px}.masthead h1{white-space:normal;font-size:32px}.toolbar .edition{display:none}.entries{grid-template-columns:1fr}.entry:first-child{grid-row:auto;border-right:0}.wordmark{font-size:22px}}
+
+/* Illustrated discovery experiment; original reference study remains separate. */
+.margin{padding-top:19px;overflow-x:hidden}.margin-heading{font:18px/1.05 Linden;text-align:center;color:#785744;padding:0 0 12px;border-bottom:3px double #b7a58b;margin-bottom:13px}.wordmark{margin-bottom:17px;font-size:23px}.masthead{display:flex;align-items:center;justify-content:center;gap:27px;padding-bottom:9px;margin:-3px 0 13px;min-height:157px;text-align:left}.masthead-type h1{font-size:38px;line-height:.91;letter-spacing:-.4px;margin-bottom:11px}.masthead-type h1 i{font-weight:400}.masthead-type p{font:11px/1.4 Sligoil;margin:0}.temple{width:76px;height:146px;overflow:hidden;position:relative;flex-shrink:0;mask-image:linear-gradient(#000 89%,transparent);}.temple img{display:block;width:100%;height:154px;object-fit:cover;mix-blend-mode:multiply;transition:transform 1.4s ease,filter 1.4s ease;transform-origin:50% 65%}.masthead:hover .temple img{transform:scale(1.065) translateY(-3px);filter:saturate(1.25)}.browse{margin-top:13px}.section-heading{font-size:21px;margin-bottom:7px}.entry:first-child a{font-size:25px}.entry a{font-size:20px}.entry p{font-size:15px;line-height:1.15}.entry:first-child p{font-size:17px;line-height:1.22}.entries{row-gap:8px}.search label{font-size:20px;margin-bottom:5px}.reading{padding-top:10px}.book-device{display:block;flex-shrink:0;width:117px;margin:23px auto 0;padding:0;border:0;background:none;color:#775641;position:relative;text-align:left;}.book-device svg{display:block;width:104px;height:158px;margin:auto;mix-blend-mode:multiply;opacity:.87;transition:transform .4s ease,opacity .4s ease}.book-device:hover svg,.book-device:focus-visible svg{transform:translateY(-3px) rotate(-1deg);opacity:1}.book-device>span{font:11px Sligoil;display:flex;justify-content:space-between;margin-top:5px;padding:0 7px}.plus{color:#af481a}.book-device[aria-expanded=true] .plus{transform:rotate(45deg)}body:not(.home-view) .book-device{display:none}.plate-panel{position:fixed;z-index:8;left:143px;top:85px;width:303px;background:#fff5df;border:1px solid #8b694c;box-shadow:5px 6px 0 #482e2328;padding:10px 14px 13px;transform-origin:left 50%;animation:unfold .25s ease-out}.plate-panel[hidden],.preview-slip[hidden]{display:none}.plate-panel header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #b7a58b;padding-bottom:6px;font:12px Sligoil;margin-bottom:9px}.plate-panel button{font:14px Sligoil;border:1px solid #b7a58b;background:#eadcc0;color:#482e23;min-width:25px;min-height:25px}.plate-panel svg{width:155px;height:235px;display:block;margin:auto;mix-blend-mode:multiply}.plate-panel p{font:17px/1.2 Linden;margin:9px 0 0}.plate-panel small{display:block;font:11px Sligoil;margin-top:5px}.preview-slip{position:fixed;z-index:7;left:157px;bottom:37px;width:276px;background:#fff6e3;border:1px solid #b29876;border-left:3px solid #f07030;box-shadow:3px 4px 0 #482e2320;padding:11px 14px;pointer-events:none;animation:slip-in .2s ease-out}.preview-slip h2{font:24px Linden;margin:0 0 5px}.preview-slip p{font:17px/1.3 Linden;margin:0}.preview-slip small{font:10px Sligoil;display:block;color:#735c4a;margin-top:8px}.entry a{transition:color .16s ease,text-decoration-color .16s ease}.entry a:hover{text-decoration-color:#f07030}.article p a:hover{background:#f3dfbd}.status{transition:background .2s ease}.screen:has(.search input:focus) .status{background:#f4d2ad}@keyframes unfold{from{opacity:0;transform:perspective(700px) rotateY(-12deg) translateX(-5px)}to{opacity:1;transform:none}}@keyframes slip-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.masthead:hover .temple img,.book-device:hover svg,.book-device:focus-visible svg{transform:none}}@media(max-width:660px){.masthead{gap:13px}.masthead-type h1{font-size:30px}.temple{width:60px}.book-device{width:92px}.book-device svg{width:88px;height:135px}.plate-panel{left:114px;max-width:calc(100vw - 124px)}.preview-slip{left:123px;max-width:calc(100vw - 136px)}}
+
+.margin-heading{display:none}.wordmark{padding-top:7px;margin-bottom:21px}.book-device{margin-top:29px}.book-device svg{height:177px;width:117px}.masthead{min-height:125px;gap:25px}.masthead-type h1{font-size:35px}.temple{height:116px;width:59px}.temple img{height:123px}.entries{grid-template-columns:1fr 1fr 1fr;gap:17px}.entry:first-child{grid-row:auto;border-right:0;padding-right:0}.entry:first-child a,.entry a{font-size:22px;line-height:1.05;display:inline-block}.entry:first-child p,.entry p{font-size:17px;line-height:1.2;margin-top:7px}.browse{margin-top:15px}.entry+.entry{border-left:1px solid #d3c2a6;padding-left:16px}@media(max-width:660px){.entries{grid-template-columns:1fr}.entry+.entry{border-left:0;padding-left:0}.book-device svg{width:88px;height:135px}.masthead-type h1{font-size:30px}}
+.home-view .reading{padding-bottom:2px}
+/* Organic margin study. Original plate is unchanged; the display filter maps its light engraving to olive-brown ink. */
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.margin{position:relative;isolation:isolate}.margin-growth{position:absolute;z-index:-1;pointer-events:none;bottom:-4px;left:-58px;width:291px;height:225px;opacity:.50;mask-image:linear-gradient(transparent,#000 22%,#000);transform:rotate(-7deg)}.home-exit{margin-top:auto;position:relative;background:var(--margin);padding:7px 0 1px;align-self:flex-start}.margin nav,.wordmark,.book-device,#contents-wrap{position:relative}.book-device{margin-top:25px}.book-device>span{background:var(--margin);width:100%;padding-top:4px}.masthead{position:relative;isolation:isolate;justify-content:flex-start;padding-left:59px;gap:22px;min-height:144px;border-bottom:0;margin-bottom:14px}.masthead-growth{position:absolute;pointer-events:none;z-index:-1;right:-17px;bottom:-12px;width:142px;height:175px;opacity:.8;transform:rotate(9deg);transform-origin:54% 94%;transition:transform 1.8s ease,opacity 1.5s ease}.masthead:hover .masthead-growth{transform:rotate(5deg) translateY(-2px);opacity:1}.masthead-type h1{font-size:38px;line-height:.93;margin:0}.temple{width:67px;height:132px}.temple img{height:138px}.masthead:hover .temple img{filter:saturate(1.1)}.search-row{position:relative}.search input{background:#fff8e9}.browse{margin-top:23px}.section-heading{font-size:20px;padding-bottom:7px;border-bottom:1px solid #c4b396}.entries{margin-top:12px}.entry+.entry{border-left:0;padding-left:0}.entry a{font-size:23px}.entry p,.entry:first-child p{font-size:17px}.entry:first-child a{font-size:23px}.plate-panel,.preview-slip{box-shadow:2px 3px 0 #482e231c}.preview-slip{border-left:1px solid #b29876;border-top:2px solid #b45b2a}.home-view .reading{padding-bottom:7px}body:not(.home-view) .margin-growth{opacity:.2;bottom:-45px;mask-image:linear-gradient(transparent,#000 65%)}body:not(.home-view) #contents-wrap{background:var(--margin)}@media(prefers-reduced-motion:reduce){.masthead:hover .masthead-growth{transform:rotate(9deg);opacity:.8}}@media(max-width:660px){.masthead{padding-left:0;gap:12px}.masthead-type h1{font-size:30px}.masthead-growth{right:-21px;width:93px;opacity:.4}.temple{width:50px}.margin-growth{left:-90px}}
+.masthead-growth{right:-9px;bottom:-5px;width:133px;height:166px}
+/* September 7 refinement: the same historical growth continues under the entire interface. */
+.screen{position:relative;isolation:isolate;background:var(--paper)}.whole-growth{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.24}.margin{background:#e9dfc84d}.margin-growth{display:none}.leaf,.reading{background:transparent}.toolbar,.status{background:#eae0ccca}.tabs{background:#eae0ccad}.home-exit,.book-device>span{background:#e9dfc8b8}body:not(.home-view) #contents-wrap{background:transparent}.masthead-growth{width:110px;height:135px;right:8px;bottom:2px;transform:rotate(3deg);transform-origin:50% 85%}.masthead:hover .masthead-growth{transform:rotate(-1deg) translateY(-1px)}@media(prefers-reduced-motion:reduce){.masthead:hover .masthead-growth{transform:rotate(3deg);opacity:.8}}@media(max-width:660px){.masthead-growth{width:88px;height:108px;right:0;bottom:5px}}
+
+/* Keep the botanical print continuous, but quieter beneath reading text. */
+.reading{background:rgba(248,240,220,.58)}
+
+/* Small software-detail study: retain the encyclopaedia layout and organic paper. */
+.reading{border-left:1px solid #aa9273;border-top:1px solid #aa9273;box-shadow:inset 1px 1px 0 #fff9e9,inset -1px -1px 0 #fff9e9}
+.tab{box-shadow:inset 1px 1px 0 #fff8e4,inset -1px -1px 0 #c2b093}
+.tab[aria-pressed=true]{box-shadow:inset 1px 0 0 #fff8e4;border-top:2px solid var(--orange)}
+.tool{padding:2px 5px;border:1px solid transparent}
+.tool:hover:not(:disabled){background:#f6ebd5;border-color:#a58a6d;box-shadow:inset 1px 1px #fff9e9;text-decoration:none}
+.tool:active:not(:disabled){background:#ded0b8;box-shadow:inset 1px 1px #a58a6d}
+.reading{scrollbar-width:auto;scrollbar-color:auto}
+.reading::-webkit-scrollbar{width:15px}
+.reading::-webkit-scrollbar-track{background:repeating-conic-gradient(#d1bfa2 0% 25%,#eee1c9 0% 50%) 0 0/2px 2px;border-left:1px solid #a48b6d}
+.reading::-webkit-scrollbar-thumb{background:#e1cfb0;border:1px solid #8f7253;box-shadow:inset 1px 1px #fff6e0,inset -1px -1px #b69a76}
+.reading::-webkit-scrollbar-thumb:hover{background:#ecdabc}
+.status{border-top:1px solid #a48b6d;box-shadow:inset 0 1px #fff6e0}
+body:not(.home-view) .reading{overflow-y:scroll;scrollbar-gutter:stable}.reading::-webkit-scrollbar{-webkit-appearance:none;display:block}/* Full-article content, including references and wide encyclopaedia tables. */
+.margin{overflow:hidden}.margin #contents-wrap{min-height:0;flex:1;overflow-y:auto;scrollbar-width:thin}.margin #contents-wrap[hidden]{display:none}.home-exit{flex-shrink:0}.article-header h1{overflow-wrap:anywhere}.wiki-content{overflow-wrap:anywhere}.wiki-content h3{font:23px Linden;margin:18px 0 8px}.wiki-content p,.wiki-content li,.wiki-content dd,.wiki-content dt{font-size:20px;line-height:1.4}.wiki-content table{display:block;overflow-x:auto;max-width:100%;border-collapse:collapse;margin:12px 0;font-size:16px}.wiki-content th,.wiki-content td{padding:5px 7px;border:1px solid #c5b293;text-align:left}.wiki-content th{font-weight:400;background:#e8dbc3}.wiki-content .infobox{float:right;width:210px;margin:0 0 15px 16px;background:#f5ebd7}.wiki-content .infobox td,.wiki-content .infobox th{font-size:15px}.wiki-content img{max-width:100%;height:auto}.wiki-content sup{font-size:.65em}.wiki-content pre{overflow-x:auto;white-space:pre-wrap;font-size:15px}.wiki-content blockquote{margin:15px 20px;padding-left:14px;border-left:2px solid #bca789}.wiki-content .reflist{font-size:16px}.wiki-content .reflist li{font-size:16px}.wiki-content .hatnote{font-size:17px;font-style:italic;margin:0 0 12px}.wiki-content math{font-size:1em}.article .endnote{clear:both}.archive-message p{font-size:21px}.retry,.search-pages button{font:14px Sligoil;background:#eddfc5;color:#482e23;border:1px solid #987f64;box-shadow:inset 1px 1px #fff6e0;padding:7px 12px}.search-pages{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}.status #status{display:block;max-width:360px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#plate-panel{max-height:calc(100dvh - 100px);overflow-y:auto}
+
+</style><!-- HALYX CONTROLS START -->
+<style>
+/* Shared Halyx controls. Run python3 scripts/sync_halyx_controls.py after editing.
+   Embedded into the three standalone pages; no runtime server change required.
+   Existing selectors below are adapters. New apparatuses can use hx-control,
+   hx-primary, and hx-studiolo without inheriting a window or page layout. */
+@font-face{font-family:Sligoil;src:url('fonts/Sligoil-Micro.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+:root{
+  --control-ink:#302720;--control-cream:#ddc9a7;--control-light:#fff0d1;
+  --control-edge:#70513c;--control-shadow:#9d7e59;--control-orange:#f07030;
+  --control-orange-light:#ffc18a;--control-orange-shadow:#a64d22;
+  --control-focus:#70513c;--control-font:Sligoil,monospace;
+}
+/* Ordinary push controls, including link elements used for a system action. */
+:is(.hx-control,footer [data-studiolo],footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a){
+  font-family:var(--control-font);font-weight:400;font-synthesis:none;
+  color:var(--control-ink);background:var(--control-cream);
+  border:1px solid var(--control-edge);border-radius:0;
+  box-shadow:inset 1px 1px var(--control-light),inset -1px -1px var(--control-shadow);
+  text-decoration:none;cursor:pointer;touch-action:manipulation;
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent){
+  background:var(--control-orange);
+  box-shadow:inset 1px 1px var(--control-orange-light),inset -1px -1px var(--control-orange-shadow);
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):hover:not(:disabled){
+  filter:brightness(1.045);color:var(--control-ink);text-decoration:none;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):active:not(:disabled){
+  box-shadow:inset 1px 1px var(--control-edge),inset -1px -1px var(--control-light);
+  transform:translateY(1px);
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent):active:not(:disabled){background:var(--control-orange)}
+/* All three exits have the same lettering and compact proportions. */
+:is(.hx-studiolo,footer [data-studiolo],.home-exit,#topbar-right .btn.return){
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:31px;padding:4px 7px;font:11px/1.2 var(--control-font);white-space:nowrap;
+}
+/* Shared interaction signals, independent of the amount of window chrome. */
+.hx-back-arrow{font:16px/1 Arial,sans-serif;flex:none;margin-right:4px}
+html body :is(button,a,input,textarea,select,[tabindex]):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+html body button:disabled{opacity:.45;cursor:default;filter:none;transform:none}
+html body .appnav button:hover:not(:disabled):not(.active){background:var(--control-cream);color:var(--control-ink)}
+html body .appnav button:disabled{color:var(--control-ink)}
+html body ::selection{background:#f5bf88;color:var(--control-ink)}
+/* Paper stays local. The scrollbar hardware is shared. */
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap){scrollbar-width:auto;scrollbar-color:auto}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar{width:13px;height:13px}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-track{background:#e9dfcc;border-left:1px solid #b7a58b}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-thumb{background:#b8a584;border:1px solid #8b765d;box-shadow:inset 1px 1px #e4d7b9,inset -1px -1px #998267}
+@media(prefers-reduced-motion:reduce){html body :is(button,a,input,textarea,select){transition:none}}
+</style>
+<!-- HALYX CONTROLS END -->
+<link rel="stylesheet" href="guide.css"><link rel="stylesheet" href="guided.css"><script src="guided.js" defer></script></head><body><svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs><clipPath id="branch-only" clipPathUnits="userSpaceOnUse"><polygon points="942,14 1342,14 1396,157 1355,254 1515,278 1517,609 1402,696 1343,715 1292,835 1210,957 1027,960 879,860 833,780 841,691 897,609 911,544 872,479 792,444 752,370 767,286 868,241 924,196 905,128"/></clipPath><filter id="grown-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .36 0 0 0 0 .32 0 0 0 0 .21 .30 .59 .11 0 -.16"/><feComponentTransfer><feFuncA type="linear" slope="1.25"/></feComponentTransfer></filter></defs></svg>
+<div class="screen"><svg class="whole-growth" width="100%" height="100%" aria-hidden="true"><defs><pattern id="growth-paper" x="-34" y="-108" width="400" height="561" patternUnits="userSpaceOnUse"><image href="public_domain_art/archive/haeckel-mycetozoa-1904.jpg" width="400" height="561" filter="url(#grown-ink)"/></pattern></defs><rect width="100%" height="100%" fill="url(#growth-paper)"/></svg><aside class="margin"><svg class="margin-growth" viewBox="0 2110 1920 1140" aria-hidden="true"><image href="public_domain_art/archive/haeckel-mycetozoa-1904.jpg" width="2332" height="3271" filter="url(#grown-ink)"/></svg><div class="margin-heading">Encyclopaedia<br><i>Perpetua</i></div><a class="wordmark" href="#home">The Archive</a><nav aria-label="Archive navigation"><a href="#home">Main page</a><a href="#search">Search</a></nav><button class="book-device" aria-label="Look closer at the book wheel" aria-expanded="false" aria-controls="plate-panel"><svg viewBox="125 190 780 1185" role="img" aria-label="Ramelli’s engraved book wheel, with a reader seated before revolving books"><image href="public_domain_art/archive/ramelli-bookwheel-1588.jpg" width="1200" height="1662"/></svg><span>Book wheel <span class="plus">+</span></span></button><div id="contents-wrap" hidden><h2>CONTENTS</h2><nav id="contents" aria-label="Article contents"></nav></div><a href="bench.html" class="home-exit"><span class="hx-back-arrow">←</span> the studiolo</a></aside><main class="leaf"><div class="toolbar"><button class="tool" id="previous" disabled>← Back</button><button class="tool" id="forward" disabled>Forward →</button></div><div class="tabs" aria-label="Archive page"><button class="tab" data-view="home" aria-pressed="true">Main page</button><button class="tab" data-view="search" aria-pressed="false">Search</button><button class="tab" id="article-tab" data-view="article" aria-pressed="false" hidden>Article</button></div><div class="reading" id="reading" aria-live="polite" aria-busy="false"></div><footer class="status"><span><span id="status">Wikipedia · English</span></span><span id="edition"></span></footer></main></div>
+<div class="plate-panel" id="plate-panel" role="region" aria-label="Book wheel engraving" hidden><header><span>Book wheel · 1588</span><button aria-label="Close engraving">×</button></header><svg viewBox="125 190 780 1185" role="img" aria-label="Ramelli’s engraved book wheel, with a reader seated before revolving books"><image href="public_domain_art/archive/ramelli-bookwheel-1588.jpg" width="1200" height="1662"/></svg><p>A revolving stand for keeping several books open at once.</p><small>Agostino Ramelli</small></div><aside class="preview-slip" role="tooltip" id="preview-slip" hidden></aside><script>
+/* The Archive: live Kiwix search and full articles inside the approved reading surface. */
+'use strict';
+const reading = document.getElementById('reading');
+const selected = [
+  {slug:'Astrolabe', title:'Astrolabe', blurb:'An instrument for finding the altitude of the sun and stars.'},
+  {slug:'Cyanotype', title:'Cyanotype', blurb:'A photographic process that makes a deep blue print.'},
+  {slug:'Cabinet_of_curiosities', title:'Cabinet of curiosities', blurb:'Collections of natural specimens, art and remarkable objects.'}
+];
+const esc = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const articleHref = slug => '#article/'+encodeURIComponent(slug);
+const parse = text => new DOMParser().parseFromString(text,'text/html');
+const articleCache = new Map();
+let book='', catalogPromise, revision=0, current={kind:'home'}, trail=[], index=0, foreground, lastArticle='Astrolabe';
+async function getText(url, signal, timeout=20000) {
+  const own=new AbortController(), timer=setTimeout(()=>own.abort(),timeout);
+  const abort=()=>own.abort();
+  if(signal?.aborted) own.abort(); else signal?.addEventListener('abort',abort,{once:true});
+  try {const response=await fetch(url,{signal:own.signal});if(!response.ok) throw new Error('HTTP '+response.status);return await response.text();}
+  finally {clearTimeout(timer);signal?.removeEventListener('abort',abort);}
+}
+function catalog() {
+  if(!catalogPromise) catalogPromise=getText('/catalog/v2/entries',null,10000).then(text=>{
+    const xml=new DOMParser().parseFromString(text,'application/xml');
+    const entry=Array.from(xml.getElementsByTagName('entry')).find(e=>Array.from(e.getElementsByTagName('link')).some(l=>/^\/content\/wikipedia_en[^/]*$/.test(l.getAttribute('href')||'')));
+    const link=entry&&Array.from(entry.getElementsByTagName('link')).find(l=>/^\/content\/wikipedia_en[^/]*$/.test(l.getAttribute('href')||''));
+    if(link) book=link.getAttribute('href').split('/')[2];
+    const date=book.match(/_(\d{4})-(\d{2})$/);
+    document.getElementById('edition').textContent=date?new Intl.DateTimeFormat('en',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(+date[1],+date[2]-1,1)))+' edition':'';
+    return book;
+  }).catch(()=>{catalogPromise=null;return '';});
+  return catalogPromise;
+}
+function form(q=''){return `<form class="search"><label class="visually-hidden" for="query">Search the encyclopaedia</label><div class="search-row"><input id="query" name="query" type="search" value="${esc(q)}" autocomplete="off" spellcheck="false"><button type="submit">Search</button></div></form>`;}
+function routeFromHash(){try{const h=location.hash.slice(1);if(h.startsWith('article/'))return {kind:'article',slug:decodeURIComponent(h.slice(8))};if(h.startsWith('search/'))return {kind:'search',q:decodeURIComponent(h.slice(7))};}catch{}return {kind:'home'};}
+function hashFor(route){return route.kind==='article'?articleHref(route.slug):route.kind==='search'?'#search/'+encodeURIComponent(route.q||''):'#home';}
+function savePosition(){if(trail[index]){trail[index].scroll=reading.scrollTop;history.replaceState({archive:true,index,route:trail[index]},'',location.href);}}
+function go(route){savePosition();trail=trail.slice(0,index+1);trail.push({...route});index++;history.pushState({archive:true,index,route},'',hashFor(route));render(route);}
+function updateNavigation(){document.getElementById('previous').disabled=index===0;document.getElementById('forward').disabled=index>=trail.length-1;}
+window.addEventListener('popstate',event=>{if(event.state?.archive){index=event.state.index;const route=trail[index]||event.state.route;render(route);}else render(routeFromHash());});
+function isCurrent(token){return token===revision;}
+function message(text, retry=false){reading.innerHTML=`<div class="archive-message"><p>${esc(text)}</p>${retry?'<button class="retry" type="button">Try again</button>':''}</div>`;}
+async function render(route){
+  const token=++revision;foreground?.abort();foreground=new AbortController();current=route;hideSlip();closePlate();
+  updateNavigation();reading.scrollTop=0;reading.setAttribute('aria-busy','false');
+  document.body.classList.toggle('home-view',route.kind==='home');
+  const article=route.kind==='article';document.getElementById('article-tab').hidden=!article;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===route.kind)));
+  document.getElementById('contents-wrap').hidden=!article;document.getElementById('contents').replaceChildren();
+  document.getElementById('status').textContent=article?'Reading':route.kind==='search'?'Search':'Wikipedia · English';
+  if(route.kind==='home'){
+    reading.innerHTML=`<header class="masthead"><svg class="masthead-growth" viewBox="752 14 765 946" aria-hidden="true"><image clip-path="url(#branch-only)" href="public_domain_art/archive/haeckel-mycetozoa-1904.jpg" width="2332" height="3271" filter="url(#grown-ink)"/></svg><div class="temple"><img src="public_domain_art/prepared/archive-etteilla-ruins.jpg" alt="An engraved landscape with an ancient temple and ruins"></div><div class="masthead-type"><h1>Encyclopaedia<br><i>Perpetua</i></h1></div></header>${form()}<section class="browse"><h2 class="section-heading">Selected entries</h2><div class="entries">${selected.map(a=>`<div class="entry"><a data-preview="${esc(a.slug)}" href="${articleHref(a.slug)}">${a.title}</a><p>${a.blurb}</p></div>`).join('')}</div></section>`;
+    reading.scrollTop=route.scroll||0;return;
+  }
+  if(route.kind==='search'){
+    reading.innerHTML=`<section class="results"><h1>Search</h1>${form(route.q)}<div id="search-results"></div></section>`;
+    if(!route.q)return;
+    const results=document.getElementById('search-results');results.textContent='Searching…';reading.setAttribute('aria-busy','true');
+    try{
+      // Search remains usable if the optional catalog metadata is unavailable.
+      const url=route.searchURL||'/search?pattern='+encodeURIComponent(route.q)+'&pageLength=14'+(book?'&books='+encodeURIComponent(book):'');
+      const doc=parse(await getText(url,foreground.signal));if(!isCurrent(token))return;
+      const entries=Array.from(doc.querySelectorAll('li')).map(li=>{const a=li.querySelector('a[href^="/content/wikipedia"]');if(!a)return null;return {title:a.textContent.trim(),slug:decodeURIComponent(a.getAttribute('href').split('/').slice(3).join('/')),snippet:li.querySelector('cite')?.textContent.trim()||''};}).filter(Boolean);
+      results.innerHTML=entries.length?entries.map(a=>`<div class="result"><a href="${articleHref(a.slug)}">${esc(a.title)}</a><p>${esc(a.snippet.length>260?a.snippet.slice(0,257)+'…':a.snippet)}</p></div>`).join(''):`<p>No entries found for “${esc(route.q)}”. Try another subject.</p>`;
+      const pages=Array.from(doc.querySelectorAll('a[href]')).filter(a=>a.getAttribute('href').startsWith('/search?'));
+      if(pages.length){const nav=document.createElement('nav');nav.className='search-pages';nav.setAttribute('aria-label','Search result pages');for(const a of pages){const b=document.createElement('button');b.textContent=a.textContent.trim();b.dataset.searchUrl=a.getAttribute('href');nav.append(b);}results.append(nav);}
+    }catch(e){if(isCurrent(token))results.innerHTML='<p>The search could not be completed.</p><button class="retry" type="button">Try again</button>';}
+    finally{if(isCurrent(token)){reading.setAttribute('aria-busy','false');reading.scrollTop=route.scroll||0;}}return;
+  }
+  if(article){
+    lastArticle=route.slug;message('Opening article…');reading.setAttribute('aria-busy','true');
+    try{
+      const data=await loadArticle(route.slug,foreground.signal);if(!isCurrent(token))return;
+      const articleEl=document.createElement('article');articleEl.className='article';
+      articleEl.innerHTML=`<header class="article-header"><h1>${esc(data.title)}</h1><p class="source">From Wikipedia, the free encyclopedia</p></header>`;
+      articleEl.append(data.content.cloneNode(true));
+      const end=document.createElement('div');end.className='endnote';end.innerHTML=`<a href="https://en.wikipedia.org/wiki/${encodeURIComponent(route.slug)}" target="_blank" rel="noopener noreferrer">Wikipedia contributors</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>`;articleEl.append(end);reading.replaceChildren(articleEl);
+      document.getElementById('contents').innerHTML='<a href="#entry-top" data-section="entry-top">Introduction</a>'+data.headings.map(h=>`<a href="#${esc(h.id)}" data-section="${esc(h.id)}">${esc(h.title)}</a>`).join('');
+      articleEl.id='entry-top';document.getElementById('status').textContent=data.title;
+      if(route.anchor)jump(route.anchor);else reading.scrollTop=route.scroll||0;
+    }catch(e){if(isCurrent(token))message('This article could not be opened.',true);}
+    finally{if(isCurrent(token))reading.setAttribute('aria-busy','false');}
+  }
+}
+function articleTarget(href, slug){
+  if(!href)return null;if(href.startsWith('#'))return {anchor:href.slice(1)};
+  if(href.startsWith('//'))href='https:'+href;
+  let u;try{u=new URL(href,location.origin+'/article/'+encodeURIComponent(slug));}catch{return null;}
+  if(!['http:','https:'].includes(u.protocol))return null;
+  if(/^(en\.)?wikipedia\.org$/.test(u.hostname)&&u.pathname.startsWith('/wiki/'))return {slug:decodeURIComponent(u.pathname.slice(6)),anchor:u.hash.slice(1)};
+  if(u.origin===location.origin){
+    if(u.pathname.startsWith('/article/'))return {slug:decodeURIComponent(u.pathname.slice(9)),anchor:u.hash.slice(1)};
+    const match=u.pathname.match(/^\/content\/wikipedia[^/]+\/(.+)/);if(match)return {slug:decodeURIComponent(match[1]),anchor:u.hash.slice(1)};
+    return null;
+  }
+  return {external:u.href};
+}
+const safeTags=new Set('p div section span a ul ol li dl dt dd h2 h3 h4 h5 h6 b i strong em sup sub table thead tbody tfoot tr th td caption blockquote pre code cite abbr small br hr img details summary time kbd figure figcaption s u mark'.split(' '));
+const mathTags=new Set('math mrow mi mn mo msup msub msubsup mfrac msqrt mroot mfenced mtable mtr mtd mtext mstyle munderover munder mover semantics annotation mpadded mspace menclose'.split(' '));
+const discardTags=new Set('script style link meta iframe object embed form input button textarea select noscript base template'.split(' '));
+const safeClasses=new Set('infobox wikitable thumb thumbinner thumbcaption hatnote navbox reflist mw-references-wrap mwe-math-element'.split(' '));
+function cleanContent(source,slug){
+  // Rebuild an allowlisted tree; source IDs are namespaced and source scripts/styles never enter this document.
+  function copy(node){
+    if(node.nodeType===Node.TEXT_NODE)return document.createTextNode(node.textContent);
+    if(node.nodeType!==Node.ELEMENT_NODE)return document.createDocumentFragment();
+    const tag=node.localName.toLowerCase();if(discardTags.has(tag)||node.matches('.mw-editsection,.shortdescription,.mw-empty-elt,#toc,.toc'))return document.createDocumentFragment();
+    const math=mathTags.has(tag)&&node.namespaceURI==='http://www.w3.org/1998/Math/MathML';
+    if(!safeTags.has(tag)&&!math){const fragment=document.createDocumentFragment();for(const c of node.childNodes)fragment.append(copy(c));return fragment;}
+    const el=math?document.createElementNS(node.namespaceURI,tag):document.createElement(tag);
+    if(node.id)el.id='entry-'+node.id;
+    for(const attr of ['lang','dir','title','colspan','rowspan','start','value','scope'])if(node.hasAttribute(attr))el.setAttribute(attr,node.getAttribute(attr));
+    if(math)for(const attr of ['display','mathvariant','stretchy','fence','accent','accentunder','columnalign','rowalign','encoding'])if(node.hasAttribute(attr))el.setAttribute(attr,node.getAttribute(attr));
+    const classes=Array.from(node.classList).filter(c=>safeClasses.has(c));if(classes.length)el.className=classes.join(' ');
+    if(tag==='a'){
+      const target=articleTarget(node.getAttribute('href'),slug);
+      if(target?.external){el.href=target.external;el.target='_blank';el.rel='noopener noreferrer';}
+      else if(target){el.href=target.slug?articleHref(target.slug):'#entry-'+target.anchor;if(target.slug)el.dataset.article=target.slug;if(target.anchor)el.dataset.anchor=target.anchor;}
+    }
+    if(tag==='img'){
+      el.alt=node.getAttribute('alt')||'';el.loading='lazy';
+      const src=node.getAttribute('src')||'';
+      if(book&&src){try{const u=new URL(src,location.origin+'/content/'+book+'/'+encodeURIComponent(slug));if(u.origin===location.origin&&u.pathname.startsWith('/content/'))el.src=u.href;}catch{}}
+      if(!el.hasAttribute('src'))return document.createTextNode(el.alt);
+    }
+    for(const c of node.childNodes)el.append(copy(c));return el;
+  }
+  const out=document.createElement('div');out.className='wiki-content';for(const c of source.childNodes)out.append(copy(c));return out;
+}
+async function loadArticle(slug,signal){
+  if(articleCache.has(slug))return articleCache.get(slug);
+  const [html]=await Promise.all([getText('/article/'+encodeURIComponent(slug),signal),catalog()]);
+  const doc=parse(html);
+  const body=doc.querySelector('.mw-parser-output');if(!body)throw new Error('Article body missing');
+  const title=(doc.querySelector('#firstHeading,.firstHeading,h1')?.textContent||doc.title||slug.replaceAll('_',' ')).trim().replace(/ - Wikipedia$/,'');
+  const content=cleanContent(body,slug);const headings=Array.from(content.querySelectorAll('h2')).map((h,i)=>{if(!h.id)h.id='entry-section-'+i;return {id:h.id,title:h.textContent.trim()};});
+  const preview=Array.from(content.children).find(e=>e.tagName==='P'&&e.textContent.trim().length>60)?.textContent.trim()||'';
+  const data={title,content,headings,preview};articleCache.set(slug,data);if(articleCache.size>8)articleCache.delete(articleCache.keys().next().value);return data;
+}
+function jump(anchor){let id=anchor;try{id=decodeURIComponent(anchor);}catch{}const el=document.getElementById(id.startsWith('entry-')?id:'entry-'+id);if(el&&reading.contains(el))el.scrollIntoView({block:'start'});}
+document.addEventListener('submit',e=>{if(e.target.matches('.search')){e.preventDefault();const q=new FormData(e.target).get('query').trim();if(q)go({kind:'search',q});}});
+document.addEventListener('click',e=>{
+  const retry=e.target.closest('.retry');if(retry){render(current);return;}
+  const page=e.target.closest('[data-search-url]');if(page){go({kind:'search',q:current.q,searchURL:page.dataset.searchUrl});return;}
+  const section=e.target.closest('[data-section]');if(section){e.preventDefault();jump(section.dataset.section);return;}
+  const a=e.target.closest('a');if(a){
+    if(a.dataset.article){e.preventDefault();go({kind:'article',slug:a.dataset.article,anchor:a.dataset.anchor});return;}
+    if(a.dataset.anchor){e.preventDefault();jump(a.dataset.anchor);return;}
+    const href=a.getAttribute('href')||'';
+    if(href.startsWith('#article/')){e.preventDefault();try{go({kind:'article',slug:decodeURIComponent(href.slice(9))});}catch{}return;}
+    if(href==='#home'||href==='#search'){e.preventDefault();go({kind:href.slice(1),q:''});return;}
+  }
+  const tab=e.target.closest('[data-view]');if(tab)go(tab.dataset.view==='article'?{kind:'article',slug:lastArticle}:{kind:tab.dataset.view,q:''});
+});
+document.getElementById('previous').onclick=()=>{if(index>0){savePosition();history.back();}};
+document.getElementById('forward').onclick=()=>{if(index<trail.length-1){savePosition();history.forward();}};
+const platePanel=document.getElementById('plate-panel'),bookDevice=document.querySelector('.book-device'),slip=document.getElementById('preview-slip');let platePinned=false,plateTimer,slipTimer,slipVersion=0;
+function showPlate(){clearTimeout(plateTimer);hideSlip();platePanel.hidden=false;bookDevice.setAttribute('aria-expanded','true');}
+function closePlate(){clearTimeout(plateTimer);platePanel.hidden=true;platePinned=false;bookDevice.setAttribute('aria-expanded','false');}
+function delayedClose(){if(!platePinned)plateTimer=setTimeout(closePlate,160);}
+bookDevice.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')showPlate();});bookDevice.addEventListener('pointerleave',delayedClose);platePanel.addEventListener('pointerenter',()=>clearTimeout(plateTimer));platePanel.addEventListener('pointerleave',delayedClose);bookDevice.onclick=()=>{if(platePinned)closePlate();else{showPlate();platePinned=true;}};platePanel.querySelector('button').onclick=()=>{closePlate();bookDevice.focus();};document.addEventListener('keydown',e=>{if(e.key==='Escape'){hideSlip();closePlate();}});document.addEventListener('pointerdown',e=>{if(!platePanel.contains(e.target)&&!bookDevice.contains(e.target))closePlate();});
+function hideSlip(){clearTimeout(slipTimer);slipVersion++;slip.hidden=true;document.querySelectorAll('[aria-describedby="preview-slip"]').forEach(e=>e.removeAttribute('aria-describedby'));}
+function showSlip(link){hideSlip();const ticket=slipVersion;slipTimer=setTimeout(async()=>{try{const a=await loadArticle(link.dataset.preview);if(ticket!==slipVersion||!link.isConnected)return;const text=a.preview.length>210?a.preview.slice(0,a.preview.lastIndexOf(' ',210))+'…':a.preview;if(!text)return;slip.innerHTML=`<h2>${esc(a.title)}</h2><p>${esc(text)}</p><small>From the article</small>`;link.setAttribute('aria-describedby','preview-slip');slip.hidden=false;}catch{/* A failed optional preview leaves the article link available. */}},350);}
+document.addEventListener('pointerover',e=>{if(e.pointerType==='mouse'){const a=e.target.closest('[data-preview]');if(a)showSlip(a);}});document.addEventListener('pointerout',e=>{if(e.target.closest('[data-preview]'))hideSlip();});document.addEventListener('focusin',e=>{if(e.target.matches('[data-preview]'))showSlip(e.target);});document.addEventListener('focusout',hideSlip);reading.addEventListener('scroll',hideSlip);
+const initial=routeFromHash();trail=[initial];history.replaceState({archive:true,index:0,route:initial},'',hashFor(initial));render(initial);catalog();
+
+</script><script src="guide.js"></script></body></html>

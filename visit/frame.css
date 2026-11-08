@@ -1,0 +1,11 @@
+@font-face{font-family:Linden;src:url('../assets/LindenHill.woff')}
+@font-face{font-family:Linden;src:url('../assets/LindenHill-Italic.woff');font-style:italic}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;color:#392e23;background:#f0e5cf url('../assets/material-study/paper.svg') center/cover fixed;font:20px/1.35 Linden,Georgia,serif}
+main{width:min(100% - 20px,800px);margin:clamp(12px,6vh,65px) auto}
+nav{display:flex;justify-content:space-between;margin-bottom:12px;font-style:italic}
+a{color:inherit;text-decoration:none;font-style:normal}
+.display{width:100%;aspect-ratio:5/3;position:relative;overflow:hidden;box-shadow:2px 6px 16px #49361d24}
+iframe{display:block;position:absolute;inset:0;width:800px;height:480px;border:0;transform-origin:top left}
+.restart{font:inherit;color:inherit;background:#f5e7c9;border:1px solid #968468;margin-top:12px;padding:5px 12px;cursor:pointer}
+@media(max-height:540px) and (orientation:landscape){main{width:min(100% - 16px,calc((100svh - 40px)*5/3));margin:0 auto}nav{margin-bottom:3px}}

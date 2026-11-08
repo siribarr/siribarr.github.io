@@ -1,0 +1,54 @@
+/* Shared Halyx controls. Run python3 scripts/sync_halyx_controls.py after editing.
+   Embedded into the three standalone pages; no runtime server change required.
+   Existing selectors below are adapters. New apparatuses can use hx-control,
+   hx-primary, and hx-studiolo without inheriting a window or page layout. */
+@font-face{font-family:Sligoil;src:url('../../../fonts/Sligoil-Micro.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+:root{
+  --control-ink:#302720;--control-cream:#ddc9a7;--control-light:#fff0d1;
+  --control-edge:#70513c;--control-shadow:#9d7e59;--control-orange:#f07030;
+  --control-orange-light:#ffc18a;--control-orange-shadow:#a64d22;
+  --control-focus:#70513c;--control-font:Sligoil,monospace;
+}
+/* Ordinary push controls, including link elements used for a system action. */
+:is(.hx-control,footer [data-studiolo],footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a){
+  font-family:var(--control-font);font-weight:400;font-synthesis:none;
+  color:var(--control-ink);background:var(--control-cream);
+  border:1px solid var(--control-edge);border-radius:0;
+  box-shadow:inset 1px 1px var(--control-light),inset -1px -1px var(--control-shadow);
+  text-decoration:none;cursor:pointer;touch-action:manipulation;
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent){
+  background:var(--control-orange);
+  box-shadow:inset 1px 1px var(--control-orange-light),inset -1px -1px var(--control-orange-shadow);
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):hover:not(:disabled){
+  filter:brightness(1.045);color:var(--control-ink);text-decoration:none;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):active:not(:disabled){
+  box-shadow:inset 1px 1px var(--control-edge),inset -1px -1px var(--control-light);
+  transform:translateY(1px);
+}
+:is(.hx-primary,.primary,.search button,#topbar-right .btn.accent):active:not(:disabled){background:var(--control-orange)}
+/* All three exits have the same lettering and compact proportions. */
+:is(.hx-studiolo,footer [data-studiolo],.home-exit,#topbar-right .btn.return){
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:31px;padding:4px 7px;font:11px/1.2 var(--control-font);white-space:nowrap;
+}
+/* Shared interaction signals, independent of the amount of window chrome. */
+.hx-back-arrow{font:16px/1 Arial,sans-serif;flex:none;margin-right:4px}
+html body :is(button,a,input,textarea,select,[tabindex]):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+:is(.hx-control,footer button,.primary,.home-exit,.search button,.retry,.search-pages button,.plate-panel button,#topbar-right .btn,#card-close,#list-close,.leaflet-control-zoom a):focus-visible{
+  outline:2px dotted var(--control-focus);outline-offset:2px;
+}
+html body button:disabled{opacity:.45;cursor:default;filter:none;transform:none}
+html body .appnav button:hover:not(:disabled):not(.active){background:var(--control-cream);color:var(--control-ink)}
+html body .appnav button:disabled{color:var(--control-ink)}
+html body ::selection{background:#f5bf88;color:var(--control-ink)}
+/* Paper stays local. The scrollbar hardware is shared. */
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap){scrollbar-width:auto;scrollbar-color:auto}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar{width:13px;height:13px}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-track{background:#e9dfcc;border-left:1px solid #b7a58b}
+:is(.hx-scroll,.reading,.filing-slip,#list-body,#card-body,#contents-wrap)::-webkit-scrollbar-thumb{background:#b8a584;border:1px solid #8b765d;box-shadow:inset 1px 1px #e4d7b9,inset -1px -1px #998267}
+@media(prefers-reduced-motion:reduce){html body :is(button,a,input,textarea,select){transition:none}}
