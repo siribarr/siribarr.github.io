@@ -216,7 +216,27 @@ body.object-page::before{content:none}
   margin: 0;
   padding: 0 3%;
 }
-.object-page #awards .filmstrip { width: min(100%, 480px); transform: rotate(-2.5deg); }
+.object-page #awards .filmstrip {
+  position: relative;
+  width: min(100%, 480px);
+  margin-top: 38px;
+  transform: rotate(-2.5deg);
+}
+.film-note {
+  position: absolute;
+  left: 54.5%;
+  bottom: calc(82% - 7px);
+  display: flex;
+  align-items: flex-start;
+  color: var(--accent);
+  pointer-events: none;
+}
+.film-note svg { flex: none; width: 43px; height: 50px; filter: drop-shadow(0 1px 0 #fff7e7); }
+.film-note span {
+  white-space: nowrap;
+  font: italic 22px/1 Linden, Georgia, serif;
+  transform: translateY(-.48em) rotate(6deg);
+}
 .object-page #awards .award-film-caption { margin: 18px 0 0 6%; }
 .object-page #awards .award-film-caption h3 { color: var(--accent); font-size: clamp(30px, 3vw, 45px); }
 .object-page #awards .award-film-watch { font: italic 18px Linden, serif; }
