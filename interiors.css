@@ -255,6 +255,8 @@ body.object-page::before{content:none}
 .object-page #awards .trophy-award img { height: clamp(210px, 22vw, 330px); }
 .object-page #awards .reading-award img { width: min(100%, 190px); margin: auto; transform: rotate(3deg); }
 .object-page #awards .trophy-award figcaption, .object-page #awards .reading-award figcaption { max-width: 24ch; }
+.object-page #awards .attitude-award { grid-area: 2 / 2; }
+.object-page #awards .attitude-award img { display: block; width: 100%; height: auto; }
 .object-page #awards .trivia-award { width: 100%; }
 
 /* Correspondence and spoken quotations keep different measures. */

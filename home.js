@@ -281,6 +281,7 @@ function openArtifact(title, image) {
 const artifactTitles = {
   trophy: '16th Annual Brews, Shoes n’ Qs Horseshoe Tournament, 2023',
   reading: '2025 Summer Reading Challenge',
+  attitude: 'Maintaining a positive attitude',
   trivia: 'Pub trivia'
 };
 for (const button of document.querySelectorAll('[data-artifact]')) button.addEventListener('click', () => {
